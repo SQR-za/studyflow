@@ -27,7 +27,8 @@
   sub,sup{font-size:.72em}
   button{font-family:inherit;cursor:pointer;color:inherit;border:none;background:none}
   input{font-family:inherit}
-  .wrap{max-width:900px;margin:0 auto;padding:16px 16px 70px}
+  .wrap{max-width:900px;margin:0 auto;
+    padding:calc(16px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(70px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px))}
 
   .topbar{display:flex;align-items:center;gap:10px;margin-bottom:16px}
   .topbar h1{font-size:1.2rem;margin:0;font-weight:800;letter-spacing:.3px}
@@ -176,11 +177,11 @@
   .tag.examtag{background:var(--warn);color:#1a1206;font-weight:700}
 
   /* lock */
-  #lock{position:fixed;inset:0;background:var(--bg);z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px}
+  #lock{position:fixed;inset:0;background:var(--bg);z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px))}
   #lock.show{display:flex}
   #lock .logo{width:64px;height:64px;font-size:28px;border-radius:18px}
   #lock input{font-size:1.4rem;text-align:center;letter-spacing:6px;width:180px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--txt)}
-  @media(max-width:560px){.wrap{padding:14px 12px 56px}.question{font-size:1.04rem}.chap .acts{flex-direction:column}}
+  @media(max-width:560px){.wrap{padding:calc(14px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-right,0px)) calc(56px + env(safe-area-inset-bottom,0px)) calc(12px + env(safe-area-inset-left,0px))}.question{font-size:1.04rem}.chap .acts{flex-direction:column}}
 </style>
 </head>
 <body>
