@@ -397,7 +397,16 @@ async function ensureGist(){if(SYNC.gistId)return SYNC.gistId;const r=await fetc
 function payload(){return{store:STORE,plan:PLANDONE,daily:DAILY,_at:Date.now()}}
 function mergeRemote(d){if(!d)return;if(d.store&&d.store.q){for(const id in d.store.q){const r=d.store.q[id],l=STORE.q[id];if(!l||(r.seen||0)>(l.seen||0))STORE.q[id]=r}if(d.store.star)STORE.star=Object.assign({},d.store.star,STORE.star)}if(d.plan)PLANDONE=Object.assign({},d.plan,PLANDONE);if(d.daily&&d.daily.dates){for(const dt in d.daily.dates)DAILY.dates[dt]=Math.max(DAILY.dates[dt]||0,d.daily.dates[dt])}sv(SKEY,STORE);sv(PKEY,PLANDONE);sv(DKEY,DAILY)}
 async function syncPush(){if(!SYNC.enabled||!SYNC.token)return;try{const id=await ensureGist();const blob=await encJSON(payload(),SYNC.token);const r=await fetch("https://api.github.com/gists/"+id,{method:"PATCH",headers:ghH(),body:JSON.stringify({files:{"studyflow-progress.json":{content:blob}}})});syncStat(r.ok?"تمت المزامنة ✓":"تعذّر الحفظ")}catch(e){syncStat("تعذّر الحفظ (تحقّق من التوكن)")}}
-async function syncPull(){if(!SYNC.enabled||!SYNC.token)return;try{const id=await ensureGist();const r=await fetch("https://api.github.com/gists/"+id,{headers:ghH()});if(!r.ok)return;const g=await r.json();const c=g.files["studyflow-progress.json"].content;if(c&&c!=="{}"){mergeRemote(await decJSON(c,SYNC.token));syncStat("مُزامَن ✓")}}catch(e){syncStat("تعذّر الجلب")}}
+async function syncPull(){if(!SYNC.enabled||!SYNC.token)return;try{
+  const r=await fetch("https://api.github.com/gists?per_page=100",{headers:ghH()});if(!r.ok){syncStat("تعذّر الجلب ("+r.status+")");return}
+  const gs=await r.json();const ms=gs.filter(x=>x.files&&x.files["studyflow-progress.json"]).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+  if(!ms.length){await ensureGist();return}
+  SYNC.gistId=ms[0].id;sv(SYNCKEY,SYNC);let got=false;
+  for(const g of ms){try{const gr=await fetch("https://api.github.com/gists/"+g.id,{headers:ghH()});if(!gr.ok)continue;const gj=await gr.json();const f=gj.files["studyflow-progress.json"];const c=f&&f.content;if(c&&c!=="{}"){mergeRemote(await decJSON(c,SYNC.token));got=true}}catch(e){}}
+  for(let i=1;i<ms.length;i++){try{await fetch("https://api.github.com/gists/"+ms[i].id,{method:"DELETE",headers:ghH()})}catch(e){}}
+  if(ms.length>1){const blob=await encJSON(payload(),SYNC.token);try{await fetch("https://api.github.com/gists/"+ms[0].id,{method:"PATCH",headers:ghH(),body:JSON.stringify({files:{"studyflow-progress.json":{content:blob}}})})}catch(e){}}
+  syncStat(got?"مُزامَن ✓":"مُزامَن")
+}catch(e){syncStat("تعذّر الجلب: "+e.message)}}
 
 /* ===== nav ===== */
 function show(w){for(const id of["home","session","notes","plan","settings","mock","weak","search"])$("#"+id).style.display=(id===w)?"block":"none";window.scrollTo(0,0)}

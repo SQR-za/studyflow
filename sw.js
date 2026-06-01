@@ -1,4 +1,4 @@
-const C="studyflow-fd327777f4";
+const C="studyflow-22285a7bb5";
 const ASSETS=["./","index.html","manifest.webmanifest","icon-512.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()));});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()));});
