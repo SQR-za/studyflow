@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#0f1115" />
+<meta name="theme-color" content="#0d1014" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="StudyFlow" />
@@ -11,20 +11,31 @@
 <link rel="apple-touch-icon" href="icon-512.png" /><link rel="icon" href="icon-512.png" />
 <title>StudyFlow · فلاش كاردز الفاينل</title>
 <style>
-  :root{--bg:#0f1115;--bg2:#161922;--bg3:#1d212c;--bg4:#222634;--line:#2a2f3d;--txt:#e7eaf0;--muted:#9aa3b2;--muted2:#6b7384;--good:#22c55e;--good-bg:#0e2a1a;--bad:#ef4444;--bad-bg:#2a1212;--warn:#f59e0b;--accent:#8b5cf6;--radius:16px;--shadow:0 10px 40px rgba(0,0,0,.45);}
+  :root{--bg:#0d1014;--bg2:#12161b;--bg3:#171c22;--bg4:#1e2530;--line:#262d36;--txt:#e6e9ec;--muted:#99a3a8;--muted2:#69737a;--good:#3ecf8e;--good-bg:#0e2a1f;--bad:#e5484d;--bad-bg:#2a1315;--warn:#f0a85a;--accent:#7c6cf0;--radius:18px;--shadow:0 12px 44px rgba(0,0,0,.55);}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"SF Pro AR","Segoe UI",system-ui,"Helvetica Neue",Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
   body{min-height:100vh;min-height:100dvh}
   .ltr{direction:ltr;text-align:left;unicode-bidi:plaintext}
   sub,sup{font-size:.72em} button{font-family:inherit;cursor:pointer;color:inherit;border:none;background:none} input,select{font-family:inherit}
   .wrap{max-width:900px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(70px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px))}
-  .topbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-  .topbar h1{font-size:1.2rem;margin:0;font-weight:800;letter-spacing:.3px}
-  .topbar .sub{color:var(--muted);font-size:.72rem;margin-top:1px}
-  .logo{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#8b5cf6,#3b82f6);font-size:18px;font-weight:800;color:#fff;flex:none;box-shadow:var(--shadow)}
+  .topbar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .topbar h1{font-size:1.22rem;margin:0;font-weight:800;letter-spacing:.3px;white-space:nowrap}
+  .topbar .sub{color:var(--muted);font-size:.72rem;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .titlewrap{min-width:0}
+  .logo{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#7c6cf0,#3b82f6);font-size:18px;font-weight:800;color:#fff;flex:none;box-shadow:var(--shadow)}
   .spacer{flex:1}
-  .iconbtn2{width:40px;height:40px;border-radius:11px;background:var(--bg3);border:1px solid var(--line);display:grid;place-items:center;font-size:1.02rem;color:var(--muted);transition:.15s}
-  .iconbtn2:hover{color:var(--txt);border-color:var(--muted2)}
+  .syncdot{width:40px;height:40px;border-radius:12px;background:var(--bg3);border:1px solid var(--line);display:grid;place-items:center;flex:none;transition:.15s}
+  .syncdot:hover{border-color:var(--muted2)}
+  .syncdot i{width:11px;height:11px;border-radius:50%;display:block;transition:.2s;background:var(--muted2)}
+  .syncdot.ok i{background:var(--good);box-shadow:0 0 9px var(--good)}
+  .syncdot.err i{background:var(--bad);box-shadow:0 0 9px var(--bad)}
+  .syncdot.sync i{background:#5b8cff;animation:spulse 1s infinite}
+  @keyframes spulse{0%,100%{opacity:1}50%{opacity:.25}}
+  .actionbar{display:flex;gap:8px;margin-bottom:16px}
+  .actionbar button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:11px 6px;font-size:1.02rem;color:var(--muted);transition:.15s}
+  .actionbar button:hover{color:var(--txt);border-color:var(--muted2);background:var(--bg3)}
+  .actionbar button span{font-size:.82rem;font-weight:600}
+  @media(max-width:360px){.actionbar button span{display:none}}
   .hero{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:12px}
   .hero .row{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
   .hero .stat{display:flex;flex-direction:column}.hero .stat b{font-size:1.5rem;font-weight:800;line-height:1}.hero .stat span{font-size:.72rem;color:var(--muted)}
@@ -120,12 +131,15 @@
   <div id="home">
     <div class="topbar">
       <div class="logo">SF</div>
-      <div><h1>StudyFlow</h1><div class="sub">فلاش كاردز · مسائل · موك · خطة مذاكرة</div></div>
+      <div class="titlewrap"><h1>StudyFlow</h1><div class="sub">مذاكرة الفاينل</div></div>
       <div class="spacer"></div>
-      <button class="iconbtn2" id="planBtn" title="خطة المذاكرة">📅</button>
-      <button class="iconbtn2" id="mockBtn" title="امتحان تجريبي">🎯</button>
-      <button class="iconbtn2" id="searchBtn" title="بحث">🔎</button>
-      <button class="iconbtn2" id="setBtn" title="الإعدادات">⚙️</button>
+      <button class="syncdot off" id="syncDot" title="حالة المزامنة"><i></i></button>
+    </div>
+    <div class="actionbar">
+      <button id="searchBtn" title="بحث">🔎<span>بحث</span></button>
+      <button id="mockBtn" title="امتحان تجريبي">🎯<span>موك</span></button>
+      <button id="planBtn" title="خطة المذاكرة">📅<span>الخطة</span></button>
+      <button id="setBtn" title="الإعدادات">⚙️<span>إعدادات</span></button>
     </div>
     <div class="today" id="todayPanel"></div>
     <div class="hero">
@@ -388,7 +402,8 @@ function openNotes(code,chId){const c=chapterById(code,chId),n=c.notes||{};$("#n
 
 /* ===== sync (GitHub Gist, encrypted) ===== */
 let pushTimer=null;function schedulePush(){if(!SYNC.enabled)return;clearTimeout(pushTimer);pushTimer=setTimeout(syncPush,2500)}
-function syncStat(t){const e=$("#syncStatus");if(e)e.textContent="الحالة: "+t}
+function setSyncDot(t){const d=$("#syncDot");if(!d)return;let s="off";if(/✓|مُزامَن/.test(t))s="ok";else if(/فشل|تعذّر|غير صالح|⚠/.test(t))s="err";else if(/جار|…/.test(t))s="sync";d.className="syncdot "+s;d.title="المزامنة: "+t}
+function syncStat(t){const e=$("#syncStatus");if(e)e.textContent="الحالة: "+t;setSyncDot(t)}
 async function aesKey(secret){const enc=new TextEncoder();const km=await crypto.subtle.importKey("raw",enc.encode(secret),"PBKDF2",false,["deriveKey"]);return crypto.subtle.deriveKey({name:"PBKDF2",salt:enc.encode("studyflow-sf"),iterations:100000,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
 async function encJSON(obj,secret){const k=await aesKey(secret);const iv=crypto.getRandomValues(new Uint8Array(12));const ct=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},k,new TextEncoder().encode(JSON.stringify(obj))));const all=new Uint8Array(iv.length+ct.length);all.set(iv);all.set(ct,iv.length);return btoa(String.fromCharCode.apply(null,all))}
 async function decJSON(b64,secret){const k=await aesKey(secret);const raw=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:raw.slice(0,12)},k,raw.slice(12));return JSON.parse(new TextDecoder().decode(pt))}
@@ -396,8 +411,8 @@ function ghH(){return{Authorization:"Bearer "+SYNC.token,Accept:"application/vnd
 async function ensureGist(){if(SYNC.gistId)return SYNC.gistId;const r=await fetch("https://api.github.com/gists?per_page=100",{headers:ghH(),cache:"no-store"});if(!r.ok)throw new Error("قراءة Gists فشلت ("+r.status+")");const gs=await r.json();const ms=gs.filter(x=>x.files&&x.files["studyflow-progress.json"]).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));if(ms.length){SYNC.gistId=ms[0].id;sv(SYNCKEY,SYNC);return ms[0].id}const cr=await fetch("https://api.github.com/gists",{method:"POST",headers:ghH(),body:JSON.stringify({description:"StudyFlow progress (encrypted)",public:false,files:{"studyflow-progress.json":{content:"{}"}}})});if(!cr.ok){let m=cr.status;try{const j=await cr.json();if(j.message)m+=" — "+j.message;}catch(e){}throw new Error("إنشاء Gist فشل ("+m+"). يحتاج Classic token بصلاحية gist");}const ng=await cr.json();SYNC.gistId=ng.id;sv(SYNCKEY,SYNC);return ng.id}
 function payload(){return{store:STORE,plan:PLANDONE,daily:DAILY,_at:Date.now()}}
 function mergeRemote(d){if(!d)return;if(d.store&&d.store.q){for(const id in d.store.q){const r=d.store.q[id],l=STORE.q[id];if(!l||(r.seen||0)>(l.seen||0))STORE.q[id]=r}if(d.store.star)STORE.star=Object.assign({},d.store.star,STORE.star)}if(d.plan)PLANDONE=Object.assign({},d.plan,PLANDONE);if(d.daily&&d.daily.dates){for(const dt in d.daily.dates)DAILY.dates[dt]=Math.max(DAILY.dates[dt]||0,d.daily.dates[dt])}sv(SKEY,STORE);sv(PKEY,PLANDONE);sv(DKEY,DAILY)}
-async function syncPush(){if(!SYNC.enabled||!SYNC.token)return;try{const id=await ensureGist();const blob=await encJSON(payload(),SYNC.token);const r=await fetch("https://api.github.com/gists/"+id,{method:"PATCH",headers:ghH(),body:JSON.stringify({files:{"studyflow-progress.json":{content:blob}}})});syncStat(r.ok?"تمت المزامنة ✓":"تعذّر الحفظ")}catch(e){syncStat("تعذّر الحفظ (تحقّق من التوكن)")}}
-async function syncPull(){if(!SYNC.enabled||!SYNC.token)return;try{
+async function syncPush(){if(!SYNC.enabled||!SYNC.token)return;setSyncDot("جارٍ");try{const id=await ensureGist();const blob=await encJSON(payload(),SYNC.token);const r=await fetch("https://api.github.com/gists/"+id,{method:"PATCH",headers:ghH(),body:JSON.stringify({files:{"studyflow-progress.json":{content:blob}}})});syncStat(r.ok?"تمت المزامنة ✓":"تعذّر الحفظ")}catch(e){syncStat("تعذّر الحفظ (تحقّق من التوكن)")}}
+async function syncPull(){if(!SYNC.enabled||!SYNC.token)return;setSyncDot("جارٍ");try{
   const r=await fetch("https://api.github.com/gists?per_page=100",{headers:ghH(),cache:"no-store"});if(!r.ok){syncStat("تعذّر الجلب ("+r.status+")");return}
   const gs=await r.json();const ms=gs.filter(x=>x.files&&x.files["studyflow-progress.json"]).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
   if(!ms.length){await ensureGist();return}
@@ -423,6 +438,7 @@ $("#weakBtn").onclick=()=>{renderWeak();show("weak")};$("#weakBack").onclick=()=
 $("#starBtn").onclick=startStarred;
 $("#searchBtn").onclick=()=>{show("search");$("#searchInput").value="";$("#searchResults").innerHTML="";setTimeout(()=>$("#searchInput").focus(),100)};$("#searchBack").onclick=()=>{renderHome();show("home")};$("#searchInput").oninput=doSearch;
 $("#setBtn").onclick=()=>{openSettings()};$("#setBack").onclick=()=>{renderHome();show("home")};
+$("#syncDot").onclick=()=>{openSettings()};
 function openSettings(){$("#lockStatus").textContent=localStorage.getItem(PASS)?"مُفعّل ✓":"مطفّأ";$("#goalInp").value=SETTINGS.goal;$("#soundSwitch").classList.toggle("on",SETTINGS.sound);$("#ghToken").value=SYNC.token||"";syncStat(SYNC.enabled?"مُفعّلة ✓":"مطفّأة");show("settings")}
 $("#goalSave").onclick=()=>{const v=parseInt($("#goalInp").value)||50;SETTINGS.goal=Math.max(5,v);saveSet();alert("تم")};
 $("#soundSwitch").onclick=()=>{SETTINGS.sound=!SETTINGS.sound;saveSet();$("#soundSwitch").classList.toggle("on",SETTINGS.sound)};
@@ -441,7 +457,7 @@ $("#syncTest").onclick=async()=>{const t=$("#ghToken").value.trim();if(!t){alert
 function downloadICS(time){const[hh,mm]=time.split(":");const pad=n=>String(n).padStart(2,"0");const esc=s=>String(s).replace(/[,;\\]/g,m=>"\\"+m).replace(/\n/g,"\\n");let L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//StudyFlow//AR","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:StudyFlow"];for(const day of SCHED.plan){if(!day.tasks.length)continue;const ch=day.tasks.map(t=>t.review?subjName(t.c)+" مراجعة":(chapterById(t.c,t.ch)?chapterById(t.c,t.ch).label:t.ch)).join("، ");const dt=day.d.replace(/-/g,"");L.push("BEGIN:VEVENT","UID:sf-s-"+day.d+"@sf","DTSTAMP:20260601T000000Z","DTSTART:"+dt+"T"+pad(hh)+pad(mm)+"00","DTEND:"+dt+"T"+pad((+hh+2)%24)+pad(mm)+"00","SUMMARY:"+esc("📚 StudyFlow: "+ch),"BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:وقت المذاكرة","TRIGGER:PT0S","END:VALARM","END:VEVENT")}for(const e of SCHED.exams){const dt=e.d.replace(/-/g,""),tm=e.t.replace(":","")+"00";L.push("BEGIN:VEVENT","UID:sf-e-"+e.c+"@sf","DTSTAMP:20260601T000000Z","DTSTART:"+dt+"T"+tm,"DTEND:"+dt+"T"+pad((+tm.slice(0,2)+1))+tm.slice(2),"SUMMARY:"+esc("🎯 اختبار "+subjName(e.c)),"BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:اختبار بكرة","TRIGGER:-P1D","END:VALARM","END:VEVENT")}L.push("END:VCALENDAR");const blob=new Blob([L.join("\r\n")],{type:"text/calendar"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="studyflow.ics";a.click()}
 
 /* ===== boot ===== */
-function startApp(){renderHome();document.querySelector(".subject")?.classList.add("open");if(SYNC.enabled)syncPull().then(renderHome)}
+function startApp(){renderHome();document.querySelector(".subject")?.classList.add("open");setSyncDot(SYNC.enabled?"جارٍ":"مطفّأة");if(SYNC.enabled)syncPull().then(renderHome)}
 function boot(){const p=localStorage.getItem(PASS);if(p){const lk=$("#lock");lk.classList.add("show");const tryU=()=>{if($("#lockInput").value===p){lk.classList.remove("show");startApp()}else $("#lockErr").style.display=""};$("#lockBtn").onclick=tryU;$("#lockInput").addEventListener("keydown",e=>{if(e.key==="Enter")tryU()});$("#lockInput").focus()}else startApp();if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{})}
 document.addEventListener("visibilitychange",()=>{if(!SYNC.enabled)return;if(document.hidden){syncPush();}else{syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});}});
 window.addEventListener("online",()=>{if(SYNC.enabled)syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});});
