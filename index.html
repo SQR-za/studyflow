@@ -217,7 +217,7 @@
 
     <div class="controls">
       <button class="toggle" id="extraToggle"><span class="switch on" id="extraSwitch"></span><span id="extraLabel">يشمل الأسئلة الإضافية</span></button>
-      <button class="btn-warn" id="globalReview">⚠️ راجع كل غلطاتي</button>
+      <span class="hint" style="align-self:center">⚠️ المراجعة لكل مادة وكل شابتر — من أزرار ⚠️ تحت</span>
     </div>
 
     <div id="subjects"></div>
@@ -382,7 +382,6 @@ function renderHome(){
   $("#hMastPct").textContent=(gT?Math.round(gM/gT*100):0)+"%";
   $("#hSeenPct").textContent=(gT?Math.round(gS/gT*100):0)+"%";
   $("#hbSeen").style.width=(gT?gS/gT*100:0)+"%";$("#hbMast").style.width=(gT?gM/gT*100:0)+"%";
-  $("#globalReview").textContent=`⚠️ راجع كل غلطاتي (${gW})`;
   $("#extraSwitch").classList.toggle("on",SETTINGS.includeExtra);
   $("#extraLabel").textContent=SETTINGS.includeExtra?"يشمل الأسئلة الإضافية":"بنك الأسئلة الرسمي فقط";
 }
@@ -541,7 +540,6 @@ document.addEventListener("keydown",e=>{
 $("#nextBtn").onclick=()=>nextCard();$("#backBtn").onclick=()=>exitSession();$("#emptyBack").onclick=()=>exitSession();
 $("#notesBack").onclick=()=>show("session");
 $("#notesBtn").onclick=()=>{if(S&&S.scope!=="__ALL__"&&S.scope!=="__GLOBAL__")openNotes(S.code,S.scope);};
-$("#globalReview").onclick=()=>startGlobalReview();
 $("#extraToggle").onclick=()=>{SETTINGS.includeExtra=!SETTINGS.includeExtra;saveSettings();renderHome();};
 $("#planBtn").onclick=()=>{renderPlan();show("plan");};$("#planBack").onclick=()=>{renderHome();show("home");};
 $("#setBtn").onclick=()=>{refreshLockStatus();show("settings");};$("#setBack").onclick=()=>{renderHome();show("home");};
