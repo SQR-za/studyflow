@@ -21,7 +21,7 @@
   .mtx::before,.mtx::after{content:"";position:absolute;top:2px;bottom:2px;width:5px;border:1.5px solid currentColor;opacity:.55}
   .mtx::before{left:0;border-right:0}.mtx::after{right:0;border-left:0}
   .mtxc{padding:0 2px;white-space:nowrap}
-  code.ic{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:rgba(45,212,191,.13);border-radius:6px;padding:.05em 7px;font-size:.85em;color:#7defcf;line-height:1.5;direction:ltr;unicode-bidi:isolate;display:inline-block;max-width:100%;white-space:nowrap;overflow:auto;vertical-align:middle}
+  code.ic{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:rgba(45,212,191,.13);border-radius:6px;padding:.05em 7px;font-size:.85em;color:#7defcf;line-height:1.5;direction:ltr;unicode-bidi:isolate;white-space:nowrap;-webkit-box-decoration-break:clone;box-decoration-break:clone}
   .wrap{max-width:900px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(70px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px))}
   .topbar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
   .topbar h1{font-size:1.22rem;margin:0;font-weight:800;letter-spacing:.3px;white-space:nowrap}
@@ -515,7 +515,7 @@ function startApp(){renderHome();document.querySelector(".subject")?.classList.a
 function boot(){const p=localStorage.getItem(PASS);if(p){const lk=$("#lock");lk.classList.add("show");const tryU=()=>{if($("#lockInput").value===p){lk.classList.remove("show");startApp()}else $("#lockErr").style.display=""};$("#lockBtn").onclick=tryU;$("#lockInput").addEventListener("keydown",e=>{if(e.key==="Enter")tryU()});$("#lockInput").focus()}else startApp();if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{})}
 document.addEventListener("visibilitychange",()=>{if(!SYNC.enabled)return;if(document.hidden){syncPush();}else{syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});}});
 window.addEventListener("online",()=>{if(SYNC.enabled)syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});});
-const VER="v0806";try{var _vb=document.createElement("div");_vb.id="sfver";_vb.textContent=VER;_vb.title="StudyFlow build";_vb.style.cssText="position:fixed;bottom:6px;left:8px;font:600 10px/1 ui-monospace,monospace;color:var(--muted2);opacity:.45;z-index:60;pointer-events:none;letter-spacing:.5px";document.body.appendChild(_vb);}catch(e){}
+const VER="v0807";try{var _vb=document.createElement("div");_vb.id="sfver";_vb.textContent=VER;_vb.title="StudyFlow build";_vb.style.cssText="position:fixed;bottom:6px;left:8px;font:600 10px/1 ui-monospace,monospace;color:var(--muted2);opacity:.45;z-index:60;pointer-events:none;letter-spacing:.5px";document.body.appendChild(_vb);}catch(e){}
 boot();
 </script>
 </body>
