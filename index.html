@@ -338,6 +338,63 @@ DATA["WEB-MID1"]={
   }]
 };
 ORDER.splice(2,0,"WEB-MID1");
+const CCCS422_MIDTERM_SELECTION=[
+  "cccs422-t3-q01","cccs422-t3-q03","cccs422-t3-q05","cccs422-t3-q07","cccs422-t3-q09","cccs422-t3-q10",
+  "cccs422-t3-q12","cccs422-t3-q13","cccs422-t3-q14","cccs422-t3-q17","cccs422-t3-q18","cccs422-t3-q21",
+  "cccs422-t3-q23","cccs422-t3-q25","cccs422-t3-q28","cccs422-t3-q29","cccs422-t3-q30",
+  "cccs422-t4-q01","cccs422-t4-q02","cccs422-t4-q04","cccs422-t4-q06","cccs422-t4-q07","cccs422-t4-q08",
+  "cccs422-t4-q10","cccs422-t4-q13","cccs422-t4-q16","cccs422-t4-q18","cccs422-t4-q19","cccs422-t4-q20",
+  "cccs422-t4-q21","cccs422-t4-q23","cccs422-t4-q25","cccs422-t4-q27","cccs422-t4-q28","cccs422-t4-q29",
+  "cccs422-t4-q30",
+  "cccs422-t5-q01","cccs422-t5-q02","cccs422-t5-q04","cccs422-t5-q05","cccs422-t5-q06","cccs422-t5-q07",
+  "cccs422-t5-q08","cccs422-t5-q10","cccs422-t5-q11","cccs422-t5-q12","cccs422-t5-q13","cccs422-t5-q14",
+  "cccs422-t5-q15","cccs422-t5-q17","cccs422-t5-q18","cccs422-t5-q19","cccs422-t5-q20","cccs422-t5-q21",
+  "cccs422-t5-q22","cccs422-t5-q23","cccs422-t5-q24","cccs422-t5-q25","cccs422-t5-q26","cccs422-t5-q28",
+  "cccs422-t5-q29","cccs422-t5-q30"
+];
+const CCCS422_MIDTERM_QUESTIONS=CCCS422_MIDTERM_SELECTION.map((sourceId,index)=>{
+  const source=DATA["CCCS-422"].chapters.flatMap(chapter=>chapter.questions).find(question=>question.id===sourceId);
+  if(!source) throw new Error(`Missing CCCS-422 midterm question: ${sourceId}`);
+  return {...source,src:"midterm",id:`cccs422-mid1-q${String(index+1).padStart(2,"0")}`};
+});
+DATA["CCCS422-MID1"]={
+  name:"CCCS-422 Midterm 1 · Chapters 3–5",
+  code:"CCCS422-MID1",
+  color:"#f59e0b",
+  chapters:[{
+    id:"cccs422-mid1-all",
+    num:"M1",
+    label:"Topics 3–5 · Paradigms, Design, and OpenMP",
+    notes:{
+      draw:["PCAM: Partitioning → Communication → Agglomeration → Mapping","Fork → parallel team → implicit barrier → master continues","R-D-E-S: Recursive · Data · Exploratory · Speculative"],
+      formulas:["S = Tserial / Tparallel","E = S / p","Amdahl: S(p) = 1 / (s + (1-s)/p), ceiling = 1/s","Average concurrency = total work / critical-path length"],
+      practice:["Recalculate the 100 s, s = 0.3, p = 10 Amdahl example","Assign 12 iterations under default blocks and schedule(static,1)","Explain master versus single and sections versus tasks"],
+      watch:["Strong = same problem size; weak = widening problem size","Balanced load alone does not eliminate idling","private is uninitialized; firstprivate copies the entry value","Only static, dynamic, and guided accept a chunk size"]
+    },
+    questions:CCCS422_MIDTERM_QUESTIONS
+  }]
+};
+ORDER.splice(2,0,"CCCS422-MID1");
+if(!SCHED.plan.some(day=>day.d==="2026-07-25"))SCHED.plan.push({
+  d:"2026-07-25",
+  day:"السبت",
+  exam:null,
+  tasks:[
+    {c:"CCCS-422",ch:"cccs422-t3"},
+    {c:"CCCS-422",ch:"cccs422-t4"},
+    {c:"CCCS-422",ch:"cccs422-t5"}
+  ]
+});
+if(!SCHED.plan.some(day=>day.d==="2026-07-26"))SCHED.plan.push({
+  d:"2026-07-26",
+  day:"الأحد",
+  exam:"CCCS-422",
+  tasks:[]
+});
+SCHED.plan.sort((a,b)=>a.d.localeCompare(b.d));
+if(!SCHED.exams.some(exam=>exam.c==="CCCS-422"&&exam.d==="2026-07-26")){
+  SCHED.exams.unshift({c:"CCCS-422",d:"2026-07-26",t:"13:00"});
+}
 for(const code in DATA)for(const ch of DATA[code].chapters){
   if(ch.objectives&&ch.objectives.length)ch.lessons=ch.objectives.map(o=>({id:ch.id+"-"+o.num.replace(".","_"),num:o.num,label:o.label,questions:ch.questions.filter(q=>q.obj===o.num),notes:(ch.objNotes&&ch.objNotes[o.num])||null}));
   else if(!ch.questions&&ch.lessons)ch.questions=ch.lessons.flatMap(l=>l.questions);
@@ -558,14 +615,16 @@ function renderMockSetup(){
   const subs=vo.map(c=>`<button data-c="${c}" class="${mkSel.code===c?"sel":""}">${subjName(c)}</button>`).join("");
   const hasLessons=lessonsOf(DATA[mkSel.code]).length>0;
   const chs=`<button data-s="__ALL__" class="${mkSel.scope==="__ALL__"?"sel":""}">كل المادة</button>`+DATA[mkSel.code].chapters.map(c=>`<button data-s="${c.id}" class="${mkSel.scope===c.id?"sel":""}">${escHtml(c.label.replace(/·.*/,"").trim())}</button>`).join("")+(hasLessons?`<button data-s="__LESSONS__" class="${mkSel.scope==="__LESSONS__"?"sel":""}">🧩 دروس مخصّصة</button>`:"");
-  const cnts=[10,20,30].map(n=>`<button data-n="${n}" class="${mkSel.count===n?"sel":""}">${n} سؤال</button>`).join("");
+  const availablePool=mkSel.scope==="__ALL__"?DATA[mkSel.code].chapters.flatMap(visQ):mkSel.scope==="__LESSONS__"?poolLessons(mkSel.code,mkSel.lessonIds):visQ(chapterById(mkSel.code,mkSel.scope));
+  const availableCount=availablePool.filter(q=>q.choices).length;
+  const cnts=[10,20,30].map(n=>`<button data-n="${n}" class="${mkSel.count===n?"sel":""}">${n} سؤال</button>`).join("")+`<button data-n="all" class="${mkSel.count==="all"?"sel":""}">كل الأسئلة (${availableCount})</button>`;
   h.innerHTML=`<div class="note-intro">امتحان مؤقّت بدون تصحيح فوري — النتيجة والمراجعة في النهاية.</div>
     <div class="sec"><h3>المادة</h3><div class="mockopt" id="mkSubs">${subs}</div><h3>النطاق</h3><div class="mockopt" id="mkChs">${chs}</div>${mkSel.scope==="__LESSONS__"?`<div id="mkLessons"></div>`:""}<h3>عدد الأسئلة</h3><div class="mockopt" id="mkCnts">${cnts}</div>
     <div class="setrow" style="margin-top:6px"><span class="lab">مؤقّت (دقيقة/سؤال)</span><button class="switch ${mkSel.timed?"on":""}" id="mkTimed"></button></div>
     <button class="btn" id="mkStart" style="margin-top:8px">ابدأ الامتحان 🎯</button></div>`;
   h.querySelectorAll("#mkSubs button").forEach(b=>b.onclick=()=>{mkSel.code=b.dataset.c;mkSel.scope="__ALL__";mkSel.lessonIds=new Set();renderMockSetup()});
   h.querySelectorAll("#mkChs button").forEach(b=>b.onclick=()=>{mkSel.scope=b.dataset.s;renderMockSetup()});
-  h.querySelectorAll("#mkCnts button").forEach(b=>b.onclick=()=>{mkSel.count=+b.dataset.n;renderMockSetup()});
+  h.querySelectorAll("#mkCnts button").forEach(b=>b.onclick=()=>{mkSel.count=b.dataset.n==="all"?"all":+b.dataset.n;renderMockSetup()});
   $("#mkTimed").onclick=()=>{mkSel.timed=!mkSel.timed;renderMockSetup()};
   $("#mkStart").onclick=startMock;
   if(mkSel.scope==="__LESSONS__"){const ml=$("#mkLessons");ml.innerHTML=lessonPickerHtml(mkSel.code,mkSel.lessonIds,{noStart:true});wireLessonPicker(ml,mkSel.code,mkSel.lessonIds,renderMockSetup)}
@@ -574,7 +633,8 @@ function startMock(){
   let pool=mkSel.scope==="__ALL__"?DATA[mkSel.code].chapters.flatMap(visQ):mkSel.scope==="__LESSONS__"?poolLessons(mkSel.code,mkSel.lessonIds):visQ(chapterById(mkSel.code,mkSel.scope));
   pool=pool.filter(q=>q.choices);
   if(!pool.length){alert("اختر درس واحد على الأقل");return}
-  pool=shuffle(pool).slice(0,Math.min(mkSel.count,pool.length));
+  const requestedCount=mkSel.count==="all"?pool.length:Math.min(mkSel.count,pool.length);
+  pool=shuffle(pool).slice(0,requestedCount);
   Mk={items:pool.map(q=>{const o=shuffle(q.choices.map((_,i)=>i));return{q,shuf:o.map(i=>q.choices[i]),correct:o.indexOf(q.answer),pick:-1}}),idx:0,color:DATA[mkSel.code].color,secLeft:mkSel.timed?pool.length*60:0,timed:mkSel.timed};
   $("#mockSetup").style.display="none";$("#mockResult").style.display="none";$("#mockRun").style.display="";$("#mkAccent").style.background=Mk.color;
   if(Mk.timed){$("#mockTimer").style.display="";tickMock()}else $("#mockTimer").style.display="none";
@@ -667,7 +727,7 @@ function startApp(){renderHome();document.querySelector(".subject")?.classList.a
 function boot(){const p=localStorage.getItem(PASS);if(p){const lk=$("#lock");lk.classList.add("show");const tryU=()=>{if($("#lockInput").value===p){lk.classList.remove("show");startApp()}else $("#lockErr").style.display=""};$("#lockBtn").onclick=tryU;$("#lockInput").addEventListener("keydown",e=>{if(e.key==="Enter")tryU()});$("#lockInput").focus()}else startApp();if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{})}
 document.addEventListener("visibilitychange",()=>{if(!SYNC.enabled)return;if(document.hidden){syncPush();}else{syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});}});
 window.addEventListener("online",()=>{if(SYNC.enabled)syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});});
-const VER="v0722-web-mid1";try{var _vb=document.createElement("div");_vb.id="sfver";_vb.textContent=VER;_vb.title="StudyFlow build";_vb.style.cssText="position:fixed;bottom:6px;left:8px;font:600 10px/1 ui-monospace,monospace;color:var(--muted2);opacity:.45;z-index:60;pointer-events:none;letter-spacing:.5px";document.body.appendChild(_vb);}catch(e){}
+const VER="v0725-mock-all";try{var _vb=document.createElement("div");_vb.id="sfver";_vb.textContent=VER;_vb.title="StudyFlow build";_vb.style.cssText="position:fixed;bottom:6px;left:8px;font:600 10px/1 ui-monospace,monospace;color:var(--muted2);opacity:.45;z-index:60;pointer-events:none;letter-spacing:.5px";document.body.appendChild(_vb);}catch(e){}
 boot();
 </script>
 </body>
