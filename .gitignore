@@ -1,2 +1,9 @@
 .DS_Store
 .claude/
+materials/
+studyflow-data.json
+studyflow-progress.json
+studyflow.ics
+*.pdf
+*.ppt
+*.pptx
