@@ -467,8 +467,8 @@
             },
             {
               "type": "match",
-              "q": "Match each core MPI function to its purpose.",
-              "q_ar": "صِل كل دالة MPI أساسية بوظيفتها.",
+              "q": "Match the six core MPI functions and the timing routine to their purposes.",
+              "q_ar": "صِل دوال MPI الست الأساسية ودالة قياس الزمن بوظائفها.",
               "pairs": [
                 [
                   "MPI_Init",
@@ -487,6 +487,14 @@
                   "Returns the calling process's rank"
                 ],
                 [
+                  "MPI_Send",
+                  "Sends a message to a destination process"
+                ],
+                [
+                  "MPI_Recv",
+                  "Receives a matching message from a source process"
+                ],
+                [
                   "MPI_Wtime",
                   "Returns the current time as a double"
                 ]
@@ -496,9 +504,12 @@
                 "تأتي عند نهاية عمل برنامج MPI.",
                 "لا تخلط بين size وrank؛ المطلوب هنا قيمة تصف المجموعة.",
                 "ابحث عن هوية process الحالية، لا حجم المجموعة.",
+                "عملية Point-to-Point ترسل البيانات إلى destination rank.",
+                "عملية Point-to-Point تنتظر رسالة مطابقة من source.",
                 "تُستخدم عادةً عند قياس performance."
               ],
-              "explanation": "The six core functions plus the timing routine.",
+              "explanation": "The six core functions are MPI_Init, MPI_Finalize, MPI_Comm_size, MPI_Comm_rank, MPI_Send, and MPI_Recv; MPI_Wtime is the timing routine.",
+              "explanation_ar": "الدوال الست الأساسية هي Init وFinalize وComm_size وComm_rank وSend وRecv، أما Wtime فهي دالة قياس الزمن.",
               "src": "exam",
               "id": "cccs422-final-t6-q32"
             },
