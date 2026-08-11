@@ -116,7 +116,7 @@
   .mchip{background:var(--bg4);border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;font-size:.83rem;color:var(--txt);transition:.12s}
   .mchip:hover{border-color:var(--muted2)}.mchip.sel{background:var(--accent);border-color:var(--accent);color:#fff}
   .mdone{font-size:.8rem;color:var(--good)}
-  .choice{display:flex;align-items:flex-start;gap:12px;background:var(--bg3);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font-size:.97rem;transition:.13s;text-align:left;width:100%}
+  .choice{display:flex;align-items:flex-start;gap:12px;background:var(--bg3);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font-size:.97rem;transition:.13s;text-align:start;width:100%}
   .choice:not(:disabled):hover{border-color:var(--muted2);background:var(--bg4)}
   .choice .key{width:26px;height:26px;border-radius:7px;background:var(--bg2);border:1px solid var(--line);display:grid;place-items:center;font-size:.78rem;font-weight:700;color:var(--muted);flex:none}.choice .ctxt{flex:1;padding-top:2px}
   .choice.correct{border-color:var(--good);background:var(--good-bg)}.choice.correct .key{background:var(--good);color:#03130a;border-color:var(--good)}
@@ -158,6 +158,9 @@
   .lrow .ldot{width:7px;height:7px;border-radius:50%;flex:none;opacity:.85}
   .lrow .lmain{flex:1;min-width:0}.lrow .ll{font-size:.84rem;font-weight:600}.lrow .lc{font-size:.67rem;color:var(--muted);margin-top:1px}
   .lrow .lgo{color:var(--muted2);font-size:.78rem;flex:none}
+  .lmodes{display:flex;align-items:center;gap:5px;flex:none}.lmode{background:var(--bg3);border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:.7rem;color:var(--muted);white-space:nowrap}.lmode:hover{color:var(--txt);border-color:var(--accent)}
+  .testscore{font-size:.65rem;font-weight:700;border-radius:14px;padding:2px 7px;display:inline-block;margin-top:3px}.testscore.ready{color:#86efac;background:var(--good-bg)}.testscore.near{color:#fde68a;background:#332b12}.testscore.review{color:#fca5a5;background:var(--bad-bg)}
+  .presetgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.preset{background:var(--bg3);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:start;color:var(--txt)}.preset:hover{border-color:var(--accent)}.preset b{display:block;font-size:.86rem}.preset small{display:block;color:var(--muted);margin-top:4px;line-height:1.55}.attempt{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-top:7px;font-size:.76rem}.attempt .apct{font-weight:800;margin-inline-start:auto}.breakdown{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:12px}.breakdown div{background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:8px;font-size:.75rem}.readiness{margin-top:8px;font-weight:700}.readiness.ready{color:var(--good)}.readiness.near{color:#facc15}.readiness.review{color:var(--bad)}
   .ic.act-lessons{font-size:.7rem}.ic.act-lessons.on{color:var(--txt);border-color:var(--accent)}
   .mtimer{font-variant-numeric:tabular-nums}
   #timerPill b{font-variant-numeric:tabular-nums}#timerPill.bad{color:var(--bad);border-color:#5b2020}
@@ -180,7 +183,7 @@
   .choice:active:not(:disabled){transform:scale(.992)}
   .lrow .act-lnote{width:28px;height:28px;border-radius:8px;background:var(--bg3);border:1px solid var(--line);display:grid;place-items:center;font-size:.76rem;color:var(--muted);flex:none;transition:.13s}
   .lrow .act-lnote:hover{color:var(--txt);border-color:var(--accent)}
-  @media(max-width:560px){.wrap{padding:calc(14px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-right,0px)) calc(56px + env(safe-area-inset-bottom,0px)) calc(12px + env(safe-area-inset-left,0px))}.question{font-size:1.04rem}.chap .acts{flex-wrap:wrap;max-width:108px;justify-content:flex-end}}
+  @media(max-width:560px){.wrap{padding:calc(14px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-right,0px)) calc(56px + env(safe-area-inset-bottom,0px)) calc(12px + env(safe-area-inset-left,0px))}.question{font-size:1.04rem}.chap .acts{flex-wrap:wrap;max-width:108px;justify-content:flex-end}.presetgrid,.breakdown{grid-template-columns:1fr}.lmodes{gap:3px}.lmode{padding:5px 7px;font-size:.65rem}}
 </style>
 </head>
 <body>
@@ -251,10 +254,10 @@
       <div class="card">
         <div class="accentbar" id="accentbar"></div>
         <div class="qmeta"><span class="srcbadge" id="srcBadge"></span><div class="qright"><button class="starbtn" id="starToggle" title="تمييز بنجمة">☆</button><div class="boxdots" id="boxdots" title="مستوى الإتقان"></div></div></div>
-        <div class="question ltr" id="question"></div>
+        <div class="question" id="question" dir="auto"></div>
         <div class="choices" id="choices"></div>
         <div class="matchhost" id="matchHost" style="display:none"></div>
-        <div class="explain" id="explain"><div class="lbl">💡 الشرح</div><div class="ltr" id="explainTxt"></div></div>
+        <div class="explain" id="explain"><div class="lbl">💡 الشرح</div><div id="explainTxt" dir="auto"></div></div>
         <div class="nextbar" id="nextbar"><div class="verdict" id="verdict"></div><button class="btn" id="nextBtn">التالي <span style="opacity:.7">↵</span></button></div>
         <div class="nextbar" id="revealbar"><button class="btn" id="revealBtn">اكشف الحل 👁️</button></div>
         <div class="gradebar" id="gradebar"><button class="gbtn d" id="gradeNo">✗ ما عرفته</button><button class="gbtn k" id="gradeYes">✓ عرفته</button></div>
@@ -271,7 +274,7 @@
     <div id="mockRun" style="display:none">
       <div class="pills"><div class="pill">السؤال <b id="mkPos">1/10</b></div><div class="pill">المتبقّي <b id="mkLeft">—</b></div></div>
       <div class="mbar"><i id="mkFill"></i></div>
-      <div class="card"><div class="accentbar" id="mkAccent"></div><div class="question ltr" id="mkQ"></div><div class="choices" id="mkChoices"></div>
+      <div class="card"><div class="accentbar" id="mkAccent"></div><div class="question" id="mkQ" dir="auto"></div><div class="choices" id="mkChoices"></div>
         <div class="nextbar show" style="margin-top:18px"><button class="btn ghost2" id="mkSkip" style="flex:.5">تخطّي</button><button class="btn" id="mkNext">التالي ↵</button></div></div>
     </div>
     <div id="mockResult" style="display:none"></div>
@@ -314,11 +317,11 @@
 
 <script>
 "use strict";
-const SKEY="studyflow-v1",SET="studyflow-set-v1",PKEY="studyflow-plan-v1",PASS="studyflow-pass-v1",DKEY="studyflow-daily-v1",SYNCKEY="studyflow-sync-v1",CONTENTKEY="studyflow-content-v1",BUILTINKEY="studyflow-builtin-finals-2026-t3-v1";
+const SKEY="studyflow-v1",SET="studyflow-set-v1",PKEY="studyflow-plan-v1",PASS="studyflow-pass-v1",DKEY="studyflow-daily-v1",SYNCKEY="studyflow-sync-v1",CONTENTKEY="studyflow-content-v1",BUILTINKEY="studyflow-builtin-finals-2026-t3-v1",PDC_DRILLS_KEY="studyflow-pdc-422-drills-v2";
 const GAPS={1:2,2:4,3:7,4:12,5:20},MB=4,DAYMS=86400000,SESSION_CAP=5;
-const EMPTY_CONTENT={version:1,subjects:{},schedule:{plan:[],exams:[]}},BUILTIN_CONTENT_URL="finals-2026-t3.json?v=20260811-1",BUILTIN_CODES=["CCCS422-FINAL","WEB-EXAM2"];
+const EMPTY_CONTENT={version:1,subjects:{},schedule:{plan:[],exams:[]}},EMPTY_DRILLS={version:2,subject:"CCCS422-FINAL",chapters:{},presets:[]},BUILTIN_CONTENT_URL="finals-2026-t3.json?v=20260811-2",PDC_DRILLS_URL="pdc-422-drills-v2.json?v=20260811-2",BUILTIN_CODES=["CCCS422-FINAL","WEB-EXAM2"];
 function lj(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}} function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-let CONTENT=lj(CONTENTKEY,EMPTY_CONTENT),BUILTIN_CONTENT=lj(BUILTINKEY,EMPTY_CONTENT);
+let CONTENT=lj(CONTENTKEY,EMPTY_CONTENT),BUILTIN_CONTENT=lj(BUILTINKEY,EMPTY_CONTENT),PDC_DRILLS=lj(PDC_DRILLS_KEY,EMPTY_DRILLS);
 let DATA={},SCHED={plan:[],exams:[]},ORDER=[];
 function mergedSchedule(builtin,custom){
   const days=new Map(),exams=new Map();
@@ -335,8 +338,9 @@ function mergedSchedule(builtin,custom){
   return{plan:[...days.values()].sort((a,b)=>a.d.localeCompare(b.d)),exams:[...exams.values()]};
 }
 function prepareContent(){
-  DATA=Object.assign({},BUILTIN_CONTENT.subjects||{},CONTENT.subjects||{});SCHED=mergedSchedule(BUILTIN_CONTENT.schedule,CONTENT.schedule);ORDER=Object.keys(DATA);
-  for(const code of ORDER){const subj=DATA[code];subj.code=subj.code||code;subj.color=subj.color||"#38bdf8";subj.chapters=Array.isArray(subj.chapters)?subj.chapters:[];for(const ch of subj.chapters){ch.questions=Array.isArray(ch.questions)?ch.questions:[];ch.practice=Array.isArray(ch.practice)?ch.practice:[];if(ch.objectives&&ch.objectives.length)ch.lessons=ch.objectives.map(o=>({id:ch.id+"-"+String(o.num).replace(".","_"),num:o.num,label:o.label,questions:ch.questions.filter(q=>q.obj===o.num),notes:(ch.objNotes&&ch.objNotes[o.num])||null}));else if(!ch.questions.length&&ch.lessons)ch.questions=ch.lessons.flatMap(l=>l.questions||[]);}}
+  DATA=JSON.parse(JSON.stringify(Object.assign({},BUILTIN_CONTENT.subjects||{},CONTENT.subjects||{})));SCHED=mergedSchedule(BUILTIN_CONTENT.schedule,CONTENT.schedule);ORDER=Object.keys(DATA);
+  const pdc=DATA[PDC_DRILLS.subject];if(pdc&&PDC_DRILLS.chapters){for(const ch of(pdc.chapters||[])){const pack=PDC_DRILLS.chapters[ch.id];if(!pack)continue;ch.questions=Array.isArray(ch.questions)?ch.questions:[];const seen=new Set(ch.questions.map(q=>q.id));for(const q of(pack.questions||[]))if(!seen.has(q.id)){ch.questions.push(q);seen.add(q.id)}ch.sections=pack.sections||[];}}
+  for(const code of ORDER){const subj=DATA[code];subj.code=subj.code||code;subj.color=subj.color||"#38bdf8";subj.chapters=Array.isArray(subj.chapters)?subj.chapters:[];for(const ch of subj.chapters){ch.questions=Array.isArray(ch.questions)?ch.questions:[];ch.practice=Array.isArray(ch.practice)?ch.practice:[];if(ch.sections&&ch.sections.length){const byId=new Map(ch.questions.map(q=>[q.id,q]));ch.lessons=ch.sections.map(s=>({id:s.id,label:s.label,questions:(s.questionIds||[]).map(id=>byId.get(id)).filter(Boolean),notes:s.notes||null}))}else if(ch.objectives&&ch.objectives.length)ch.lessons=ch.objectives.map(o=>({id:ch.id+"-"+String(o.num).replace(".","_"),num:o.num,label:o.label,questions:ch.questions.filter(q=>q.obj===o.num),notes:(ch.objNotes&&ch.objNotes[o.num])||null}));else if(!ch.questions.length&&ch.lessons)ch.questions=ch.lessons.flatMap(l=>l.questions||[]);}}
 }
 prepareContent();
 function validateContent(raw){
@@ -366,15 +370,21 @@ function validateBuiltinFinals(raw){
   for(const code of BUILTIN_CODES){const subject=content.subjects[code],total=subject?.chapters?.reduce((n,ch)=>n+(ch.questions||[]).length,0)||0;if(!subject||subject.chapters.length!==3||total!==105)throw new Error(`حزمة ${code} غير مكتملة`);}
   return content;
 }
+function validatePdcDrills(raw){
+  if(!raw||raw.version!==2||raw.subject!=="CCCS422-FINAL"||!raw.chapters||!Array.isArray(raw.presets))throw new Error("حزمة تدريبات PDC غير صالحة");
+  const ids=new Set();for(const[chapterId,pack]of Object.entries(raw.chapters)){if(!Array.isArray(pack.sections)||!Array.isArray(pack.questions))throw new Error(`حزمة ${chapterId} ناقصة`);for(const q of pack.questions){if(!q.id||!q.q||ids.has(q.id)||!Array.isArray(q.choices)||q.choices.length<2||!Number.isInteger(q.answer)||q.answer<0||q.answer>=q.choices.length)throw new Error(`سؤال PDC غير صالح: ${q.id||"بدون id"}`);ids.add(q.id)}for(const s of pack.sections)if(!s.id||!s.label||!Array.isArray(s.questionIds)||!s.questionIds.length)throw new Error(`قسم PDC غير صالح في ${chapterId}`)}
+  return raw;
+}
 async function loadBuiltinFinals(){
   try{const response=await fetch(BUILTIN_CONTENT_URL,{cache:"no-store"});if(response.ok){BUILTIN_CONTENT=validateBuiltinFinals(await response.json());sv(BUILTINKEY,BUILTIN_CONTENT)}}catch(e){}
+  try{const response=await fetch(PDC_DRILLS_URL,{cache:"no-store"});if(response.ok){PDC_DRILLS=validatePdcDrills(await response.json());sv(PDC_DRILLS_KEY,PDC_DRILLS)}}catch(e){}
   prepareContent();
 }
 function replaceContent(raw){CONTENT=validateContent(raw);sv(CONTENTKEY,CONTENT);prepareContent();SETTINGS.hidden=[];saveSet();renderHome();}
 function downloadJSON(name,value){const blob=new Blob([JSON.stringify(value,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-let STORE=lj(SKEY,{q:{},star:{}}); if(!STORE.star)STORE.star={};
+let STORE=lj(SKEY,{q:{},star:{},tests:{},attempts:[]});if(!STORE.star)STORE.star={};if(!STORE.tests)STORE.tests={};if(!Array.isArray(STORE.attempts))STORE.attempts=[];
 let SETTINGS=Object.assign({includeExtra:true,goal:50,sound:false,sessionMins:20,fullscreen:true,hidden:[]},lj(SET,{}));
-if(SETTINGS.builtinFinalsBuild!=="2026-08-11-v1"){SETTINGS.hidden=(SETTINGS.hidden||[]).filter(code=>!BUILTIN_CODES.includes(code));SETTINGS.builtinFinalsBuild="2026-08-11-v1";sv(SET,SETTINGS)}
+if(SETTINGS.builtinFinalsBuild!=="2026-08-11-v2"){SETTINGS.hidden=(SETTINGS.hidden||[]).filter(code=>!BUILTIN_CODES.includes(code));SETTINGS.builtinFinalsBuild="2026-08-11-v2";sv(SET,SETTINGS)}
 let PLANDONE=lj(PKEY,{}); let DAILY=lj(DKEY,{dates:{}}); let SYNC=lj(SYNCKEY,{token:"",gistId:"",enabled:false});
 function saveStore(){sv(SKEY,STORE);schedulePush();} function saveSet(){sv(SET,SETTINGS);} function savePlan(){sv(PKEY,PLANDONE);schedulePush();} function saveDaily(){sv(DKEY,DAILY);schedulePush();}
 function qstate(id){return STORE.q[id]||(STORE.q[id]={box:1,seen:0,correct:0,wrong:0,due:0,last:0})}
@@ -390,6 +400,9 @@ function visLes(l){return SETTINGS.includeExtra?l.questions:l.questions.filter(q
 function lessonsOf(subj){return subj.chapters.filter(c=>c.lessons&&c.lessons.length)}
 function poolLessons(code,ids){const out=[];if(!ids)return out;for(const c of DATA[code].chapters)if(c.lessons)for(const l of c.lessons)if(ids.has(l.id))out.push(...visLes(l));return out}
 function lessonLabel(code,ids){const names=[];for(const c of lessonsOf(DATA[code]))for(const l of c.lessons)if(ids.has(l.id))names.push(l.label);return names.length<=2?names.join("، "):`${names.length} دروس مختارة`}
+function lessonById(code,id){for(const c of(DATA[code]?.chapters||[]))for(const l of(c.lessons||[]))if(l.id===id)return l;return null}
+function lessonForQuestion(code,id){for(const c of(DATA[code]?.chapters||[]))for(const l of(c.lessons||[]))if(l.questions.some(q=>q.id===id))return l;return null}
+function readiness(pct){if(pct>=90)return{cls:"ready",text:"متقن — جاهز"};if(pct>=80)return{cls:"near",text:"قريب جدًا"};if(pct>=70)return{cls:"near",text:"جيد، راجع الأخطاء"};return{cls:"review",text:"غير جاهز بعد"}}
 
 /* math */
 function escHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
@@ -442,8 +455,10 @@ function renderHome(){
       row.querySelector(".act-notes").onclick=e=>{e.stopPropagation();openNotes(code,c.id)};
       ch.appendChild(row);
       if(hasL){const sub=document.createElement("div");sub.className="lesson-sublist";
-        sub.innerHTML=c.lessons.map(l=>{const lm=lessonStats(l);const hasN=l.notes&&Object.values(l.notes).some(a=>a&&a.length);return `<div class="lrow" data-l="${l.id}"><span class="ldot" style="background:${subj.color}"></span><div class="lmain"><div class="ll ltr">${escHtml(l.label)}</div><div class="lc">${visLes(l).length} سؤال · أتقنت ${lm.mastered}${lm.weak?` · ⚠️ ${lm.weak}`:""}</div></div>${hasN?`<button class="act-lnote" data-ln="${l.id}" title="الناقص — مذاكرة يدوية">📝</button>`:""}<span class="lgo">▶</span></div>`}).join("");
-        sub.querySelectorAll(".lrow").forEach(lr=>lr.onclick=()=>startChapter(code,"__LESSONS__","all",new Set([lr.dataset.l])));
+        sub.innerHTML=c.lessons.map(l=>{const lm=lessonStats(l),last=STORE.tests[l.id],rd=last?readiness(last.pct):null;const hasN=l.notes&&Object.values(l.notes).some(a=>a&&a.length);return `<div class="lrow" data-l="${l.id}"><span class="ldot" style="background:${subj.color}"></span><div class="lmain"><div class="ll" dir="auto">${escHtml(l.label)}</div><div class="lc">${visLes(l).length} سؤال · أتقنت ${lm.mastered}${lm.weak?` · ⚠️ ${lm.weak}`:""}</div>${last?`<span class="testscore ${rd.cls}">آخر اختبار ${last.pct}%</span>`:""}</div><div class="lmodes"><button class="lmode act-learn" title="حفظ بالاختيارات">🧠 حفظ</button><button class="lmode act-test" title="اختبار تقييم بلا تصحيح فوري">⚡ اختبار</button>${hasN?`<button class="lmode act-lnote" data-ln="${l.id}" title="الناقص — مذاكرة يدوية">📝</button>`:""}</div></div>`}).join("");
+        sub.querySelectorAll(".lmain").forEach(main=>main.onclick=()=>startChapter(code,"__LESSONS__","learn",new Set([main.closest(".lrow").dataset.l])));
+        sub.querySelectorAll(".act-learn").forEach(b=>b.onclick=e=>{e.stopPropagation();startChapter(code,"__LESSONS__","learn",new Set([b.closest(".lrow").dataset.l]))});
+        sub.querySelectorAll(".act-test").forEach(b=>b.onclick=e=>{e.stopPropagation();startLessonTest(code,b.closest(".lrow").dataset.l)});
         sub.querySelectorAll(".act-lnote").forEach(nb=>nb.onclick=e=>{e.stopPropagation();const les=c.lessons.find(x=>x.id===nb.dataset.ln);openLessonNotes(les,subjName(code))});
         ch.appendChild(sub);
         row.querySelector(".act-lessons").onclick=e=>{e.stopPropagation();const open=sub.classList.toggle("open");const b=e.currentTarget;b.textContent=open?"▴":"▾";b.classList.toggle("on",open)};
@@ -493,7 +508,7 @@ function startStarred(){const items=[];for(const code of ORDER)for(const c of DA
 function launch(items,meta){
   S=Object.assign({cards:buildCards(items),step:0,prevId:null,answered:false,cur:null,shuf:null,correctIdx:-1,stats:{good:0,bad:0,streak:0}},meta);
   $("#sSubject").textContent=meta.subject;$("#sChapter").textContent=meta.label?"· "+meta.label:"";
-  const mf=$("#modeFlag");if(meta.mode==="review"){mf.style.display="";mf.className="modeflag rev";mf.textContent="⚠️ مراجعة الغلطات"}else if(meta.mode==="practice"){mf.style.display="";mf.className="modeflag prac";mf.textContent="🧮 مسائل"}else if(meta.mode==="star"){mf.style.display="";mf.className="modeflag star";mf.textContent="⭐ المميّزة"}else if(meta.mode==="due"){mf.style.display="";mf.className="modeflag prac";mf.textContent="🔁 مراجعة مستحقّة"}else mf.style.display="none";
+  const mf=$("#modeFlag");if(meta.mode==="review"){mf.style.display="";mf.className="modeflag rev";mf.textContent="⚠️ مراجعة الغلطات"}else if(meta.mode==="practice"){mf.style.display="";mf.className="modeflag prac";mf.textContent="🧮 مسائل"}else if(meta.mode==="learn"){mf.style.display="";mf.className="modeflag prac";mf.textContent="🧠 حفظ · مرتان صحيحتان"}else if(meta.mode==="star"){mf.style.display="";mf.className="modeflag star";mf.textContent="⭐ المميّزة"}else if(meta.mode==="due"){mf.style.display="";mf.className="modeflag prac";mf.textContent="🔁 مراجعة مستحقّة"}else mf.style.display="none";
   $("#accentbar").style.background=meta.color;document.documentElement.style.setProperty("--accent",meta.color);
   $("#notesBtn").style.display=((meta.scope&&!meta.scope.startsWith("__"))||(meta.lesson&&meta.lesson.notes))?"":"none";
   show("session");
@@ -514,7 +529,7 @@ function nextCard(){
   const ch=$("#choices");
   if(isMatch){ch.style.display="none";$("#kbdHint").style.display="none";renderMatch(card)}
   else if(practice){ch.style.display="none";$("#kbdHint").style.display="none";$("#revealbar").classList.add("show")}
-  else{ch.style.display="";$("#kbdHint").style.display="";ch.innerHTML="";const order=shuffle(card.choices.map((_,i)=>i));S.shuf=order.map(i=>card.choices[i]);S.correctIdx=order.indexOf(card.answer);const K=["A","B","C","D"];S.shuf.forEach((t,i)=>{const b=document.createElement("button");b.className="choice";b.dataset.i=i;b.innerHTML=`<span class="key">${K[i]}</span><span class="ctxt ltr">${mathToHtml(t)}</span>`;b.onclick=()=>answer(i);ch.appendChild(b)})}
+  else{ch.style.display="";$("#kbdHint").style.display="";ch.innerHTML="";const order=shuffle(card.choices.map((_,i)=>i));S.shuf=order.map(i=>card.choices[i]);S.correctIdx=order.indexOf(card.answer);const K=["A","B","C","D"];S.shuf.forEach((t,i)=>{const b=document.createElement("button");b.className="choice";b.dataset.i=i;b.innerHTML=`<span class="key">${K[i]}</span><span class="ctxt" dir="auto">${mathToHtml(t)}</span>`;b.onclick=()=>answer(i);ch.appendChild(b)})}
   updatePills()
 }
 function renderMatch(card){
@@ -556,7 +571,7 @@ function gradeMatch(card){
 function renderBoxdots(box){const h=$("#boxdots");h.innerHTML="";for(let i=1;i<=5;i++){const d=document.createElement("i");if(i<=box)d.className="on";h.appendChild(d)}}
 function feedback(ok){try{if(navigator.vibrate)navigator.vibrate(ok?15:[20,40,20]);}catch(e){}if(SETTINGS.sound)beep(ok)}
 let AC;function beep(ok){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.frequency.value=ok?660:200;g.gain.value=.05;o.start();g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+.18);o.stop(AC.currentTime+.19)}catch(e){}}
-function applyGrade(card,correct){const st=qstate(card.id);st.seen++;S.step++;card.sess=(card.sess||0)+1;if(correct){card.box=Math.min(5,card.box+1);card.dueStep=S.step+GAPS[card.box]+Math.floor(Math.random()*3);st.correct++;S.stats.good++;S.stats.streak++}else{card.box=1;card.dueStep=S.step+2+Math.floor(Math.random()*2);st.wrong++;S.stats.bad++;S.stats.streak=0}st.box=card.box;const now=Date.now();st.last=now;st.due=now+(correct?GAPS[card.box]:1)*DAYMS;if(card.sess>=SESSION_CAP)card.done=true;saveStore();bumpDaily();renderBoxdots(card.box);feedback(correct)}
+function applyGrade(card,correct){const st=qstate(card.id);st.seen++;S.step++;card.sess=(card.sess||0)+1;if(correct){card.box=Math.min(5,card.box+1);card.dueStep=S.step+GAPS[card.box]+Math.floor(Math.random()*3);st.correct++;S.stats.good++;S.stats.streak++;card.learnStreak=(card.learnStreak||0)+1}else{card.box=1;card.dueStep=S.step+2+Math.floor(Math.random()*2);st.wrong++;S.stats.bad++;S.stats.streak=0;card.learnStreak=0}st.box=card.box;const now=Date.now();st.last=now;st.due=now+(correct?GAPS[card.box]:1)*DAYMS;if(S.mode==="learn"){if(card.learnStreak>=2||card.sess>=7)card.done=true}else if(card.sess>=SESSION_CAP)card.done=true;saveStore();bumpDaily();renderBoxdots(card.box);feedback(correct)}
 function answer(i){if(S.answered)return;S.answered=true;const card=S.cur,correct=(i===S.correctIdx);applyGrade(card,correct);[...document.querySelectorAll(".choice")].forEach((b,bi)=>{b.disabled=true;if(bi===S.correctIdx)b.classList.add("correct");else if(bi===i)b.classList.add("wrong");else b.classList.add("dim")});if(card.explanation){$("#explainTxt").innerHTML=mathToHtml(card.explanation);$("#explain").classList.add("show")}const v=$("#verdict");v.className="verdict "+(correct?"good":"bad");v.textContent=correct?"✓ صحيح":"✗ غلط";$("#nextbar").classList.add("show");S.prevId=card.id;updatePills();setTimeout(()=>{try{$("#nextBtn").scrollIntoView({behavior:"smooth",block:"nearest"})}catch(_){}},60)}
 function revealSolution(){if(S.answered)return;const card=S.cur;$("#explainTxt").innerHTML="<b>الحل:</b> "+mathToHtml(card.solution);$("#explain").classList.add("show");$("#revealbar").classList.remove("show");$("#gradebar").classList.add("show")}
 function gradePractice(correct){if(S.answered)return;S.answered=true;applyGrade(S.cur,correct);$("#gradebar").classList.remove("show");const v=$("#verdict");v.className="verdict "+(correct?"good":"bad");v.textContent=correct?"✓ عرفته":"✗ راجعه";$("#nextbar").classList.add("show");S.prevId=S.cur.id;updatePills()}
@@ -584,17 +599,21 @@ document.addEventListener("visibilitychange",()=>{if(!document.hidden&&document.
 let Mk=null,mkInt=null;
 function openMock(){show("mock");$("#mockRun").style.display="none";$("#mockResult").style.display="none";$("#mockSetup").style.display="";$("#mockTimer").style.display="none";if(!ORDER.length){$("#mockSetup").innerHTML='<div class="emptymsg"><div class="big">📚</div><div>استورد محتواك الدراسي أولاً من الإعدادات.</div></div>';return}renderMockSetup()}
 let mkSel={code:null,scope:"__ALL__",count:20,timed:true,lessonIds:new Set()};
+function presetTotal(p){return p.count||(p.parts||[]).reduce((n,x)=>n+x.count,0)}
 function renderMockSetup(){
   const h=$("#mockSetup");
   const vo=visibleOrder();if(!vo.includes(mkSel.code))mkSel.code=vo[0];
   const subs=vo.map(c=>`<button data-c="${c}" class="${mkSel.code===c?"sel":""}">${subjName(c)}</button>`).join("");
   const hasLessons=lessonsOf(DATA[mkSel.code]).length>0;
   const chs=`<button data-s="__ALL__" class="${mkSel.scope==="__ALL__"?"sel":""}">كل المادة</button>`+DATA[mkSel.code].chapters.map(c=>`<button data-s="${c.id}" class="${mkSel.scope===c.id?"sel":""}">${escHtml(c.label.replace(/·.*/,"").trim())}</button>`).join("")+(hasLessons?`<button data-s="__LESSONS__" class="${mkSel.scope==="__LESSONS__"?"sel":""}">🧩 دروس مخصّصة</button>`:"");
-  const cnts=[10,20,30].map(n=>`<button data-n="${n}" class="${mkSel.count===n?"sel":""}">${n} سؤال</button>`).join("");
-  h.innerHTML=`<div class="note-intro">امتحان مؤقّت بدون تصحيح فوري — النتيجة والمراجعة في النهاية.</div>
+  const cnts=[5,10,20,30,40].map(n=>`<button data-n="${n}" class="${mkSel.count===n?"sel":""}">${n} سؤال</button>`).join("");
+  const presets=mkSel.code===PDC_DRILLS.subject?(PDC_DRILLS.presets||[]):[];const presetHtml=presets.length?`<div class="sec"><h3>اختبارات جاهزة حسب أهمية الفاينل</h3><div class="presetgrid">${presets.map(p=>`<button class="preset" data-preset="${p.id}"><b>${escHtml(p.label)}</b><small>${escHtml(p.description)} · ${presetTotal(p)} سؤال</small></button>`).join("")}</div></div>`:"";
+  const attempts=(STORE.attempts||[]).filter(a=>a.code===mkSel.code).slice(0,5);const attemptsHtml=attempts.length?`<div class="sec"><h3>آخر محاولاتك</h3>${attempts.map(a=>{const rd=readiness(a.pct);return `<div class="attempt"><span>${escHtml(a.label)}</span><span class="${rd.cls}">${rd.text}</span><span class="apct" style="color:${a.pct>=90?'var(--good)':a.pct>=70?'#facc15':'var(--bad)'}">${a.pct}%</span></div>`}).join("")}</div>`:"";
+  h.innerHTML=`<div class="note-intro">الاختبار لا يعرض التصحيح أثناء الحل. في النهاية تحصل على النتيجة، تقييم الجاهزية، وتحليل كل قسم.</div>${presetHtml}
     <div class="sec"><h3>المادة</h3><div class="mockopt" id="mkSubs">${subs}</div><h3>النطاق</h3><div class="mockopt" id="mkChs">${chs}</div>${mkSel.scope==="__LESSONS__"?`<div id="mkLessons"></div>`:""}<h3>عدد الأسئلة</h3><div class="mockopt" id="mkCnts">${cnts}</div>
     <div class="setrow" style="margin-top:6px"><span class="lab">مؤقّت (دقيقة/سؤال)</span><button class="switch ${mkSel.timed?"on":""}" id="mkTimed"></button></div>
-    <button class="btn" id="mkStart" style="margin-top:8px">ابدأ الامتحان 🎯</button></div>`;
+    <button class="btn" id="mkStart" style="margin-top:8px">ابدأ الامتحان 🎯</button></div>${attemptsHtml}`;
+  h.querySelectorAll("[data-preset]").forEach(b=>b.onclick=()=>startPreset(b.dataset.preset));
   h.querySelectorAll("#mkSubs button").forEach(b=>b.onclick=()=>{mkSel.code=b.dataset.c;mkSel.scope="__ALL__";mkSel.lessonIds=new Set();renderMockSetup()});
   h.querySelectorAll("#mkChs button").forEach(b=>b.onclick=()=>{mkSel.scope=b.dataset.s;renderMockSetup()});
   h.querySelectorAll("#mkCnts button").forEach(b=>b.onclick=()=>{mkSel.count=+b.dataset.n;renderMockSetup()});
@@ -602,26 +621,33 @@ function renderMockSetup(){
   $("#mkStart").onclick=startMock;
   if(mkSel.scope==="__LESSONS__"){const ml=$("#mkLessons");ml.innerHTML=lessonPickerHtml(mkSel.code,mkSel.lessonIds,{noStart:true});wireLessonPicker(ml,mkSel.code,mkSel.lessonIds,renderMockSetup)}
 }
+function launchMockPool(pool,meta){
+  pool=pool.filter(q=>q&&q.choices);if(!pool.length){alert("لا توجد أسئلة اختيارية في هذا النطاق");return}
+  Mk={items:pool.map(q=>{const o=shuffle(q.choices.map((_,i)=>i));return{q,shuf:o.map(i=>q.choices[i]),correct:o.indexOf(q.answer),pick:-1}}),idx:0,color:DATA[meta.code]?.color||"#38bdf8",secLeft:meta.timed?pool.length*60:0,timed:meta.timed,code:meta.code,label:meta.label||"اختبار مخصص",lessonIds:meta.lessonIds||[],presetId:meta.presetId||null};
+  show("mock");$("#mockSetup").style.display="none";$("#mockResult").style.display="none";$("#mockRun").style.display="";$("#mkAccent").style.background=Mk.color;
+  if(Mk.timed){$("#mockTimer").style.display="";tickMock()}else $("#mockTimer").style.display="none";renderMockQ()
+}
 function startMock(){
   let pool=mkSel.scope==="__ALL__"?DATA[mkSel.code].chapters.flatMap(visQ):mkSel.scope==="__LESSONS__"?poolLessons(mkSel.code,mkSel.lessonIds):visQ(chapterById(mkSel.code,mkSel.scope));
   pool=pool.filter(q=>q.choices);
   if(!pool.length){alert("اختر درس واحد على الأقل");return}
   pool=shuffle(pool).slice(0,Math.min(mkSel.count,pool.length));
-  Mk={items:pool.map(q=>{const o=shuffle(q.choices.map((_,i)=>i));return{q,shuf:o.map(i=>q.choices[i]),correct:o.indexOf(q.answer),pick:-1}}),idx:0,color:DATA[mkSel.code].color,secLeft:mkSel.timed?pool.length*60:0,timed:mkSel.timed};
-  $("#mockSetup").style.display="none";$("#mockResult").style.display="none";$("#mockRun").style.display="";$("#mkAccent").style.background=Mk.color;
-  if(Mk.timed){$("#mockTimer").style.display="";tickMock()}else $("#mockTimer").style.display="none";
-  renderMockQ()
+  const label=mkSel.scope==="__ALL__"?"كل المادة":mkSel.scope==="__LESSONS__"?lessonLabel(mkSel.code,mkSel.lessonIds):chapterById(mkSel.code,mkSel.scope).label;
+  launchMockPool(pool,{code:mkSel.code,label,lessonIds:[...mkSel.lessonIds],timed:mkSel.timed})
 }
+function startLessonTest(code,lessonId){const lesson=lessonById(code,lessonId);if(!lesson)return;const pool=shuffle(visLes(lesson).filter(q=>q.choices)).slice(0,10);launchMockPool(pool,{code,label:"اختبار القسم · "+lesson.label,lessonIds:[lessonId],timed:true})}
+function startPreset(id){const p=(PDC_DRILLS.presets||[]).find(x=>x.id===id);if(!p)return;const code=PDC_DRILLS.subject;let pool=[];if(p.parts){for(const part of p.parts){const ch=chapterById(code,part.chapterId);if(ch)pool.push(...shuffle(visQ(ch).filter(q=>q.choices)).slice(0,part.count))}}else if(p.lessonIds){pool=shuffle(poolLessons(code,new Set(p.lessonIds)).filter(q=>q.choices)).slice(0,p.count)}mkSel.code=code;launchMockPool(shuffle(pool),{code,label:p.label,lessonIds:p.lessonIds||[],presetId:p.id,timed:p.timed!==false})}
 function tickMock(){clearInterval(mkInt);mkInt=setInterval(()=>{Mk.secLeft--;const m=Math.floor(Mk.secLeft/60),s=Mk.secLeft%60;$("#mockTimer").textContent=`⏱ ${m}:${String(s).padStart(2,"0")}`;if(Mk.secLeft<=0){clearInterval(mkInt);finishMock()}},1000);const m=Math.floor(Mk.secLeft/60);$("#mockTimer").textContent=`⏱ ${m}:00`}
-function renderMockQ(){const it=Mk.items[Mk.idx];$("#mkPos").textContent=(Mk.idx+1)+"/"+Mk.items.length;$("#mkLeft").textContent=(Mk.items.length-Mk.idx-1);$("#mkFill").style.width=(Mk.idx/Mk.items.length*100)+"%";$("#mkQ").innerHTML=mathToHtml(it.q.q);const ch=$("#mkChoices");ch.innerHTML="";const K=["A","B","C","D"];it.shuf.forEach((t,i)=>{const b=document.createElement("button");b.className="choice"+(it.pick===i?" correct":"");b.innerHTML=`<span class="key">${K[i]}</span><span class="ctxt ltr">${mathToHtml(t)}</span>`;b.onclick=()=>{it.pick=i;renderMockQ()};ch.appendChild(b)});$("#mkNext").textContent=Mk.idx===Mk.items.length-1?"إنهاء ✓":"التالي ↵"}
+function renderMockQ(){const it=Mk.items[Mk.idx];$("#mkPos").textContent=(Mk.idx+1)+"/"+Mk.items.length;$("#mkLeft").textContent=(Mk.items.length-Mk.idx-1);$("#mkFill").style.width=(Mk.idx/Mk.items.length*100)+"%";$("#mkQ").innerHTML=mathToHtml(it.q.q);const ch=$("#mkChoices");ch.innerHTML="";const K=["A","B","C","D"];it.shuf.forEach((t,i)=>{const b=document.createElement("button");b.className="choice"+(it.pick===i?" correct":"");b.innerHTML=`<span class="key">${K[i]}</span><span class="ctxt" dir="auto">${mathToHtml(t)}</span>`;b.onclick=()=>{it.pick=i;renderMockQ()};ch.appendChild(b)});$("#mkNext").textContent=Mk.idx===Mk.items.length-1?"إنهاء ✓":"التالي ↵"}
 function mockNext(){if(Mk.idx<Mk.items.length-1){Mk.idx++;renderMockQ()}else finishMock()}
-function finishMock(){clearInterval(mkInt);$("#mockTimer").style.display="none";let correct=0;Mk.items.forEach(it=>{const ok=it.pick===it.correct;if(ok)correct++;const st=qstate(it.q.id);st.seen++;if(ok){st.correct++;st.box=Math.min(5,(st.box||1)+1)}else{st.wrong++;st.box=1}st.last=Date.now();st.due=Date.now()+(ok?GAPS[st.box]:1)*DAYMS});saveStore();bumpDaily();
-  const pct=Math.round(correct/Mk.items.length*100);$("#mockRun").style.display="none";const r=$("#mockResult");r.style.display="";
-  let list=Mk.items.map((it,i)=>{const ok=it.pick===it.correct;const yourTxt=it.pick>=0?it.shuf[it.pick]:"— (تُرك)";return `<div class="srchres"><div class="sq ltr">${i+1}. ${mathToHtml(it.q.q)}</div><div class="meta" style="color:${ok?"var(--good)":"var(--bad)"}">${ok?"✓ صح":"✗ غلط"} — إجابتك: <span class="ltr">${mathToHtml(yourTxt)}</span></div>${ok?"":`<div class="sa" style="display:block">✓ الصحيح: <span class="ltr">${mathToHtml(it.q.choices[it.q.answer])}</span>${it.q.explanation?" — "+mathToHtml(it.q.explanation):""}</div>`}</div>`}).join("");
-  r.innerHTML=`<div class="sec" style="text-align:center"><div style="font-size:2.6rem;font-weight:800;color:${pct>=60?"var(--good)":"var(--bad)"}">${pct}%</div><div style="color:var(--muted)">${correct} من ${Mk.items.length} صحيحة</div><div class="setrow" style="justify-content:center;margin-top:14px"><button class="sbtn primary" id="mkReview">⚠️ راجع الغلطات</button><button class="sbtn" id="mkAgain">🔁 موك جديد</button></div></div><h3 style="margin:6px 2px">المراجعة</h3>${list}`;
-  $("#mkAgain").onclick=openMock;
+function finishMock(){clearInterval(mkInt);$("#mockTimer").style.display="none";let correct=0;const groups=new Map();Mk.items.forEach(it=>{const ok=it.pick===it.correct;if(ok)correct++;const st=qstate(it.q.id);st.seen++;if(ok){st.correct++;st.box=Math.min(5,(st.box||1)+1)}else{st.wrong++;st.box=1}st.last=Date.now();st.due=Date.now()+(ok?GAPS[st.box]:1)*DAYMS;const lesson=lessonForQuestion(Mk.code,it.q.id),key=lesson?.id||"other",g=groups.get(key)||{label:lesson?.label||"أسئلة عامة",correct:0,total:0};g.total++;if(ok)g.correct++;groups.set(key,g)});
+  const pct=Math.round(correct/Mk.items.length*100),rd=readiness(pct),attempt={id:"a"+Date.now(),at:new Date().toISOString(),code:Mk.code,label:Mk.label,pct,correct,total:Mk.items.length,lessonIds:Mk.lessonIds,presetId:Mk.presetId};STORE.attempts.unshift(attempt);STORE.attempts=STORE.attempts.slice(0,100);if(Mk.lessonIds.length===1)STORE.tests[Mk.lessonIds[0]]={pct,correct,total:Mk.items.length,at:attempt.at};saveStore();bumpDaily();$("#mockRun").style.display="none";const r=$("#mockResult");r.style.display="";
+  const breakdown=[...groups.values()].map(g=>{const p=Math.round(g.correct/g.total*100);return `<div><b dir="auto">${escHtml(g.label)}</b><br><span style="color:${p>=90?'var(--good)':p>=70?'#facc15':'var(--bad)'}">${g.correct}/${g.total} · ${p}%</span></div>`}).join("");
+  let list=Mk.items.map((it,i)=>{const ok=it.pick===it.correct;const yourTxt=it.pick>=0?it.shuf[it.pick]:"— (تُرك)";return `<div class="srchres"><div class="sq" dir="auto">${i+1}. ${mathToHtml(it.q.q)}</div><div class="meta" style="color:${ok?"var(--good)":"var(--bad)"}">${ok?"✓ صح":"✗ غلط"} — إجابتك: <span dir="auto">${mathToHtml(yourTxt)}</span></div>${ok?"":`<div class="sa" style="display:block" dir="auto">✓ الصحيح: ${mathToHtml(it.q.choices[it.q.answer])}${it.q.explanation?" — "+mathToHtml(it.q.explanation):""}</div>`}</div>`}).join("");
+  r.innerHTML=`<div class="sec" style="text-align:center"><div style="font-size:2.6rem;font-weight:800;color:${pct>=90?"var(--good)":pct>=70?"#facc15":"var(--bad)"}">${pct}%</div><div style="color:var(--muted)">${correct} من ${Mk.items.length} صحيحة</div><div class="readiness ${rd.cls}">${rd.text}</div><div class="breakdown">${breakdown}</div><div class="setrow" style="justify-content:center;margin-top:14px"><button class="sbtn primary" id="mkReview">⚠️ راجع الغلطات</button><button class="sbtn" id="mkAgain">🔁 أعد الاختبار</button></div></div><h3 style="margin:6px 2px">المراجعة</h3>${list}`;
+  $("#mkAgain").onclick=()=>Mk.presetId?startPreset(Mk.presetId):(Mk.lessonIds.length===1?startLessonTest(Mk.code,Mk.lessonIds[0]):openMock());
   const wrong=Mk.items.filter(it=>it.pick!==it.correct).map(it=>it.q);
-  const rb=$("#mkReview");if(!wrong.length){rb.style.display="none"}else rb.onclick=()=>launch(wrong,{code:mkSel.code,scope:"__MOCKREV__",mode:"review",color:Mk.color,subject:subjName(mkSel.code),label:"غلطات الموك"});
+  const rb=$("#mkReview");if(!wrong.length){rb.style.display="none"}else rb.onclick=()=>launch(wrong,{code:Mk.code,scope:"__MOCKREV__",mode:"review",color:Mk.color,subject:subjName(Mk.code),label:"غلطات الاختبار"});
 }
 
 /* ===== WEAK ===== */
@@ -645,7 +671,7 @@ async function decJSON(b64,secret){const k=await aesKey(secret);const raw=Uint8A
 function ghH(){return{Authorization:"Bearer "+SYNC.token,Accept:"application/vnd.github+json","Content-Type":"application/json"}}
 async function ensureGist(){if(SYNC.gistId)return SYNC.gistId;const r=await fetch("https://api.github.com/gists?per_page=100",{headers:ghH(),cache:"no-store"});if(!r.ok)throw new Error("قراءة Gists فشلت ("+r.status+")");const gs=await r.json();const ms=gs.filter(x=>x.files&&x.files["studyflow-progress.json"]).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));if(ms.length){SYNC.gistId=ms[0].id;sv(SYNCKEY,SYNC);return ms[0].id}const cr=await fetch("https://api.github.com/gists",{method:"POST",headers:ghH(),body:JSON.stringify({description:"StudyFlow progress (encrypted)",public:false,files:{"studyflow-progress.json":{content:"{}"}}})});if(!cr.ok){let m=cr.status;try{const j=await cr.json();if(j.message)m+=" — "+j.message;}catch(e){}throw new Error("إنشاء Gist فشل ("+m+"). يحتاج Classic token بصلاحية gist");}const ng=await cr.json();SYNC.gistId=ng.id;sv(SYNCKEY,SYNC);return ng.id}
 function payload(){return{store:STORE,plan:PLANDONE,daily:DAILY,_at:Date.now()}}
-function mergeRemote(d){if(!d)return;if(d.store&&d.store.q){for(const id in d.store.q){const r=d.store.q[id],l=STORE.q[id];if(!l||(r.seen||0)>(l.seen||0))STORE.q[id]=r}if(d.store.star)STORE.star=Object.assign({},d.store.star,STORE.star)}if(d.plan)PLANDONE=Object.assign({},d.plan,PLANDONE);if(d.daily&&d.daily.dates){for(const dt in d.daily.dates)DAILY.dates[dt]=Math.max(DAILY.dates[dt]||0,d.daily.dates[dt])}sv(SKEY,STORE);sv(PKEY,PLANDONE);sv(DKEY,DAILY)}
+function mergeRemote(d){if(!d)return;if(d.store&&d.store.q){for(const id in d.store.q){const r=d.store.q[id],l=STORE.q[id];if(!l||(r.seen||0)>(l.seen||0))STORE.q[id]=r}if(d.store.star)STORE.star=Object.assign({},d.store.star,STORE.star);if(d.store.tests)for(const[id,t]of Object.entries(d.store.tests)){if(!STORE.tests[id]||String(t.at||"")>String(STORE.tests[id].at||""))STORE.tests[id]=t}if(Array.isArray(d.store.attempts)){const byId=new Map([...(d.store.attempts||[]),...(STORE.attempts||[])].map(a=>[a.id,a]));STORE.attempts=[...byId.values()].sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0,100)}}if(d.plan)PLANDONE=Object.assign({},d.plan,PLANDONE);if(d.daily&&d.daily.dates){for(const dt in d.daily.dates)DAILY.dates[dt]=Math.max(DAILY.dates[dt]||0,d.daily.dates[dt])}sv(SKEY,STORE);sv(PKEY,PLANDONE);sv(DKEY,DAILY)}
 async function syncPush(){if(!SYNC.enabled||!SYNC.token)return;setSyncDot("جارٍ");try{const id=await ensureGist();const blob=await encJSON(payload(),SYNC.token);const r=await fetch("https://api.github.com/gists/"+id,{method:"PATCH",headers:ghH(),body:JSON.stringify({files:{"studyflow-progress.json":{content:blob}}})});syncStat(r.ok?"تمت المزامنة ✓":"تعذّر الحفظ")}catch(e){syncStat("تعذّر الحفظ (تحقّق من التوكن)")}}
 async function syncPull(){if(!SYNC.enabled||!SYNC.token)return;setSyncDot("جارٍ");try{
   const r=await fetch("https://api.github.com/gists?per_page=100",{headers:ghH(),cache:"no-store"});if(!r.ok){syncStat("تعذّر الجلب ("+r.status+")");return}
@@ -688,10 +714,10 @@ $("#soundSwitch").onclick=()=>{SETTINGS.sound=!SETTINGS.sound;saveSet();$("#soun
 $("#icsBtn").onclick=()=>downloadICS($("#icsTime").value||"19:00");
 $("#exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify({store:STORE,plan:PLANDONE,daily:DAILY,settings:SETTINGS,_app:"StudyFlow"},null,1)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="studyflow-progress.json";a.click()};
 $("#importBtn").onclick=()=>$("#importFile").click();
-$("#importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(d.store)STORE=d.store;if(!STORE.star)STORE.star={};if(d.plan)PLANDONE=d.plan;if(d.daily)DAILY=d.daily;if(d.settings)SETTINGS=Object.assign(SETTINGS,d.settings);sv(SKEY,STORE);sv(PKEY,PLANDONE);sv(DKEY,DAILY);saveSet();alert("تم الاسترجاع ✓");renderHome();show("home")}catch(e){alert("ملف غير صالح")}};r.readAsText(f)};
+$("#importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(d.store)STORE=d.store;if(!STORE.star)STORE.star={};if(!STORE.tests)STORE.tests={};if(!Array.isArray(STORE.attempts))STORE.attempts=[];if(d.plan)PLANDONE=d.plan;if(d.daily)DAILY=d.daily;if(d.settings)SETTINGS=Object.assign(SETTINGS,d.settings);sv(SKEY,STORE);sv(PKEY,PLANDONE);sv(DKEY,DAILY);saveSet();alert("تم الاسترجاع ✓");renderHome();show("home")}catch(e){alert("ملف غير صالح")}};r.readAsText(f)};
 $("#setPassBtn").onclick=()=>{const v=$("#setPass").value.trim();if(!v){alert("اكتب رمز");return}localStorage.setItem(PASS,v);$("#setPass").value="";$("#lockStatus").textContent="مُفعّل ✓";alert("تم")};
 $("#clearPassBtn").onclick=()=>{localStorage.removeItem(PASS);$("#lockStatus").textContent="مطفّأ";alert("أُلغي")};
-$("#resetAll2").onclick=()=>{if(!confirm("تصفير كل التقدّم؟"))return;STORE={q:{},star:{}};sv(SKEY,STORE);DAILY={dates:{}};sv(DKEY,DAILY);alert("تم");renderHome()};
+$("#resetAll2").onclick=()=>{if(!confirm("تصفير كل التقدّم؟"))return;STORE={q:{},star:{},tests:{},attempts:[]};sv(SKEY,STORE);DAILY={dates:{}};sv(DKEY,DAILY);alert("تم");renderHome()};
 $("#syncOn").onclick=async()=>{const t=$("#ghToken").value.trim();if(!t){alert("الصق التوكن");return}SYNC.token=t;SYNC.enabled=true;SYNC.gistId="";sv(SYNCKEY,SYNC);syncStat("جارٍ التفعيل…");try{await ensureGist();await syncPull();await syncPush();syncStat("مُفعّلة ومُزامَنة ✓");renderHome()}catch(e){SYNC.enabled=false;sv(SYNCKEY,SYNC);syncStat("فشل: "+e.message)}};
 $("#syncOff").onclick=()=>{SYNC.enabled=false;sv(SYNCKEY,SYNC);syncStat("مطفّأة")};
 $("#syncNow").onclick=async()=>{syncStat("جارٍ…");await syncPull();await syncPush();renderHome()};
