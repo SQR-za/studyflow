@@ -431,6 +431,7 @@
             {
               "type": "match",
               "q": "Match each collective to where its result lands.",
+              "q_ar": "صِل كل collective بالمكان الذي تصل إليه نتيجته.",
               "pairs": [
                 [
                   "MPI_Reduce",
@@ -453,6 +454,13 @@
                   "One process gets the concatenation"
                 ]
               ],
+              "pairHints_ar": [
+                "قارنها بنسخة Allreduce وراقب argument الخاص بالـ root.",
+                "كلمة All هي المفتاح؛ قارنها بـ Reduce.",
+                "تخيّل عملية one-to-many تبدأ من root.",
+                "تخيّل توزيع بطاقات مختلفة من رزمة واحدة.",
+                "اعكس صورة Scatter ذهنيًا."
+              ],
               "explanation": "Each collective moves data to a different set of processes.",
               "src": "exam",
               "id": "cccs422-final-t6-q31"
@@ -460,6 +468,7 @@
             {
               "type": "match",
               "q": "Match each core MPI function to its purpose.",
+              "q_ar": "صِل كل دالة MPI أساسية بوظيفتها.",
               "pairs": [
                 [
                   "MPI_Init",
@@ -482,6 +491,13 @@
                   "Returns the current time as a double"
                 ]
               ],
+              "pairHints_ar": [
+                "تأتي قبل أي استدعاء MPI فعلي.",
+                "تأتي عند نهاية عمل برنامج MPI.",
+                "لا تخلط بين size وrank؛ المطلوب هنا قيمة تصف المجموعة.",
+                "ابحث عن هوية process الحالية، لا حجم المجموعة.",
+                "تُستخدم عادةً عند قياس performance."
+              ],
               "explanation": "The six core functions plus the timing routine.",
               "src": "exam",
               "id": "cccs422-final-t6-q32"
@@ -489,6 +505,7 @@
             {
               "type": "match",
               "q": "Match each derived-type constructor to its description.",
+              "q_ar": "صِل كل مُنشئ derived datatype بوصفه.",
               "pairs": [
                 [
                   "MPI_Type_contiguous",
@@ -507,6 +524,12 @@
                   "Irregular blocks of possibly different types"
                 ]
               ],
+              "pairHints_ar": [
+                "الاسم يوحي بعناصر متجاورة بلا فجوات.",
+                "تذكّر argument باسم stride.",
+                "فكّر في arrays للأطوال والإزاحات.",
+                "هو الأكثر مرونة عند تمثيل سجل مركّب."
+              ],
               "explanation": "MPI datatype constructors from simplest to richest.",
               "src": "exam",
               "id": "cccs422-final-t6-q33"
@@ -514,6 +537,7 @@
             {
               "type": "match",
               "q": "Match each blocking or wildcard concept to its rule.",
+              "q_ar": "صِل كل مفهوم blocking أو wildcard بقاعدته.",
               "pairs": [
                 [
                   "MPI_Recv",
@@ -532,6 +556,12 @@
                   "Reveals sender and tag after a wildcard receive"
                 ]
               ],
+              "pairHints_ar": [
+                "فكّر في الشرط الذي يجب تحققه قبل أن يواصل المستقبِل.",
+                "السلوك قد يتغيّر بحسب توفر buffering.",
+                "يُكتب مكان source لدى الطرف المستقبِل.",
+                "افحص هذا الكائن بعد الاستقبال لمعرفة metadata."
+              ],
               "explanation": "Point-to-point semantics and wildcard rules.",
               "src": "exam",
               "id": "cccs422-final-t6-q34"
@@ -539,6 +569,7 @@
             {
               "type": "match",
               "q": "Match each MPI_Send argument to its role.",
+              "q_ar": "صِل كل argument في MPI_Send بدوره.",
               "pairs": [
                 [
                   "msg_buf_p",
@@ -560,6 +591,13 @@
                   "communicator",
                   "The group the message travels within"
                 ]
+              ],
+              "pairHints_ar": [
+                "ابحث عن المكان الذي تبدأ منه bytes المرسلة.",
+                "هذه قيمة عددية تصف كمية البيانات، لا عنوانها.",
+                "هذه قيمة rank تخص الطرف الآخر.",
+                "تساعد على التفريق بين رسائل تتشارك الطرفين.",
+                "تحدد سياق التواصل بين مجموعة من processes."
               ],
               "explanation": "First three arguments define contents, last three define destination.",
               "src": "exam",
@@ -994,6 +1032,7 @@
             {
               "type": "match",
               "q": "Match each function qualifier to its execution and call site.",
+              "q_ar": "صِل كل function qualifier بمكان التنفيذ ومكان الاستدعاء.",
               "pairs": [
                 [
                   "__global__",
@@ -1008,6 +1047,11 @@
                   "Runs on host, called from host, the default"
                 ]
               ],
+              "pairHints_ar": [
+                "ابحث عن qualifier الدالة التي تُطلق بصيغة <<<...>>>.",
+                "يُستدعى من كود يعمل أصلًا على GPU.",
+                "هذا هو السلوك الافتراضي لدوال C/C++."
+              ],
               "explanation": "Qualifiers control where a function runs and where it may be called.",
               "src": "exam",
               "id": "cccs422-final-t7-q31"
@@ -1015,6 +1059,7 @@
             {
               "type": "match",
               "q": "Match each built-in variable to its meaning.",
+              "q_ar": "صِل كل built-in variable بمعناه.",
               "pairs": [
                 [
                   "threadIdx",
@@ -1033,6 +1078,12 @@
                   "Size or shape of the grid"
                 ]
               ],
+              "pairHints_ar": [
+                "Idx تعني موضعًا، والاسم يبدأ بأصغر وحدة تنفيذ.",
+                "Dim تعني أبعادًا أو حجمًا، والاسم يشير إلى block.",
+                "يمثل موضع block داخل المستوى الأعلى.",
+                "يمثل قياس المستوى الأعلى كاملًا."
+              ],
               "explanation": "Idx means a rank; Dim means a size.",
               "src": "exam",
               "id": "cccs422-final-t7-q32"
@@ -1040,6 +1091,7 @@
             {
               "type": "match",
               "q": "Match each CUDA memory level to its visibility.",
+              "q_ar": "صِل كل مستوى CUDA memory بنطاق رؤيته.",
               "pairs": [
                 [
                   "Local",
@@ -1058,6 +1110,12 @@
                   "Read-only for all threads in a block"
                 ]
               ],
+              "pairHints_ar": [
+                "الاسم يوحي بملكية خاصة جدًا.",
+                "نطاق المشاركة لا يتجاوز الوحدة التي تجمع threads.",
+                "فكّر في أوسع نطاق ضمن memory hierarchy.",
+                "تُستخدم عندما تقرأ threads قيمة لا تتغير."
+              ],
               "explanation": "Visibility widens from thread to block to everyone, plus a read-only level.",
               "src": "exam",
               "id": "cccs422-final-t7-q33"
@@ -1065,6 +1123,7 @@
             {
               "type": "match",
               "q": "Match each CUDA memory call to its C analogue.",
+              "q_ar": "صِل كل CUDA memory call بما يشابهها في C.",
               "pairs": [
                 [
                   "cudaMalloc",
@@ -1083,6 +1142,12 @@
                   "host wait for device completion"
                 ]
               ],
+              "pairHints_ar": [
+                "قارن الجزء الأخير من الاسم بدالة حجز الذاكرة في C.",
+                "احذف بادئة cuda وستتعرف على الفعل.",
+                "اسم دالة C ظاهر تقريبًا داخل اسم CUDA.",
+                "هذه ليست عملية حجز أو نسخ؛ فكّر في تزامن host مع device."
+              ],
               "explanation": "The CUDA memory API mirrors standard C memory functions.",
               "src": "exam",
               "id": "cccs422-final-t7-q34"
@@ -1090,6 +1155,7 @@
             {
               "type": "match",
               "q": "Match each term to its definition.",
+              "q_ar": "صِل كل مصطلح بتعريفه.",
               "pairs": [
                 [
                   "Warp",
@@ -1107,6 +1173,12 @@
                   "Kernel",
                   "Device function marked __global__"
                 ]
+              ],
+              "pairHints_ar": [
+                "ابحث عن أصغر مجموعة ينفذها scheduler معًا.",
+                "هو أعلى مستوى في hierarchy الخاص بإطلاق العمل.",
+                "وحدة عتادية تُسند إليها blocks.",
+                "هذه هي الدالة التي يطلقها host على device."
               ],
               "explanation": "Core GPU architecture and execution terms.",
               "src": "exam",
@@ -1541,6 +1613,7 @@
             {
               "type": "match",
               "q": "Match each scaling law or strategy to its statement.",
+              "q_ar": "صِل كل scaling law أو strategy بالعبارة المناسبة.",
               "pairs": [
                 [
                   "Amdahl's Law",
@@ -1559,6 +1632,12 @@
                   "Same operation on different data parts"
                 ]
               ],
+              "pairHints_ar": [
+                "اسأل ماذا يحدث إن بقي جزء لا يمكن parallelize.",
+                "فكّر في تثبيت الزمن مع زيادة حجم العمل.",
+                "هل تنفذ الوحدات أعمالًا مختلفة؟",
+                "هل يُطبق العمل نفسه على أجزاء مختلفة؟"
+              ],
               "explanation": "The laws bound speedup; the strategies distribute the work.",
               "src": "exam",
               "id": "cccs422-final-t8-q31"
@@ -1566,6 +1645,7 @@
             {
               "type": "match",
               "q": "Match each historic machine to its defining fact.",
+              "q_ar": "صِل كل جهاز تاريخي بالمعلومة التي تميّزه.",
               "pairs": [
                 [
                   "ENIAC",
@@ -1580,6 +1660,11 @@
                   "1970s, vector supercomputer"
                 ]
               ],
+              "pairHints_ar": [
+                "هو الأقدم في القائمة وسبق نماذج parallel الحديثة.",
+                "يرتبط اسمه بتصميم SIMD مبكر.",
+                "اشتهر في عصر ازدهار vector processing."
+              ],
               "explanation": "The three landmark early machines and their eras.",
               "src": "exam",
               "id": "cccs422-final-t8-q32"
@@ -1587,6 +1672,7 @@
             {
               "type": "match",
               "q": "Match each programming model to its target.",
+              "q_ar": "صِل كل programming model بالهدف الذي صُمم له.",
               "pairs": [
                 [
                   "OpenMP",
@@ -1605,6 +1691,12 @@
                   "Open-source ML framework"
                 ]
               ],
+              "pairHints_ar": [
+                "تذكّر pragmas داخل برنامج CPU متعدد threads.",
+                "فكّر في processes تتبادل messages.",
+                "ابحث عن vendor الـ GPU المرتبط بهذا النموذج.",
+                "يرتبط ببناء وتدريب نماذج machine learning."
+              ],
               "explanation": "The four programming models by memory model or target.",
               "src": "exam",
               "id": "cccs422-final-t8-q33"
@@ -1612,6 +1704,7 @@
             {
               "type": "match",
               "q": "Match each future or accelerator technology to its trait.",
+              "q_ar": "صِل كل تقنية مستقبلية أو accelerator بالصفة المناسبة.",
               "pairs": [
                 [
                   "Quantum",
@@ -1634,6 +1727,13 @@
                   "Reconfigurable hardware"
                 ]
               ],
+              "pairHints_ar": [
+                "تذكّر qubits والخوارزميات غير الكلاسيكية.",
+                "تصميمها مستوحى من neurons.",
+                "لا تختَر طرفًا واحدًا؛ فكّر في جمع مدرستين.",
+                "الحرف T مرتبط بكلمة tensors.",
+                "الميزة الأساسية أن تكوين العتاد ليس ثابتًا."
+              ],
               "explanation": "Emerging and accelerator hardware traits.",
               "src": "exam",
               "id": "cccs422-final-t8-q34"
@@ -1641,6 +1741,7 @@
             {
               "type": "match",
               "q": "Match each application to its domain.",
+              "q_ar": "صِل كل تطبيق بالمجال الذي ينتمي إليه.",
               "pairs": [
                 [
                   "Drug discovery",
@@ -1658,6 +1759,12 @@
                   "Machine translation",
                   "Natural Language Processing"
                 ]
+              ],
+              "pairHints_ar": [
+                "يتطلب دراسة جزيئات وتفاعلات عبر نماذج حسابية.",
+                "يعتمد على تحليل سلوك مجموعات ضخمة من المستخدمين.",
+                "يتعامل مع frames ومشاهد في الزمن الحقيقي.",
+                "يتعامل مع الجمل والمعنى بين لغتين."
               ],
               "explanation": "Each canonical example maps to one of the four domains.",
               "src": "exam",

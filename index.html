@@ -21,7 +21,8 @@
   .mtx::before,.mtx::after{content:"";position:absolute;top:2px;bottom:2px;width:5px;border:1.5px solid currentColor;opacity:.55}
   .mtx::before{left:0;border-right:0}.mtx::after{right:0;border-left:0}
   .mtxc{padding:0 2px;white-space:nowrap}
-  code.ic{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:rgba(45,212,191,.16);border-radius:6px;padding:.1em 7px;font-size:.85em;color:#7defcf;line-height:1.55;direction:ltr;unicode-bidi:isolate;white-space:nowrap;box-decoration-break:slice;-webkit-box-decoration-break:slice}
+  code.inline-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:rgba(45,212,191,.16);border-radius:6px;padding:.1em 7px;font-size:1em;color:#7defcf;line-height:1.55;direction:ltr;unicode-bidi:isolate;white-space:nowrap;display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:baseline;box-decoration-break:slice;-webkit-box-decoration-break:slice}
+  .techid{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:1em;direction:ltr;unicode-bidi:isolate;white-space:nowrap;display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:baseline}
   .wrap{max-width:900px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(70px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px))}
   .topbar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
   .topbar h1{font-size:1.22rem;margin:0;font-weight:800;letter-spacing:.3px;white-space:nowrap}
@@ -99,30 +100,52 @@
   .qright{display:flex;align-items:center;gap:8px}
   .starbtn{font-size:1rem;color:var(--muted2);transition:.15s}.starbtn.on{color:#fcd34d}
   .boxdots{display:flex;gap:4px}.boxdots i{width:7px;height:7px;border-radius:50%;background:var(--bg3);border:1px solid var(--line)}.boxdots i.on{background:var(--good);border-color:var(--good)}
-  .question{font-size:1.1rem;font-weight:600;margin:2px 0 18px;line-height:1.85}
+  .question{font-size:1.1rem;font-weight:600;margin:2px 0 10px;line-height:1.85;overflow-wrap:normal;word-break:normal}
+  .qassist{display:none;margin:0 0 16px}
+  .qassist.has{display:block}
+  .qassist-toggle{border:1px solid var(--line);background:var(--bg3);color:var(--muted);border-radius:9px;padding:7px 11px;font-size:.78rem;font-weight:700;min-height:34px}
+  .qassist-toggle:hover,.qassist-toggle[aria-expanded="true"]{color:var(--accent);border-color:var(--accent)}
+  .qassist-body{display:none;margin-top:7px;padding:10px 12px;border-radius:10px;background:var(--bg3);border:1px solid var(--line);font-size:.86rem;line-height:1.75;color:var(--muted)}
+  .qassist-body.show{display:block;animation:fade .2s ease}
+  .qassist-line+.qassist-line{margin-top:7px;padding-top:7px;border-top:1px solid var(--line)}
+  .qassist-label{color:var(--txt);font-size:.72rem;font-weight:800;margin-inline-end:6px}
   .choices{display:flex;flex-direction:column;gap:10px}
   .matchhost{display:flex;flex-direction:column;gap:8px}
-  .matchhint{font-size:.8rem;color:var(--muted);margin-bottom:2px;line-height:1.5}
-  .mrow2{display:flex;align-items:stretch;gap:8px;background:var(--bg3);border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;transition:.13s}
-  .mrow2 .ml2{flex:1;min-width:0;font-size:.9rem;font-weight:600;display:flex;align-items:center}
-  .mrow2 .mslot{flex:none;width:46%;min-height:38px;background:var(--bg);border:1.5px dashed var(--muted2);border-radius:10px;padding:7px 9px;font-size:.82rem;color:var(--muted2);display:flex;align-items:center;justify-content:center;text-align:center}
-  .mrow2 .mslot.ready{border-color:var(--accent);color:var(--accent)}
-  .mrow2 .mslot.filled{border-style:solid;border-color:var(--accent);background:var(--bg2);color:var(--txt);font-weight:600}
-  .mrow2.mok{border-color:var(--good);background:var(--good-bg)}.mrow2.mok .mslot{border-color:var(--good)}
-  .mrow2.mbad{border-color:var(--bad);background:var(--bad-bg)}.mrow2.mbad .mslot{border-color:var(--bad)}
-  .mrow2 .mres2{flex:none;font-size:.72rem;font-weight:700;min-width:16px;display:flex;align-items:center}
-  .mrow2.mok .mres2{color:var(--good)}.mrow2.mbad .mres2{color:var(--bad)}
-  .mchips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 2px;padding:10px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;min-height:20px}
-  .mchip{background:var(--bg4);border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;font-size:.83rem;color:var(--txt);transition:.12s}
-  .mchip:hover{border-color:var(--muted2)}.mchip.sel{background:var(--accent);border-color:var(--accent);color:#fff}
-  .mdone{font-size:.8rem;color:var(--good)}
+  .matchhint{font-size:.82rem;color:var(--muted);margin-bottom:4px;line-height:1.7}
+  .matchgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;direction:rtl;align-items:start}
+  .mcol{min-width:0;display:flex;flex-direction:column;gap:8px}
+  .mcolhead{font-size:.72rem;font-weight:800;color:var(--muted);padding:0 3px}
+  .mprompt,.manswer{min-width:0;border:1.5px solid var(--line);background:var(--bg3);border-radius:12px;transition:.14s}
+  .mprompt{padding:8px;display:flex;flex-direction:column;gap:6px}
+  .mprompt-pick{display:flex;align-items:flex-start;gap:8px;width:100%;padding:0;text-align:start;min-height:42px}
+  .mprompt-pick:hover .mprompt-text,.mprompt.selected .mprompt-text{color:var(--accent)}
+  .mprompt.selected,.mprompt.over{border-color:var(--accent);box-shadow:0 0 0 2px rgba(45,212,191,.18)}
+  .mnum{flex:none;width:25px;height:25px;border-radius:7px;background:var(--bg2);border:1px solid var(--line);color:var(--txt);font-size:.78rem;font-weight:800;display:grid;place-items:center}
+  .mprompt-text{min-width:0;flex:1;font-size:.9rem;font-weight:650;line-height:1.55;text-align:start;unicode-bidi:plaintext;overflow-wrap:normal;word-break:normal}
+  .pairhint-toggle{align-self:flex-start;color:var(--muted);border:1px solid var(--line);border-radius:7px;padding:4px 8px;font-size:.68rem;font-weight:700;min-height:27px}
+  .pairhint-toggle:hover,.pairhint-toggle[aria-expanded="true"]{color:var(--accent);border-color:var(--accent)}
+  .pairhint{display:none;color:var(--muted);background:var(--bg2);border-radius:8px;padding:7px 8px;font-size:.76rem;line-height:1.65;text-align:start}
+  .pairhint.show{display:block;animation:fade .18s ease}
+  .manswer{position:relative;display:flex;align-items:center;gap:8px;padding:10px;min-height:58px;text-align:start;touch-action:manipulation;cursor:grab}
+  .manswer-pick{min-width:0;flex:1;display:flex;align-items:center;gap:8px;text-align:start;padding:0;color:inherit}
+  .manswer:hover,.manswer.selected{border-color:var(--accent);background:var(--bg4)}
+  .manswer.selected{box-shadow:0 0 0 2px rgba(45,212,191,.18)}
+  .manswer:active{cursor:grabbing;transform:scale(.985)}.manswer.drag{opacity:.45}
+  .manswer-text{min-width:0;flex:1;font-size:.88rem;font-weight:650;line-height:1.55;text-align:start;unicode-bidi:plaintext;overflow-wrap:normal;word-break:normal}
+  .mlink{flex:none;min-width:25px;height:25px;padding:0 6px;border-radius:13px;background:var(--accent);color:#04201b;font-size:.72rem;font-weight:900;display:grid;place-items:center;direction:ltr}
+  .mlink.empty{background:var(--bg2);border:1px solid var(--line);color:var(--muted2)}
+  .munlink{flex:none;width:27px;height:27px;border-radius:8px;border:1px solid var(--line);color:var(--muted);font-size:.85rem;display:grid;place-items:center}
+  .munlink:hover{color:var(--bad);border-color:var(--bad)}
+  .mresult-answer.mok{border-color:var(--good);background:var(--good-bg)}.mresult-answer.mbad{border-color:var(--bad);background:var(--bad-bg)}
+  .mcorrection{display:block;color:#fca5a5;font-size:.72rem;margin-top:4px;direction:ltr;text-align:left;unicode-bidi:plaintext}
+  .mdone{font-size:.8rem;color:var(--good);padding:8px 2px}
   .choice{display:flex;align-items:flex-start;gap:12px;background:var(--bg3);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font-size:.97rem;transition:.13s;text-align:start;width:100%}
   .choice:not(:disabled):hover{border-color:var(--muted2);background:var(--bg4)}
   .choice .key{width:26px;height:26px;border-radius:7px;background:var(--bg2);border:1px solid var(--line);display:grid;place-items:center;font-size:.78rem;font-weight:700;color:var(--muted);flex:none}.choice .ctxt{flex:1;padding-top:2px}
   .choice.correct{border-color:var(--good);background:var(--good-bg)}.choice.correct .key{background:var(--good);color:#03130a;border-color:var(--good)}
   .choice.wrong{border-color:var(--bad);background:var(--bad-bg)}.choice.wrong .key{background:var(--bad);color:#1a0606;border-color:var(--bad)}
   .choice:disabled{cursor:default}.choice.dim{opacity:.5}
-  .explain{margin-top:16px;padding:13px 15px;background:var(--bg3);border:1px solid var(--line);border-right:3px solid var(--accent);border-radius:10px;font-size:.9rem;color:var(--muted);display:none}.explain.show{display:block;animation:fade .25s ease}.explain .lbl{color:var(--txt);font-weight:700;font-size:.78rem;margin-bottom:3px}
+  .explain{margin-top:16px;padding:13px 15px;background:var(--bg3);border:1px solid var(--line);border-right:3px solid var(--accent);border-radius:10px;font-size:.9rem;color:var(--muted);display:none}.explain.show{display:block;animation:fade .25s ease}.explain .lbl{color:var(--txt);font-weight:700;font-size:.78rem;margin-bottom:3px}.explain-ar{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);color:var(--muted);font-size:.84rem;line-height:1.75}.explain-ar b{color:var(--txt);font-size:.72rem;margin-inline-end:5px}
   @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
   .nextbar{display:none;margin-top:18px;gap:10px;align-items:center}.nextbar.show{display:flex}
   .btn{background:var(--accent);color:#fff;border-radius:12px;padding:13px 22px;font-size:.97rem;font-weight:700;transition:.15s;flex:1;display:flex;align-items:center;justify-content:center;gap:8px}.btn:hover{filter:brightness(1.1)}.btn:active{transform:scale(.985)}
@@ -172,10 +195,6 @@
   #guard .gbtns{display:flex;flex-direction:column;gap:10px}
   body.focusing .actionbar,body.focusing .footer{display:none}
   #lock{position:fixed;inset:0;background:var(--bg);z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px))}#lock.show{display:flex}#lock .logo{width:64px;height:64px;font-size:24px;border-radius:18px}#lock input{font-size:1.4rem;text-align:center;letter-spacing:6px;width:180px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--txt)}
-  /* match drag-and-drop polish */
-  .mrow2 .mnum{flex:none;width:20px;height:20px;border-radius:6px;background:var(--bg2);border:1px solid var(--line);color:var(--muted);font-size:.7rem;font-weight:700;display:grid;place-items:center;align-self:center}
-  .mrow2 .mslot.over{border-color:var(--accent);background:var(--bg2);box-shadow:0 0 0 2px rgba(45,212,191,.28)}
-  .mchip{touch-action:none;cursor:grab}.mchip:active{cursor:grabbing;transform:scale(.97)}.mchip.drag{opacity:.4;border-color:var(--accent)}
   .matchhint .ltr{color:var(--muted2);font-size:.92em}
   /* card entrance + press feedback */
   @keyframes cardin{from{opacity:0;transform:translateY(9px) scale(.992)}to{opacity:1;transform:none}}
@@ -183,7 +202,7 @@
   .choice:active:not(:disabled){transform:scale(.992)}
   .lrow .act-lnote{width:28px;height:28px;border-radius:8px;background:var(--bg3);border:1px solid var(--line);display:grid;place-items:center;font-size:.76rem;color:var(--muted);flex:none;transition:.13s}
   .lrow .act-lnote:hover{color:var(--txt);border-color:var(--accent)}
-  @media(max-width:560px){.wrap{padding:calc(14px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-right,0px)) calc(56px + env(safe-area-inset-bottom,0px)) calc(12px + env(safe-area-inset-left,0px))}.question{font-size:1.04rem}.chap .acts{flex-wrap:wrap;max-width:108px;justify-content:flex-end}.presetgrid,.breakdown{grid-template-columns:1fr}.lmodes{gap:3px}.lmode{padding:5px 7px;font-size:.65rem}}
+  @media(max-width:560px){.wrap{padding:calc(14px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-right,0px)) calc(56px + env(safe-area-inset-bottom,0px)) calc(12px + env(safe-area-inset-left,0px))}.card{padding:20px 12px}.question{font-size:1.04rem}.chap .acts{flex-wrap:wrap;max-width:108px;justify-content:flex-end}.presetgrid,.breakdown{grid-template-columns:1fr}.lmodes{gap:3px}.lmode{padding:5px 7px;font-size:.65rem}.matchgrid{gap:6px}.mprompt,.manswer{border-radius:10px}.mprompt{padding:7px 6px}.mprompt-pick{gap:5px}.mnum{width:23px;height:23px;font-size:.72rem}.mprompt-text,.manswer-text{font-size:.86rem;line-height:1.48}.manswer{padding:8px 6px;gap:5px;min-height:54px;display:block}.manswer-pick{display:grid;grid-template-columns:23px minmax(0,1fr);gap:5px;width:100%}.manswer-pick .mlink{grid-column:1;grid-row:1}.manswer-pick .manswer-text{grid-column:1/-1;grid-row:2}.manswer .munlink{position:absolute;top:6px;left:6px}.mlink{min-width:23px;height:23px;padding:0 5px}.munlink{width:25px;height:25px}.pairhint-toggle{font-size:.68rem;padding:4px 6px}.pairhint{font-size:.76rem;padding:6px}.qassist-body{font-size:.86rem}}
 </style>
 </head>
 <body>
@@ -255,6 +274,7 @@
         <div class="accentbar" id="accentbar"></div>
         <div class="qmeta"><span class="srcbadge" id="srcBadge"></span><div class="qright"><button class="starbtn" id="starToggle" title="تمييز بنجمة">☆</button><div class="boxdots" id="boxdots" title="مستوى الإتقان"></div></div></div>
         <div class="question" id="question" dir="auto"></div>
+        <div class="qassist" id="questionAssist"></div>
         <div class="choices" id="choices"></div>
         <div class="matchhost" id="matchHost" style="display:none"></div>
         <div class="explain" id="explain"><div class="lbl">💡 الشرح</div><div id="explainTxt" dir="auto"></div></div>
@@ -274,7 +294,7 @@
     <div id="mockRun" style="display:none">
       <div class="pills"><div class="pill">السؤال <b id="mkPos">1/10</b></div><div class="pill">المتبقّي <b id="mkLeft">—</b></div></div>
       <div class="mbar"><i id="mkFill"></i></div>
-      <div class="card"><div class="accentbar" id="mkAccent"></div><div class="question" id="mkQ" dir="auto"></div><div class="choices" id="mkChoices"></div>
+      <div class="card"><div class="accentbar" id="mkAccent"></div><div class="question" id="mkQ" dir="auto"></div><div class="qassist" id="mkAssist"></div><div class="choices" id="mkChoices"></div>
         <div class="nextbar show" style="margin-top:18px"><button class="btn ghost2" id="mkSkip" style="flex:.5">تخطّي</button><button class="btn" id="mkNext">التالي ↵</button></div></div>
     </div>
     <div id="mockResult" style="display:none"></div>
@@ -319,7 +339,7 @@
 "use strict";
 const SKEY="studyflow-v1",SET="studyflow-set-v1",PKEY="studyflow-plan-v1",PASS="studyflow-pass-v1",DKEY="studyflow-daily-v1",SYNCKEY="studyflow-sync-v1",CONTENTKEY="studyflow-content-v1",BUILTINKEY="studyflow-builtin-finals-2026-t3-v1",PDC_DRILLS_KEY="studyflow-pdc-422-drills-v2";
 const GAPS={1:2,2:4,3:7,4:12,5:20},MB=4,DAYMS=86400000,SESSION_CAP=5;
-const EMPTY_CONTENT={version:1,subjects:{},schedule:{plan:[],exams:[]}},EMPTY_DRILLS={version:2,subject:"CCCS422-FINAL",chapters:{},presets:[]},BUILTIN_CONTENT_URL="finals-2026-t3.json?v=20260811-2",PDC_DRILLS_URL="pdc-422-drills-v2.json?v=20260811-2",BUILTIN_CODES=["CCCS422-FINAL","WEB-EXAM2"];
+const EMPTY_CONTENT={version:1,subjects:{},schedule:{plan:[],exams:[]}},EMPTY_DRILLS={version:2,subject:"CCCS422-FINAL",chapters:{},presets:[]},BUILTIN_CONTENT_URL="finals-2026-t3.json?v=20260811-3",PDC_DRILLS_URL="pdc-422-drills-v2.json?v=20260811-3",BUILTIN_CODES=["CCCS422-FINAL","WEB-EXAM2"];
 function lj(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}} function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 let CONTENT=lj(CONTENTKEY,EMPTY_CONTENT),BUILTIN_CONTENT=lj(BUILTINKEY,EMPTY_CONTENT),PDC_DRILLS=lj(PDC_DRILLS_KEY,EMPTY_DRILLS);
 let DATA={},SCHED={plan:[],exams:[]},ORDER=[];
@@ -384,7 +404,7 @@ function replaceContent(raw){CONTENT=validateContent(raw);sv(CONTENTKEY,CONTENT)
 function downloadJSON(name,value){const blob=new Blob([JSON.stringify(value,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 let STORE=lj(SKEY,{q:{},star:{},tests:{},attempts:[]});if(!STORE.star)STORE.star={};if(!STORE.tests)STORE.tests={};if(!Array.isArray(STORE.attempts))STORE.attempts=[];
 let SETTINGS=Object.assign({includeExtra:true,goal:50,sound:false,sessionMins:20,fullscreen:true,hidden:[]},lj(SET,{}));
-if(SETTINGS.builtinFinalsBuild!=="2026-08-11-v2"){SETTINGS.hidden=(SETTINGS.hidden||[]).filter(code=>!BUILTIN_CODES.includes(code));SETTINGS.builtinFinalsBuild="2026-08-11-v2";sv(SET,SETTINGS)}
+if(SETTINGS.builtinFinalsBuild!=="2026-08-11-v3"){SETTINGS.hidden=(SETTINGS.hidden||[]).filter(code=>!BUILTIN_CODES.includes(code));SETTINGS.builtinFinalsBuild="2026-08-11-v3";sv(SET,SETTINGS)}
 let PLANDONE=lj(PKEY,{}); let DAILY=lj(DKEY,{dates:{}}); let SYNC=lj(SYNCKEY,{token:"",gistId:"",enabled:false});
 function saveStore(){sv(SKEY,STORE);schedulePush();} function saveSet(){sv(SET,SETTINGS);} function savePlan(){sv(PKEY,PLANDONE);schedulePush();} function saveDaily(){sv(DKEY,DAILY);schedulePush();}
 function qstate(id){return STORE.q[id]||(STORE.q[id]={box:1,seen:0,correct:0,wrong:0,due:0,last:0})}
@@ -409,7 +429,23 @@ function escHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").
 const MMAP={'\\alpha':'α','\\beta':'β','\\gamma':'γ','\\delta':'δ','\\epsilon':'ε','\\varepsilon':'ε','\\theta':'θ','\\vartheta':'θ','\\kappa':'κ','\\lambda':'λ','\\mu':'μ','\\nu':'ν','\\xi':'ξ','\\pi':'π','\\rho':'ρ','\\sigma':'σ','\\tau':'τ','\\phi':'φ','\\varphi':'φ','\\chi':'χ','\\psi':'ψ','\\omega':'ω','\\Gamma':'Γ','\\Delta':'Δ','\\Theta':'Θ','\\Lambda':'Λ','\\Pi':'Π','\\Sigma':'Σ','\\Phi':'Φ','\\Psi':'Ψ','\\Omega':'Ω','\\times':'×','\\div':'÷','\\cdot':'·','\\pm':'±','\\mp':'∓','\\circ':'∘','\\bullet':'•','\\leq':'≤','\\le':'≤','\\geq':'≥','\\ge':'≥','\\neq':'≠','\\ne':'≠','\\equiv':'≡','\\approx':'≈','\\cong':'≅','\\propto':'∝','\\rightarrow':'→','\\to':'→','\\leftarrow':'←','\\Rightarrow':'⇒','\\leftrightarrow':'↔','\\Leftrightarrow':'⇔','\\mapsto':'↦','\\infty':'∞','\\partial':'∂','\\nabla':'∇','\\forall':'∀','\\exists':'∃','\\neg':'¬','\\land':'∧','\\wedge':'∧','\\lor':'∨','\\vee':'∨','\\oplus':'⊕','\\in':'∈','\\notin':'∉','\\subset':'⊂','\\subseteq':'⊆','\\supseteq':'⊇','\\cup':'∪','\\cap':'∩','\\emptyset':'∅','\\sum':'Σ','\\prod':'∏','\\int':'∫','\\sqrt':'√','\\angle':'∠','\\perp':'⊥','\\parallel':'∥','\\mid':'∣','\\models':'⊨','\\vdash':'⊢','\\langle':'⟨','\\rangle':'⟩','\\lfloor':'⌊','\\rfloor':'⌋','\\lceil':'⌈','\\rceil':'⌉','\\ldots':'…','\\dots':'…','\\cdots':'⋯'};
 const SS="A-Za-z0-9αβγδεζηθικλμνξπρστυφχψωΓΔΘΛΞΠΣΦΨΩ*'+\\-";
 function renderMatrix(body){const rows=body.trim().replace(/^(\\\\)+|(\\\\)+$/g,"").split(/\\\\/).map(r=>r.trim()).filter(r=>r.length);const grid=rows.map(r=>r.split(/&amp;|&/).map(c=>c.trim()));const ncols=Math.max(...grid.map(r=>r.length),1);const cells=grid.flatMap(r=>{const a=r.slice();while(a.length<ncols)a.push("");return a});return '<span class="mtx" style="grid-template-columns:repeat('+ncols+',auto)">'+cells.map(c=>'<span class="mtxc">'+c+'</span>').join("")+'</span>'}
-function mathToHtml(raw){let s=escHtml(raw);s=s.replace(/\$/g,"");s=s.replace(/\\begin\{[a-zA-Z]*?matrix\}([\s\S]*?)\\end\{[a-zA-Z]*?matrix\}/g,(m,b)=>renderMatrix(b));s=s.replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>");s=s.replace(/`([^`]+)`/g,'<code class="ic">$1</code>');s=s.replace(/\\(?:text|mathrm|mathbf|mathit|mathsf|operatorname)\s*\{([^{}]*)\}/g,"$1");for(let i=0;i<4;i++)s=s.replace(/\\d?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,"($1)/($2)");s=s.replace(/\\(cos|sin|tan|cot|sec|csc|log|ln|exp|max|min|arg|det|dim|deg|gcd|lim|mod|sup|inf)\b/g,"$1");for(const k of Object.keys(MMAP).sort((a,b)=>b.length-a.length))s=s.split(k).join(MMAP[k]);const ACC={hat:"̂",widehat:"̂",vec:"⃗",overrightarrow:"⃗",bar:"̄",overline:"̄",tilde:"̃",dot:"̇"};s=s.replace(/\\(hat|widehat|vec|overrightarrow|bar|overline|tilde|dot)\s*\{([^{}]*)\}/g,(m,a,x)=>x+(ACC[a]||""));s=s.replace(/\\(hat|vec|bar|tilde|dot)\s+(\S)/g,(m,a,x)=>x+(ACC[a]||""));s=s.replace(/\\[,;:! ]/g," ").replace(/\\quad|\\qquad/g,"  ").replace(/\\left|\\right|\\displaystyle|\\limits/g,"");s=s.replace(/\^\{([^{}]*)\}/g,(m,g)=>"<sup>"+g+"</sup>");s=s.replace(new RegExp("\\^(\\\\?["+SS+"])","g"),(m,g)=>"<sup>"+g+"</sup>");s=s.replace(/_\{([^{}]*)\}/g,(m,g)=>"<sub>"+g+"</sub>");s=s.replace(new RegExp("_(\\\\?["+SS+"])","g"),(m,g)=>"<sub>"+g+"</sub>");s=s.replace(/[{}]/g,"").replace(/\\\\/g," ").replace(/\\([A-Za-z]+)/g,"$1").replace(/\\(.)/g,"$1");return s}
+function mathToHtml(raw){
+  let s=escHtml(raw),held=[];const hold=html=>"\uE100"+(held.push(html)-1)+"\uE101";
+  /* Inline code and program identifiers must never pass through the LaTeX
+     subscript pass.  Keep one-letter math such as x_i available to it. */
+  s=s.replace(/`([^`]+)`/g,(m,x)=>hold('<code class="inline-code">'+x+'</code>'));
+  s=s.replace(/\b[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z][A-Za-z0-9]*)+\b/g,t=>{const p=t.split("_");return p.length===2&&p[0].length===1&&p[1].length<=2?t:hold('<span class="techid">'+t+'</span>')});
+  s=s.replace(/\$/g,"");s=s.replace(/\\begin\{[a-zA-Z]*?matrix\}([\s\S]*?)\\end\{[a-zA-Z]*?matrix\}/g,(m,b)=>renderMatrix(b));s=s.replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>");s=s.replace(/\\(?:text|mathrm|mathbf|mathit|mathsf|operatorname)\s*\{([^{}]*)\}/g,"$1");for(let i=0;i<4;i++)s=s.replace(/\\d?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,"($1)/($2)");s=s.replace(/\\(cos|sin|tan|cot|sec|csc|log|ln|exp|max|min|arg|det|dim|deg|gcd|lim|mod|sup|inf)\b/g,"$1");for(const k of Object.keys(MMAP).sort((a,b)=>b.length-a.length))s=s.split(k).join(MMAP[k]);const ACC={hat:"̂",widehat:"̂",vec:"⃗",overrightarrow:"⃗",bar:"̄",overline:"̄",tilde:"̃",dot:"̇"};s=s.replace(/\\(hat|widehat|vec|overrightarrow|bar|overline|tilde|dot)\s*\{([^{}]*)\}/g,(m,a,x)=>x+(ACC[a]||""));s=s.replace(/\\(hat|vec|bar|tilde|dot)\s+(\S)/g,(m,a,x)=>x+(ACC[a]||""));s=s.replace(/\\[,;:! ]/g," ").replace(/\\quad|\\qquad/g,"  ").replace(/\\left|\\right|\\displaystyle|\\limits/g,"");s=s.replace(/\^\{([^{}]*)\}/g,(m,g)=>"<sup>"+g+"</sup>");s=s.replace(new RegExp("\\^(\\\\?["+SS+"])","g"),(m,g)=>"<sup>"+g+"</sup>");s=s.replace(/_\{([^{}]*)\}/g,(m,g)=>"<sub>"+g+"</sub>");s=s.replace(new RegExp("_(\\\\?["+SS+"])","g"),(m,g)=>"<sub>"+g+"</sub>");s=s.replace(/[{}]/g,"").replace(/\\\\/g," ").replace(/\\([A-Za-z]+)/g,"$1").replace(/\\(.)/g,"$1");return s.replace(/\uE100(\d+)\uE101/g,(m,i)=>held[+i]||"")
+}
+function renderQuestionAssist(host,q,state){
+  if(typeof host==="string")host=$(host);if(!host)return;const has=!!(q&&(q.q_ar||q.hint_ar));host.innerHTML="";host.classList.toggle("has",has);if(!has)return;
+  const open=!!state._assistOpen,bodyId=(host.id||"qassist")+"Body";host.innerHTML=`<button class="qassist-toggle" type="button" aria-expanded="${open}" aria-controls="${bodyId}">${open?"−":"+"} عربي / Hint</button><div class="qassist-body ${open?"show":""}" id="${bodyId}" dir="rtl">${q.q_ar?`<div class="qassist-line"><span class="qassist-label">العربي</span>${mathToHtml(q.q_ar)}</div>`:""}${q.hint_ar?`<div class="qassist-line"><span class="qassist-label">تلميح</span>${mathToHtml(q.hint_ar)}</div>`:""}</div>`;
+  host.querySelector(".qassist-toggle").onclick=()=>{state._assistOpen=!state._assistOpen;renderQuestionAssist(host,q,state)};
+}
+function explanationHtml(q,prefix=""){
+  const main=q.explanation?`<div dir="auto">${mathToHtml(q.explanation)}</div>`:"",ar=q.explanation_ar?`<div class="explain-ar" dir="rtl"><b>شرح عربي</b>${mathToHtml(q.explanation_ar)}</div>`:"";return prefix+main+ar
+}
+function showExplanation(q,prefix=""){const html=explanationHtml(q,prefix),box=$("#explain");if(!html){box.classList.remove("show");return}$("#explainTxt").innerHTML=html;box.classList.add("show")}
 
 function chapterStats(ch){let m=0,seen=0,weak=0;const items=visQ(ch).concat(ch.practice||[]);for(const q of items){const s=STORE.q[q.id];if(s){if(s.seen>0)seen++;if(s.box>=MB)m++;if(isWeak(q.id))weak++;}}return{mastered:m,seen,weak,total:items.length}}
 function lessonStats(l){let m=0,weak=0;const items=visLes(l);for(const q of items){const s=STORE.q[q.id];if(s){if(s.box>=MB)m++;if(isWeak(q.id))weak++;}}return{mastered:m,weak,total:items.length}}
@@ -523,7 +559,7 @@ function nextCard(){
   $("#srcBadge").style.display=(practice||isMatch)?"none":"";
   if(!practice&&!isMatch){const sb=$("#srcBadge");const lab=card.source?("📄 "+card.source):({official:"📘 مصدر رسمي",lecture:"🎓 محاضرة",extra:"✨ إضافي",source:"📄 من المصدر",exam:"🎯 نطاق الاختبار"}[card.src]||"");sb.textContent=lab;sb.title=card.source||"";sb.className="srcbadge"+(card.src==="official"?" official":"")}
   $("#starToggle").textContent=STORE.star[card.id]?"★":"☆";$("#starToggle").classList.toggle("on",!!STORE.star[card.id]);
-  renderBoxdots(card.box);$("#question").innerHTML=mathToHtml(card.q);
+  renderBoxdots(card.box);$("#question").innerHTML=mathToHtml(card.q);card._assistOpen=false;renderQuestionAssist("#questionAssist",card,card);
   $("#explain").classList.remove("show");$("#nextbar").classList.remove("show");$("#gradebar").classList.remove("show");$("#revealbar").classList.remove("show");
   const mh=$("#matchHost");mh.style.display="none";mh.innerHTML="";
   const ch=$("#choices");
@@ -534,37 +570,46 @@ function nextCard(){
 }
 function renderMatch(card){
   const mh=$("#matchHost");mh.style.display="";
-  card._rights=shuffle(card.pairs.map((_,i)=>i));card._assign={};card._sel=null;
+  card._rights=shuffle(card.pairs.map((_,i)=>i));card._assign={};card._selAnswer=null;card._selPrompt=null;card._openHints={};card._dragAnswer=null;
   drawMatch(card);
 }
-function drawMatch(card){
-  const mh=$("#matchHost");const used=new Set(Object.values(card._assign));
-  const rows=card.pairs.map((p,row)=>{const a=card._assign[row];
-    const slot=a!=null?`<button class="mslot filled" data-row="${row}"><span class="ltr">${escHtml(card.pairs[a][1])}</span></button>`:`<button class="mslot ${card._sel!=null?"ready":""}" data-row="${row}">${card._sel!=null?"أفلت هنا ▸":"— اسحب أو اضغط —"}</button>`;
-    return `<div class="mrow2"><span class="mnum">${row+1}</span><span class="ml2 ltr">${mathToHtml(p[0])}</span>${slot}</div>`;}).join("");
-  const chips=card._rights.filter(h=>!used.has(h)).map(h=>`<button class="mchip ${card._sel===h?"sel":""}" draggable="true" data-chip="${h}"><span class="ltr">${escHtml(card.pairs[h][1])}</span></button>`).join("");
+function pairHint(card,row){const h=card.pairHints_ar;if(Array.isArray(h))return h[row]||"";if(h&&typeof h==="object")return h[String(row+1)]||h[String(row)]||h[card.pairs[row]?.[0]]||"";return""}
+function rowForAnswer(card,answer){for(const[row,a]of Object.entries(card._assign))if(a===answer)return+row;return null}
+function assignMatch(card,row,answer,focusSelector){
+  if(!Number.isInteger(row)||!Number.isInteger(answer)||row<0||answer<0||row>=card.pairs.length||answer>=card.pairs.length)return;for(const r of Object.keys(card._assign))if(card._assign[r]===answer)delete card._assign[r];card._assign[row]=answer;card._selAnswer=null;card._selPrompt=null;drawMatch(card,focusSelector)
+}
+function chooseMatchPrompt(card,row){if(card._selAnswer!=null){assignMatch(card,row,card._selAnswer,`[data-prompt="${row}"]`);return}card._selPrompt=card._selPrompt===row?null:row;drawMatch(card,`[data-prompt="${row}"]`)}
+function chooseMatchAnswer(card,answer){if(card._selPrompt!=null){assignMatch(card,card._selPrompt,answer,`[data-answer-pick="${answer}"]`);return}card._selAnswer=card._selAnswer===answer?null:answer;drawMatch(card,`[data-answer-pick="${answer}"]`)}
+function drawMatch(card,focusSelector){
+  const mh=$("#matchHost");
+  const prompts=card.pairs.map((p,row)=>{const hint=pairHint(card,row),open=!!card._openHints[row],linked=card._assign[row]!=null;return `<div class="mprompt ${card._selPrompt===row?"selected":""} ${linked?"linked":""}" data-drop-row="${row}"><button type="button" class="mprompt-pick" data-prompt="${row}" aria-label="العنصر رقم ${row+1}${linked?"، مرتبط":""}" aria-pressed="${card._selPrompt===row}"><span class="mnum">${row+1}</span><span class="mprompt-text" dir="auto">${mathToHtml(p[0])}</span></button>${hint?`<button type="button" class="pairhint-toggle" data-hint-row="${row}" aria-controls="match-hint-${row}" aria-label="تلميح للعنصر رقم ${row+1}" aria-expanded="${open}">${open?"−":"+"} تلميح</button><div class="pairhint ${open?"show":""}" id="match-hint-${row}" dir="rtl">${mathToHtml(hint)}</div>`:""}</div>`}).join("");
+  const answers=card._rights.map(h=>{const row=rowForAnswer(card,h),linked=row!=null,selected=card._selAnswer===h;return `<div class="manswer ${selected?"selected":""}" draggable="true" data-answer="${h}"><button type="button" class="manswer-pick" data-answer-pick="${h}" aria-label="إجابة${linked?" مرتبطة بالعنصر رقم "+(row+1):" غير مرتبطة"}" aria-pressed="${selected}"><span class="mlink ${linked?"":"empty"}">${linked?"#"+(row+1):"—"}</span><span class="manswer-text" dir="auto">${mathToHtml(card.pairs[h][1])}</span></button>${linked?`<button type="button" class="munlink" data-unlink="${h}" aria-label="إلغاء ربط الإجابة بالعنصر رقم ${row+1}" title="إلغاء الربط">×</button>`:""}</div>`}).join("");
   const done=Object.keys(card._assign).length===card.pairs.length;
-  mh.innerHTML=`<div class="matchhint">وصّل كل عنصر بما يقابله — اسحب البطاقة أو اضغطها ثم اضغط الخانة · <span class="ltr">drag or tap to match</span></div>${rows}<div class="mchips">${chips||'<span class="mdone">✓ اكتمل — اضغط تحقّق</span>'}</div><button class="btn" id="matchCheck" style="margin-top:12px" ${done?"":"disabled"}>تحقّق ✓</button>`;
-  mh.querySelectorAll("[data-chip]").forEach(b=>{
-    b.onclick=()=>{const h=+b.dataset.chip;card._sel=card._sel===h?null:h;drawMatch(card)};
-    b.ondragstart=e=>{card._sel=+b.dataset.chip;try{e.dataTransfer.setData("text/plain","m");e.dataTransfer.effectAllowed="move"}catch(_){}b.classList.add("drag")};
-    b.ondragend=()=>{b.classList.remove("drag")};
+  mh.innerHTML=`<div class="matchhint">اختر إجابة ثم اضغط رقم العنصر، أو اختر العنصر ثم الإجابة. ويمكنك سحب الإجابة إلى العنصر · <span class="ltr">click or drag to match</span></div><div class="matchgrid"><div class="mcol"><div class="mcolhead">العناصر الثابتة · Prompts</div>${prompts}</div><div class="mcol"><div class="mcolhead">الإجابات المتحركة · Answers</div>${answers}</div></div><div class="mdone" aria-live="polite">${done?"✓ اكتمل الربط — تقدر تغيّره أو تتحقق الآن":Object.keys(card._assign).length+" / "+card.pairs.length+" مرتبط"}</div><button class="btn" id="matchCheck" style="margin-top:4px" ${done?"":"disabled"}>تحقّق ✓</button>`;
+  mh.querySelectorAll("[data-prompt]").forEach(b=>b.onclick=()=>chooseMatchPrompt(card,+b.dataset.prompt));
+  mh.querySelectorAll("[data-hint-row]").forEach(b=>b.onclick=e=>{e.stopPropagation();const row=+b.dataset.hintRow;card._openHints[row]=!card._openHints[row];drawMatch(card,`[data-hint-row="${row}"]`)});
+  mh.querySelectorAll("[data-answer-pick]").forEach(b=>b.onclick=()=>chooseMatchAnswer(card,+b.dataset.answerPick));
+  mh.querySelectorAll("[data-answer]").forEach(b=>{
+    b.ondragstart=e=>{card._dragAnswer=+b.dataset.answer;try{e.dataTransfer.setData("text/plain",String(card._dragAnswer));e.dataTransfer.effectAllowed="move"}catch(_){}b.classList.add("drag")};
+    b.ondragend=()=>{card._dragAnswer=null;b.classList.remove("drag")};
   });
-  mh.querySelectorAll(".mslot").forEach(s=>{
-    s.onclick=()=>{const row=+s.dataset.row;if(card._assign[row]!=null){delete card._assign[row];drawMatch(card);return}if(card._sel!=null){card._assign[row]=card._sel;card._sel=null;drawMatch(card)}};
+  mh.querySelectorAll("[data-unlink]").forEach(b=>b.onclick=e=>{e.stopPropagation();const h=+b.dataset.unlink,row=rowForAnswer(card,h);if(row!=null)delete card._assign[row];card._selAnswer=null;card._selPrompt=null;drawMatch(card,`[data-answer-pick="${h}"]`)});
+  mh.querySelectorAll("[data-drop-row]").forEach(s=>{
     s.ondragover=e=>{e.preventDefault();s.classList.add("over")};
     s.ondragleave=()=>s.classList.remove("over");
-    s.ondrop=e=>{e.preventDefault();s.classList.remove("over");const row=+s.dataset.row;if(card._sel!=null){card._assign[row]=card._sel;card._sel=null;drawMatch(card)}};
+    s.ondrop=e=>{e.preventDefault();s.classList.remove("over");const row=+s.dataset.dropRow;let answer=card._dragAnswer;try{const v=e.dataTransfer.getData("text/plain");if(v!=="")answer=+v}catch(_){}if(Number.isInteger(answer))assignMatch(card,row,answer,`[data-prompt="${row}"]`)};
   });
   const cb=$("#matchCheck");if(cb&&done)cb.onclick=()=>gradeMatch(card);
+  if(focusSelector)mh.querySelector(focusSelector)?.focus();
 }
 function gradeMatch(card){
   if(S.answered)return;S.answered=true;let allok=true;
-  const rows=card.pairs.map((p,row)=>{const a=card._assign[row];const ok=a===row;if(!ok)allok=false;
-    return `<div class="mrow2 ${ok?"mok":"mbad"}"><span class="ml2 ltr">${mathToHtml(p[0])}</span><span class="mslot filled"><span class="ltr">${a!=null?escHtml(card.pairs[a][1]):"—"}</span></span><span class="mres2 ltr">${ok?"✓":"✗ "+escHtml(p[1])}</span></div>`;}).join("");
-  $("#matchHost").innerHTML=`<div class="matchhint">النتيجة · Result:</div>${rows}`;
+  for(let row=0;row<card.pairs.length;row++)if(card._assign[row]!==row)allok=false;
+  const prompts=card.pairs.map((p,row)=>`<div class="mprompt"><div class="mprompt-pick"><span class="mnum">${row+1}</span><span class="mprompt-text" dir="auto">${mathToHtml(p[0])}</span></div></div>`).join("");
+  const answers=card._rights.map(h=>{const row=rowForAnswer(card,h),ok=row===h;return `<div class="manswer mresult-answer ${ok?"mok":"mbad"}"><div class="manswer-pick"><span class="mlink">#${row==null?"—":row+1}</span><span class="manswer-text" dir="auto">${mathToHtml(card.pairs[h][1])}${ok?"":`<span class="mcorrection">Correct match: #${h+1}</span>`}</span></div><span aria-hidden="true">${ok?"✓":"✗"}</span></div>`}).join("");
+  $("#matchHost").innerHTML=`<div class="matchhint">النتيجة · Result:</div><div class="matchgrid"><div class="mcol"><div class="mcolhead">العناصر · Prompts</div>${prompts}</div><div class="mcol"><div class="mcolhead">إجاباتك · Your matches</div>${answers}</div></div>`;
   applyGrade(card,allok);
-  if(card.explanation){$("#explainTxt").innerHTML=mathToHtml(card.explanation);$("#explain").classList.add("show")}
+  showExplanation(card);
   const v=$("#verdict");v.className="verdict "+(allok?"good":"bad");v.textContent=allok?"✓ كله صح":"✗ راجع الغلط";
   $("#nextbar").classList.add("show");S.prevId=card.id;updatePills();
 }
@@ -572,8 +617,8 @@ function renderBoxdots(box){const h=$("#boxdots");h.innerHTML="";for(let i=1;i<=
 function feedback(ok){try{if(navigator.vibrate)navigator.vibrate(ok?15:[20,40,20]);}catch(e){}if(SETTINGS.sound)beep(ok)}
 let AC;function beep(ok){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.frequency.value=ok?660:200;g.gain.value=.05;o.start();g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+.18);o.stop(AC.currentTime+.19)}catch(e){}}
 function applyGrade(card,correct){const st=qstate(card.id);st.seen++;S.step++;card.sess=(card.sess||0)+1;if(correct){card.box=Math.min(5,card.box+1);card.dueStep=S.step+GAPS[card.box]+Math.floor(Math.random()*3);st.correct++;S.stats.good++;S.stats.streak++;card.learnStreak=(card.learnStreak||0)+1}else{card.box=1;card.dueStep=S.step+2+Math.floor(Math.random()*2);st.wrong++;S.stats.bad++;S.stats.streak=0;card.learnStreak=0}st.box=card.box;const now=Date.now();st.last=now;st.due=now+(correct?GAPS[card.box]:1)*DAYMS;if(S.mode==="learn"){if(card.learnStreak>=2||card.sess>=7)card.done=true}else if(card.sess>=SESSION_CAP)card.done=true;saveStore();bumpDaily();renderBoxdots(card.box);feedback(correct)}
-function answer(i){if(S.answered)return;S.answered=true;const card=S.cur,correct=(i===S.correctIdx);applyGrade(card,correct);[...document.querySelectorAll(".choice")].forEach((b,bi)=>{b.disabled=true;if(bi===S.correctIdx)b.classList.add("correct");else if(bi===i)b.classList.add("wrong");else b.classList.add("dim")});if(card.explanation){$("#explainTxt").innerHTML=mathToHtml(card.explanation);$("#explain").classList.add("show")}const v=$("#verdict");v.className="verdict "+(correct?"good":"bad");v.textContent=correct?"✓ صحيح":"✗ غلط";$("#nextbar").classList.add("show");S.prevId=card.id;updatePills();setTimeout(()=>{try{$("#nextBtn").scrollIntoView({behavior:"smooth",block:"nearest"})}catch(_){}},60)}
-function revealSolution(){if(S.answered)return;const card=S.cur;$("#explainTxt").innerHTML="<b>الحل:</b> "+mathToHtml(card.solution);$("#explain").classList.add("show");$("#revealbar").classList.remove("show");$("#gradebar").classList.add("show")}
+function answer(i){if(S.answered)return;S.answered=true;const card=S.cur,correct=(i===S.correctIdx);applyGrade(card,correct);[...document.querySelectorAll(".choice")].forEach((b,bi)=>{b.disabled=true;if(bi===S.correctIdx)b.classList.add("correct");else if(bi===i)b.classList.add("wrong");else b.classList.add("dim")});showExplanation(card);const v=$("#verdict");v.className="verdict "+(correct?"good":"bad");v.textContent=correct?"✓ صحيح":"✗ غلط";$("#nextbar").classList.add("show");S.prevId=card.id;updatePills();setTimeout(()=>{try{$("#nextBtn").scrollIntoView({behavior:"smooth",block:"nearest"})}catch(_){}},60)}
+function revealSolution(){if(S.answered)return;const card=S.cur;showExplanation(card,`<div dir="auto"><b>الحل:</b> ${mathToHtml(card.solution)}</div>`);$("#revealbar").classList.remove("show");$("#gradebar").classList.add("show")}
 function gradePractice(correct){if(S.answered)return;S.answered=true;applyGrade(S.cur,correct);$("#gradebar").classList.remove("show");const v=$("#verdict");v.className="verdict "+(correct?"good":"bad");v.textContent=correct?"✓ عرفته":"✗ راجعه";$("#nextbar").classList.add("show");S.prevId=S.cur.id;updatePills()}
 function updatePills(){const{good,bad,streak}=S.stats;$("#pGood").textContent=good;$("#pBad").textContent=bad;const t=good+bad;$("#pAcc").textContent=t?Math.round(good/t*100)+"%":"—";$("#pStreak").textContent=streak;let m=0;for(const c of S.cards){const s=STORE.q[c.id];if(s&&s.box>=MB)m++}$("#pMastered").textContent=m+"/"+S.cards.length;$("#mFill").style.width=(S.cards.length?m/S.cards.length*100:0)+"%"}
 /* ===== timer + focus + leave-guard + spaced-repetition (added) ===== */
@@ -638,12 +683,12 @@ function startMock(){
 function startLessonTest(code,lessonId){const lesson=lessonById(code,lessonId);if(!lesson)return;const pool=shuffle(visLes(lesson).filter(q=>q.choices)).slice(0,10);launchMockPool(pool,{code,label:"اختبار القسم · "+lesson.label,lessonIds:[lessonId],timed:true})}
 function startPreset(id){const p=(PDC_DRILLS.presets||[]).find(x=>x.id===id);if(!p)return;const code=PDC_DRILLS.subject;let pool=[];if(p.parts){for(const part of p.parts){const ch=chapterById(code,part.chapterId);if(ch)pool.push(...shuffle(visQ(ch).filter(q=>q.choices)).slice(0,part.count))}}else if(p.lessonIds){pool=shuffle(poolLessons(code,new Set(p.lessonIds)).filter(q=>q.choices)).slice(0,p.count)}mkSel.code=code;launchMockPool(shuffle(pool),{code,label:p.label,lessonIds:p.lessonIds||[],presetId:p.id,timed:p.timed!==false})}
 function tickMock(){clearInterval(mkInt);mkInt=setInterval(()=>{Mk.secLeft--;const m=Math.floor(Mk.secLeft/60),s=Mk.secLeft%60;$("#mockTimer").textContent=`⏱ ${m}:${String(s).padStart(2,"0")}`;if(Mk.secLeft<=0){clearInterval(mkInt);finishMock()}},1000);const m=Math.floor(Mk.secLeft/60);$("#mockTimer").textContent=`⏱ ${m}:00`}
-function renderMockQ(){const it=Mk.items[Mk.idx];$("#mkPos").textContent=(Mk.idx+1)+"/"+Mk.items.length;$("#mkLeft").textContent=(Mk.items.length-Mk.idx-1);$("#mkFill").style.width=(Mk.idx/Mk.items.length*100)+"%";$("#mkQ").innerHTML=mathToHtml(it.q.q);const ch=$("#mkChoices");ch.innerHTML="";const K=["A","B","C","D"];it.shuf.forEach((t,i)=>{const b=document.createElement("button");b.className="choice"+(it.pick===i?" correct":"");b.innerHTML=`<span class="key">${K[i]}</span><span class="ctxt" dir="auto">${mathToHtml(t)}</span>`;b.onclick=()=>{it.pick=i;renderMockQ()};ch.appendChild(b)});$("#mkNext").textContent=Mk.idx===Mk.items.length-1?"إنهاء ✓":"التالي ↵"}
+function renderMockQ(){const it=Mk.items[Mk.idx];$("#mkPos").textContent=(Mk.idx+1)+"/"+Mk.items.length;$("#mkLeft").textContent=(Mk.items.length-Mk.idx-1);$("#mkFill").style.width=(Mk.idx/Mk.items.length*100)+"%";$("#mkQ").innerHTML=mathToHtml(it.q.q);renderQuestionAssist("#mkAssist",it.q,it);const ch=$("#mkChoices");ch.innerHTML="";const K=["A","B","C","D"];it.shuf.forEach((t,i)=>{const b=document.createElement("button");b.className="choice"+(it.pick===i?" correct":"");b.innerHTML=`<span class="key">${K[i]}</span><span class="ctxt" dir="auto">${mathToHtml(t)}</span>`;b.onclick=()=>{it.pick=i;renderMockQ()};ch.appendChild(b)});$("#mkNext").textContent=Mk.idx===Mk.items.length-1?"إنهاء ✓":"التالي ↵"}
 function mockNext(){if(Mk.idx<Mk.items.length-1){Mk.idx++;renderMockQ()}else finishMock()}
 function finishMock(){clearInterval(mkInt);$("#mockTimer").style.display="none";let correct=0;const groups=new Map();Mk.items.forEach(it=>{const ok=it.pick===it.correct;if(ok)correct++;const st=qstate(it.q.id);st.seen++;if(ok){st.correct++;st.box=Math.min(5,(st.box||1)+1)}else{st.wrong++;st.box=1}st.last=Date.now();st.due=Date.now()+(ok?GAPS[st.box]:1)*DAYMS;const lesson=lessonForQuestion(Mk.code,it.q.id),key=lesson?.id||"other",g=groups.get(key)||{label:lesson?.label||"أسئلة عامة",correct:0,total:0};g.total++;if(ok)g.correct++;groups.set(key,g)});
   const pct=Math.round(correct/Mk.items.length*100),rd=readiness(pct),attempt={id:"a"+Date.now(),at:new Date().toISOString(),code:Mk.code,label:Mk.label,pct,correct,total:Mk.items.length,lessonIds:Mk.lessonIds,presetId:Mk.presetId};STORE.attempts.unshift(attempt);STORE.attempts=STORE.attempts.slice(0,100);if(Mk.lessonIds.length===1)STORE.tests[Mk.lessonIds[0]]={pct,correct,total:Mk.items.length,at:attempt.at};saveStore();bumpDaily();$("#mockRun").style.display="none";const r=$("#mockResult");r.style.display="";
   const breakdown=[...groups.values()].map(g=>{const p=Math.round(g.correct/g.total*100);return `<div><b dir="auto">${escHtml(g.label)}</b><br><span style="color:${p>=90?'var(--good)':p>=70?'#facc15':'var(--bad)'}">${g.correct}/${g.total} · ${p}%</span></div>`}).join("");
-  let list=Mk.items.map((it,i)=>{const ok=it.pick===it.correct;const yourTxt=it.pick>=0?it.shuf[it.pick]:"— (تُرك)";return `<div class="srchres"><div class="sq" dir="auto">${i+1}. ${mathToHtml(it.q.q)}</div><div class="meta" style="color:${ok?"var(--good)":"var(--bad)"}">${ok?"✓ صح":"✗ غلط"} — إجابتك: <span dir="auto">${mathToHtml(yourTxt)}</span></div>${ok?"":`<div class="sa" style="display:block" dir="auto">✓ الصحيح: ${mathToHtml(it.q.choices[it.q.answer])}${it.q.explanation?" — "+mathToHtml(it.q.explanation):""}</div>`}</div>`}).join("");
+  let list=Mk.items.map((it,i)=>{const ok=it.pick===it.correct;const yourTxt=it.pick>=0?it.shuf[it.pick]:"— (تُرك)",ar=it.q.explanation_ar?`<div class="explain-ar" dir="rtl"><b>شرح عربي</b>${mathToHtml(it.q.explanation_ar)}</div>`:"";return `<div class="srchres"><div class="sq" dir="auto">${i+1}. ${mathToHtml(it.q.q)}</div><div class="meta" style="color:${ok?"var(--good)":"var(--bad)"}">${ok?"✓ صح":"✗ غلط"} — إجابتك: <span dir="auto">${mathToHtml(yourTxt)}</span></div>${ok?"":`<div class="sa" style="display:block" dir="auto">✓ الصحيح: ${mathToHtml(it.q.choices[it.q.answer])}${it.q.explanation?" — "+mathToHtml(it.q.explanation):""}</div>`}${ar}</div>`}).join("");
   r.innerHTML=`<div class="sec" style="text-align:center"><div style="font-size:2.6rem;font-weight:800;color:${pct>=90?"var(--good)":pct>=70?"#facc15":"var(--bad)"}">${pct}%</div><div style="color:var(--muted)">${correct} من ${Mk.items.length} صحيحة</div><div class="readiness ${rd.cls}">${rd.text}</div><div class="breakdown">${breakdown}</div><div class="setrow" style="justify-content:center;margin-top:14px"><button class="sbtn primary" id="mkReview">⚠️ راجع الغلطات</button><button class="sbtn" id="mkAgain">🔁 أعد الاختبار</button></div></div><h3 style="margin:6px 2px">المراجعة</h3>${list}`;
   $("#mkAgain").onclick=()=>Mk.presetId?startPreset(Mk.presetId):(Mk.lessonIds.length===1?startLessonTest(Mk.code,Mk.lessonIds[0]):openMock());
   const wrong=Mk.items.filter(it=>it.pick!==it.correct).map(it=>it.q);
@@ -735,7 +780,7 @@ async function clearLegacyStudyFlowCache(){
 async function boot(){await clearLegacyStudyFlowCache();await loadBuiltinFinals();const p=localStorage.getItem(PASS);if(p){const lk=$("#lock");lk.classList.add("show");const tryU=()=>{if($("#lockInput").value===p){lk.classList.remove("show");startApp()}else $("#lockErr").style.display=""};$("#lockBtn").onclick=tryU;$("#lockInput").addEventListener("keydown",e=>{if(e.key==="Enter")tryU()});$("#lockInput").focus()}else startApp()}
 document.addEventListener("visibilitychange",()=>{if(!SYNC.enabled)return;if(document.hidden){syncPush();}else{syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});}});
 window.addEventListener("online",()=>{if(SYNC.enabled)syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});});
-const VER="v0811-private-finals";try{var _vb=document.createElement("div");_vb.id="sfver";_vb.textContent=VER;_vb.title="StudyFlow build";_vb.style.cssText="position:fixed;bottom:6px;left:8px;font:600 10px/1 ui-monospace,monospace;color:var(--muted2);opacity:.45;z-index:60;pointer-events:none;letter-spacing:.5px";document.body.appendChild(_vb);}catch(e){}
+const VER="v0811-pdc-english-match-v3";try{var _vb=document.createElement("div");_vb.id="sfver";_vb.textContent=VER;_vb.title="StudyFlow build";_vb.style.cssText="position:fixed;bottom:6px;left:8px;font:600 10px/1 ui-monospace,monospace;color:var(--muted2);opacity:.45;z-index:60;pointer-events:none;letter-spacing:.5px";document.body.appendChild(_vb);}catch(e){}
 boot();
 </script>
 </body>
