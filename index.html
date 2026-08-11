@@ -288,7 +288,7 @@
   <!-- SETTINGS -->
   <div id="settings">
     <div class="sess-top"><button class="iconlg" id="setBack">→</button><div class="ttl">⚙️ الإعدادات</div></div>
-    <div class="sec"><h3>📚 المحتوى الدراسي</h3><div class="hint" style="margin-bottom:8px">استورد ملف <span class="ltr">studyflow-data.json</span> أنشأه لك Codex من كتبك أو سلايداتك. يُحفظ المحتوى داخل هذا المتصفح ولا يُرفع إلى GitHub.</div><div class="setrow"><button class="sbtn primary" id="contentImportBtn">⬆️ استورد المحتوى</button><button class="sbtn" id="contentExportBtn">⬇️ صدّر المحتوى</button><button class="sbtn danger" id="contentClearBtn">إزالة المحتوى</button><input type="file" id="contentFile" accept=".json,application/json" style="display:none"></div></div>
+    <div class="sec"><h3>📚 المحتوى الدراسي</h3><div class="hint" style="margin-bottom:8px">مجموعتا الفاينل جاهزتان تلقائيًا. أي ملف <span class="ltr">studyflow-data.json</span> إضافي تستورده يُحفظ داخل هذا المتصفح ولا يُرفع إلى GitHub.</div><div class="setrow"><button class="sbtn primary" id="contentImportBtn">⬆️ استورد المحتوى</button><button class="sbtn" id="contentExportBtn">⬇️ صدّر المحتوى</button><button class="sbtn danger" id="contentClearBtn">إزالة المحتوى الخاص</button><input type="file" id="contentFile" accept=".json,application/json" style="display:none"></div></div>
     <div class="sec"><h3>🎯 الهدف اليومي</h3><div class="setrow"><span class="lab">عدد الأسئلة/المسائل في اليوم</span><input class="tinp" id="goalInp" type="number" min="5" step="5" style="width:90px"><button class="sbtn primary" id="goalSave">حفظ</button></div></div>
     <div class="sec"><h3>👁️ المواد الظاهرة</h3><div class="hint" style="margin-bottom:8px">اختر المواد اللي تظهر في الرئيسية والموك. الباقي ينخفي — بياناته وتقدّمك يبقون محفوظين.</div><div class="mockopt" id="subjToggles"></div></div>
     <div class="sec"><h3>🎯 الجلسة والتركيز</h3>
@@ -314,13 +314,28 @@
 
 <script>
 "use strict";
-const SKEY="studyflow-v1",SET="studyflow-set-v1",PKEY="studyflow-plan-v1",PASS="studyflow-pass-v1",DKEY="studyflow-daily-v1",SYNCKEY="studyflow-sync-v1",CONTENTKEY="studyflow-content-v1";
+const SKEY="studyflow-v1",SET="studyflow-set-v1",PKEY="studyflow-plan-v1",PASS="studyflow-pass-v1",DKEY="studyflow-daily-v1",SYNCKEY="studyflow-sync-v1",CONTENTKEY="studyflow-content-v1",BUILTINKEY="studyflow-builtin-finals-2026-t3-v1";
 const GAPS={1:2,2:4,3:7,4:12,5:20},MB=4,DAYMS=86400000,SESSION_CAP=5;
+const EMPTY_CONTENT={version:1,subjects:{},schedule:{plan:[],exams:[]}},BUILTIN_CONTENT_URL="finals-2026-t3.json?v=20260811-1",BUILTIN_CODES=["CCCS422-FINAL","WEB-EXAM2"];
 function lj(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}} function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-let CONTENT=lj(CONTENTKEY,{version:1,subjects:{},schedule:{plan:[],exams:[]}});
-let DATA=CONTENT.subjects||{},SCHED=CONTENT.schedule||{plan:[],exams:[]},ORDER=Object.keys(DATA);
+let CONTENT=lj(CONTENTKEY,EMPTY_CONTENT),BUILTIN_CONTENT=lj(BUILTINKEY,EMPTY_CONTENT);
+let DATA={},SCHED={plan:[],exams:[]},ORDER=[];
+function mergedSchedule(builtin,custom){
+  const days=new Map(),exams=new Map();
+  for(const source of[builtin||{},custom||{}]){
+    for(const day of(Array.isArray(source.plan)?source.plan:[])){
+      if(!day||!day.d)continue;
+      const current=days.get(day.d)||{d:day.d,day:day.day||"",exam:null,tasks:[]};
+      if(day.day)current.day=day.day;if(day.exam)current.exam=day.exam;
+      for(const task of(Array.isArray(day.tasks)?day.tasks:[]))if(!current.tasks.some(t=>t.c===task.c&&t.ch===task.ch&&!!t.review===!!task.review))current.tasks.push(task);
+      days.set(day.d,current);
+    }
+    for(const exam of(Array.isArray(source.exams)?source.exams:[]))if(exam&&exam.c)exams.set(exam.c,exam);
+  }
+  return{plan:[...days.values()].sort((a,b)=>a.d.localeCompare(b.d)),exams:[...exams.values()]};
+}
 function prepareContent(){
-  DATA=CONTENT.subjects||{};SCHED=CONTENT.schedule||{plan:[],exams:[]};SCHED.plan=Array.isArray(SCHED.plan)?SCHED.plan:[];SCHED.exams=Array.isArray(SCHED.exams)?SCHED.exams:[];ORDER=Object.keys(DATA);
+  DATA=Object.assign({},BUILTIN_CONTENT.subjects||{},CONTENT.subjects||{});SCHED=mergedSchedule(BUILTIN_CONTENT.schedule,CONTENT.schedule);ORDER=Object.keys(DATA);
   for(const code of ORDER){const subj=DATA[code];subj.code=subj.code||code;subj.color=subj.color||"#38bdf8";subj.chapters=Array.isArray(subj.chapters)?subj.chapters:[];for(const ch of subj.chapters){ch.questions=Array.isArray(ch.questions)?ch.questions:[];ch.practice=Array.isArray(ch.practice)?ch.practice:[];if(ch.objectives&&ch.objectives.length)ch.lessons=ch.objectives.map(o=>({id:ch.id+"-"+String(o.num).replace(".","_"),num:o.num,label:o.label,questions:ch.questions.filter(q=>q.obj===o.num),notes:(ch.objNotes&&ch.objNotes[o.num])||null}));else if(!ch.questions.length&&ch.lessons)ch.questions=ch.lessons.flatMap(l=>l.questions||[]);}}
 }
 prepareContent();
@@ -346,10 +361,20 @@ function validateContent(raw){
   if(typeof schedule!=="object"||!Array.isArray(schedule.plan||[])||!Array.isArray(schedule.exams||[]))throw new Error("schedule غير صالح");
   return{version:1,subjects,schedule:{plan:schedule.plan||[],exams:schedule.exams||[]}};
 }
+function validateBuiltinFinals(raw){
+  const content=validateContent(raw);
+  for(const code of BUILTIN_CODES){const subject=content.subjects[code],total=subject?.chapters?.reduce((n,ch)=>n+(ch.questions||[]).length,0)||0;if(!subject||subject.chapters.length!==3||total!==105)throw new Error(`حزمة ${code} غير مكتملة`);}
+  return content;
+}
+async function loadBuiltinFinals(){
+  try{const response=await fetch(BUILTIN_CONTENT_URL,{cache:"no-store"});if(response.ok){BUILTIN_CONTENT=validateBuiltinFinals(await response.json());sv(BUILTINKEY,BUILTIN_CONTENT)}}catch(e){}
+  prepareContent();
+}
 function replaceContent(raw){CONTENT=validateContent(raw);sv(CONTENTKEY,CONTENT);prepareContent();SETTINGS.hidden=[];saveSet();renderHome();}
 function downloadJSON(name,value){const blob=new Blob([JSON.stringify(value,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 let STORE=lj(SKEY,{q:{},star:{}}); if(!STORE.star)STORE.star={};
 let SETTINGS=Object.assign({includeExtra:true,goal:50,sound:false,sessionMins:20,fullscreen:true,hidden:[]},lj(SET,{}));
+if(SETTINGS.builtinFinalsBuild!=="2026-08-11-v1"){SETTINGS.hidden=(SETTINGS.hidden||[]).filter(code=>!BUILTIN_CODES.includes(code));SETTINGS.builtinFinalsBuild="2026-08-11-v1";sv(SET,SETTINGS)}
 let PLANDONE=lj(PKEY,{}); let DAILY=lj(DKEY,{dates:{}}); let SYNC=lj(SYNCKEY,{token:"",gistId:"",enabled:false});
 function saveStore(){sv(SKEY,STORE);schedulePush();} function saveSet(){sv(SET,SETTINGS);} function savePlan(){sv(PKEY,PLANDONE);schedulePush();} function saveDaily(){sv(DKEY,DAILY);schedulePush();}
 function qstate(id){return STORE.q[id]||(STORE.q[id]={box:1,seen:0,correct:0,wrong:0,due:0,last:0})}
@@ -481,7 +506,7 @@ function nextCard(){
   S.answered=false;S.cur=card;const isMatch=card.type==="match";const practice=!isMatch&&!card.choices;
   const _cel=document.querySelector("#cardHost .card");if(_cel){_cel.classList.remove("cardin");void _cel.offsetWidth;_cel.classList.add("cardin")}
   $("#srcBadge").style.display=(practice||isMatch)?"none":"";
-  if(!practice&&!isMatch){const sb=$("#srcBadge");const lab=card.source?("📄 "+card.source):({official:"📘 مصدر رسمي",lecture:"🎓 محاضرة",extra:"✨ إضافي",source:"📄 من المصدر"}[card.src]||"");sb.textContent=lab;sb.title=card.source||"";sb.className="srcbadge"+(card.src==="official"?" official":"")}
+  if(!practice&&!isMatch){const sb=$("#srcBadge");const lab=card.source?("📄 "+card.source):({official:"📘 مصدر رسمي",lecture:"🎓 محاضرة",extra:"✨ إضافي",source:"📄 من المصدر",exam:"🎯 نطاق الاختبار"}[card.src]||"");sb.textContent=lab;sb.title=card.source||"";sb.className="srcbadge"+(card.src==="official"?" official":"")}
   $("#starToggle").textContent=STORE.star[card.id]?"★":"☆";$("#starToggle").classList.toggle("on",!!STORE.star[card.id]);
   renderBoxdots(card.box);$("#question").innerHTML=mathToHtml(card.q);
   $("#explain").classList.remove("show");$("#nextbar").classList.remove("show");$("#gradebar").classList.remove("show");$("#revealbar").classList.remove("show");
@@ -653,7 +678,7 @@ function chooseContentFile(){const f=$("#contentFile");f.value="";f.click()}
 $("#contentImportHome").onclick=chooseContentFile;$("#contentImportBtn").onclick=chooseContentFile;
 $("#contentFile").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{replaceContent(JSON.parse(await f.text()));alert(`تم استيراد ${ORDER.length} مادة ✓`);show("home")}catch(err){alert("تعذّر استيراد المحتوى: "+err.message)}};
 $("#contentExportBtn").onclick=()=>downloadJSON("studyflow-data.json",CONTENT);
-$("#contentClearBtn").onclick=()=>{if(!confirm("إزالة المحتوى الدراسي من هذا المتصفح؟ تقدّمك سيبقى محفوظاً."))return;CONTENT={version:1,subjects:{},schedule:{plan:[],exams:[]}};sv(CONTENTKEY,CONTENT);prepareContent();renderHome();renderSubjToggles();alert("تمت إزالة المحتوى")};
+$("#contentClearBtn").onclick=()=>{if(!confirm("إزالة المحتوى الخاص المستورد؟ تقدّمك ومجموعتا الفاينل سيبقيان محفوظين."))return;CONTENT={version:1,subjects:{},schedule:{plan:[],exams:[]}};sv(CONTENTKEY,CONTENT);prepareContent();renderHome();renderSubjToggles();alert("تمت إزالة المحتوى الخاص")};
 function renderSubjToggles(){const host=$("#subjToggles");if(!host)return;const h=SETTINGS.hidden||[];host.innerHTML=ORDER.map(c=>DATA[c]?`<button data-sc="${c}" class="${h.includes(c)?"":"sel"}">${subjName(c)}</button>`:"").join("");host.querySelectorAll("button").forEach(b=>b.onclick=()=>{const c=b.dataset.sc;const hid=SETTINGS.hidden||(SETTINGS.hidden=[]);const i=hid.indexOf(c);if(i>=0)hid.splice(i,1);else hid.push(c);saveSet();renderSubjToggles();renderHome()})}
 function openSettings(){$("#lockStatus").textContent=localStorage.getItem(PASS)?"مُفعّل ✓":"مطفّأ";$("#goalInp").value=SETTINGS.goal;$("#soundSwitch").classList.toggle("on",SETTINGS.sound);$("#sessMinInp").value=SETTINGS.sessionMins||20;$("#fsSwitch").classList.toggle("on",SETTINGS.fullscreen!==false);$("#ghToken").value=SYNC.token||"";renderSubjToggles();syncStat(SYNC.enabled?"مُفعّلة ✓":"مطفّأة");show("settings")}
 $("#goalSave").onclick=()=>{const v=parseInt($("#goalInp").value)||50;SETTINGS.goal=Math.max(5,v);saveSet();alert("تم")};
@@ -676,10 +701,15 @@ function downloadICS(time){const[hh,mm]=time.split(":");const pad=n=>String(n).p
 
 /* ===== boot ===== */
 function startApp(){renderHome();document.querySelector(".subject")?.classList.add("open");setSyncDot(SYNC.enabled?"جارٍ":"مطفّأة");if(SYNC.enabled)syncPull().then(renderHome)}
-function boot(){const p=localStorage.getItem(PASS);if(p){const lk=$("#lock");lk.classList.add("show");const tryU=()=>{if($("#lockInput").value===p){lk.classList.remove("show");startApp()}else $("#lockErr").style.display=""};$("#lockBtn").onclick=tryU;$("#lockInput").addEventListener("keydown",e=>{if(e.key==="Enter")tryU()});$("#lockInput").focus()}else startApp();if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{})}
+async function clearLegacyStudyFlowCache(){
+  if(!location.protocol.startsWith("http"))return;
+  if("serviceWorker"in navigator){try{const registration=await navigator.serviceWorker.getRegistration("./");if(registration)await registration.unregister()}catch(e){}}
+  if("caches"in window){try{const keys=await caches.keys();await Promise.all(keys.filter(key=>key.startsWith("studyflow-")).map(key=>caches.delete(key)))}catch(e){}}
+}
+async function boot(){await clearLegacyStudyFlowCache();await loadBuiltinFinals();const p=localStorage.getItem(PASS);if(p){const lk=$("#lock");lk.classList.add("show");const tryU=()=>{if($("#lockInput").value===p){lk.classList.remove("show");startApp()}else $("#lockErr").style.display=""};$("#lockBtn").onclick=tryU;$("#lockInput").addEventListener("keydown",e=>{if(e.key==="Enter")tryU()});$("#lockInput").focus()}else startApp()}
 document.addEventListener("visibilitychange",()=>{if(!SYNC.enabled)return;if(document.hidden){syncPush();}else{syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});}});
 window.addEventListener("online",()=>{if(SYNC.enabled)syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});});
-const VER="v0808-private-content";try{var _vb=document.createElement("div");_vb.id="sfver";_vb.textContent=VER;_vb.title="StudyFlow build";_vb.style.cssText="position:fixed;bottom:6px;left:8px;font:600 10px/1 ui-monospace,monospace;color:var(--muted2);opacity:.45;z-index:60;pointer-events:none;letter-spacing:.5px";document.body.appendChild(_vb);}catch(e){}
+const VER="v0811-private-finals";try{var _vb=document.createElement("div");_vb.id="sfver";_vb.textContent=VER;_vb.title="StudyFlow build";_vb.style.cssText="position:fixed;bottom:6px;left:8px;font:600 10px/1 ui-monospace,monospace;color:var(--muted2);opacity:.45;z-index:60;pointer-events:none;letter-spacing:.5px";document.body.appendChild(_vb);}catch(e){}
 boot();
 </script>
 </body>
