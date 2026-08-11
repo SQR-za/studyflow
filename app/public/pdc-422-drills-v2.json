@@ -1,0 +1,1188 @@
+{
+  "version": 2,
+  "subject": "CCCS422-FINAL",
+  "build": "2026-08-11-pdc-v3",
+  "chapters": {
+    "cccs422-final-t6": {
+      "sections": [
+        {
+          "id": "mpi-foundations",
+          "label": "1 · MPI Foundations & Program Flow",
+          "questionIds": ["cccs422-final-t6-q01", "cccs422-final-t6-q02", "cccs422-final-t6-q03", "cccs422-final-t6-q04", "cccs422-final-t6-q05", "cccs422-final-t6-q06", "cccs422-final-t6-q07", "cccs422-final-t6-q08", "cccs422-final-t6-q16", "cccs422-final-t6-q17", "cccs422-final-t6-q20", "cccs422-final-t6-q32", "cccs422-final-t6-q36", "cccs422-final-t6-q37"]
+        },
+        {
+          "id": "mpi-point-to-point",
+          "label": "2 · Send/Recv, Matching & Non-blocking",
+          "questionIds": ["cccs422-final-t6-q09", "cccs422-final-t6-q10", "cccs422-final-t6-q11", "cccs422-final-t6-q12", "cccs422-final-t6-q13", "cccs422-final-t6-q14", "cccs422-final-t6-q15", "cccs422-final-t6-q18", "cccs422-final-t6-q19", "cccs422-final-t6-q34", "cccs422-final-t6-q35", "cccs422-final-t6-q38", "cccs422-final-t6-q39", "cccs422-final-t6-q40", "cccs422-final-t6-q41", "cccs422-final-t6-q42", "cccs422-final-t6-q43", "cccs422-final-t6-q44", "cccs422-final-t6-q45", "cccs422-final-t6-q71"]
+        },
+        {
+          "id": "mpi-collectives",
+          "label": "3 · Collectives & Timing",
+          "questionIds": ["cccs422-final-t6-q21", "cccs422-final-t6-q22", "cccs422-final-t6-q23", "cccs422-final-t6-q24", "cccs422-final-t6-q25", "cccs422-final-t6-q31", "cccs422-final-t6-q46", "cccs422-final-t6-q47", "cccs422-final-t6-q48", "cccs422-final-t6-q49", "cccs422-final-t6-q50", "cccs422-final-t6-q51", "cccs422-final-t6-q52"]
+        },
+        {
+          "id": "mpi-derived-types",
+          "label": "4 · Derived Datatypes & Communication Cost",
+          "questionIds": ["cccs422-final-t6-q26", "cccs422-final-t6-q27", "cccs422-final-t6-q28", "cccs422-final-t6-q29", "cccs422-final-t6-q30", "cccs422-final-t6-q33", "cccs422-final-t6-q53", "cccs422-final-t6-q54", "cccs422-final-t6-q55", "cccs422-final-t6-q56", "cccs422-final-t6-q57", "cccs422-final-t6-q58", "cccs422-final-t6-q59", "cccs422-final-t6-q66", "cccs422-final-t6-q67"]
+        },
+        {
+          "id": "mpi-exam-drills",
+          "label": "5 · MPI Code Tracing & Exam Drills",
+          "questionIds": ["cccs422-final-t6-q60", "cccs422-final-t6-q61", "cccs422-final-t6-q62", "cccs422-final-t6-q63", "cccs422-final-t6-q64", "cccs422-final-t6-q65", "cccs422-final-t6-q68", "cccs422-final-t6-q69", "cccs422-final-t6-q70", "cccs422-final-t6-q72"]
+        }
+      ],
+"questions": [
+        {
+          "id": "cccs422-final-t6-q36",
+          "section": "mpi-foundations",
+          "q": "An MPI program runs with four processes. What values can `my_rank` take?",
+          "q_ar": "شُغّل برنامج MPI بأربع Processes. ما قيم `my_rank` الممكنة؟",
+          "hint_ar": "تذكّر أن ترقيم Ranks يبدأ من الصفر.",
+          "choices": [
+            "1, 2, 3, 4",
+            "0, 1, 2, 3",
+            "0 only",
+            "4 only"
+          ],
+          "answer": 1,
+          "explanation": "MPI ranks start at 0 and end at `comm_sz - 1`, so four processes have ranks 0 through 3.",
+          "explanation_ar": "Ranks تبدأ من 0 وتنتهي عند `comm_sz - 1`، أي 0 إلى 3.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 7"
+        },
+        {
+          "id": "cccs422-final-t6-q37",
+          "section": "mpi-foundations",
+          "q": "Which sequence correctly describes the lifecycle of an MPI program?",
+          "q_ar": "ما الترتيب الصحيح لدورة حياة برنامج MPI؟",
+          "hint_ar": "فكّر فيما يجب أن يحدث قبل وبعد أي MPI operation.",
+          "choices": [
+            "Finalize -> Init -> Rank -> Size",
+            "Init -> Comm_size/Comm_rank -> Work/Communication -> Finalize",
+            "Rank -> Send -> Init -> Finalize",
+            "Init -> Finalize -> Send/Recv"
+          ],
+          "answer": 1,
+          "explanation": "MPI must be initialized first, then the program can query the process count and rank, perform its work and communication, and finally call `MPI_Finalize`.",
+          "explanation_ar": "يجب تشغيل MPI أولًا، ثم معرفة العدد والـrank، ثم تنفيذ العمل، وأخيرًا Finalize.",
+          "src": "exam",
+          "source": "Topic 6 · Slides 4–7"
+        },
+        {
+          "id": "cccs422-final-t6-q38",
+          "section": "mpi-point-to-point",
+          "q": "Which statement sends one integer from `x` to rank 1 using tag 7?",
+          "q_ar": "أي سطر يرسل Integer واحدًا من `x` إلى rank 1 باستخدام tag 7؟",
+          "hint_ar": "راجع ترتيب Parameters في `MPI_Send`.",
+          "choices": [
+            "MPI_Send(x, MPI_INT, 1, 7);",
+            "MPI_Send(&x, 1, MPI_INT, 1, 7, MPI_COMM_WORLD);",
+            "MPI_Recv(&x, 1, MPI_INT, 1, 7, MPI_COMM_WORLD);",
+            "MPI_Send(&x, 7, MPI_INT, 1, 1, MPI_COMM_WORLD);"
+          ],
+          "answer": 1,
+          "explanation": "The `MPI_Send` parameter order is buffer, count, datatype, destination, tag, and communicator.",
+          "explanation_ar": "الترتيب هو buffer, count, datatype, destination, tag, communicator.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 10"
+        },
+        {
+          "id": "cccs422-final-t6-q39",
+          "section": "mpi-point-to-point",
+          "q": "Rank 1 expects one integer from rank 0 with tag 7. Which receive call is correct?",
+          "q_ar": "rank 1 ينتظر Integer من rank 0 وtag 7. أي Receive صحيح؟",
+          "hint_ar": "حدّد `source` و`tag` من وصف السؤال.",
+          "choices": [
+            "MPI_Recv(&x, 1, MPI_INT, 0, 7, MPI_COMM_WORLD, MPI_STATUS_IGNORE);",
+            "MPI_Recv(&x, 0, MPI_INT, 1, 7, MPI_COMM_WORLD, MPI_STATUS_IGNORE);",
+            "MPI_Send(&x, 1, MPI_INT, 0, 7, MPI_COMM_WORLD);",
+            "MPI_Recv(x, MPI_INT, 7, 0);"
+          ],
+          "answer": 0,
+          "explanation": "The source is rank 0 and the tag is 7; `MPI_Recv` also requires a status argument or `MPI_STATUS_IGNORE`.",
+          "explanation_ar": "الـsource هو rank 0 والـtag هو 7، ويجب تمرير status أو MPI_STATUS_IGNORE.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 11"
+        },
+        {
+          "id": "cccs422-final-t6-q40",
+          "section": "mpi-point-to-point",
+          "q": "A sender transmits 4 integers, while the matching receive buffer can hold 6 integers. What happens?",
+          "q_ar": "المرسل يرسل 4 Integers والمستقبل خصص مساحة لـ6 Integers مع type/tag/comm متطابقة. ماذا يحدث؟",
+          "hint_ar": "قارن سعة `Receive Buffer` بحجم الرسالة.",
+          "choices": [
+            "The receive fails because the two counts are not equal",
+            "The receive succeeds because its buffer is larger than the message",
+            "It succeeds only when the sender is rank 0",
+            "A data race occurs"
+          ],
+          "answer": 1,
+          "explanation": "A receive buffer may be larger than the incoming message. It must satisfy `recv_buf_sz >= send_buf_sz`; a smaller buffer is insufficient.",
+          "explanation_ar": "الشرط هو `recv_buf_sz >= send_buf_sz`؛ الأكبر مسموح، الأصغر غير كافٍ.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 14"
+        },
+        {
+          "id": "cccs422-final-t6-q41",
+          "section": "mpi-point-to-point",
+          "q": "Which wildcard use is invalid?",
+          "q_ar": "أي استخدام للـWildcard غير صحيح؟",
+          "hint_ar": "تذكّر في أي جهة تُستخدم `Wildcards`.",
+          "choices": [
+            "Using MPI_ANY_SOURCE in MPI_Recv",
+            "Using MPI_ANY_TAG in MPI_Recv",
+            "Sending to MPI_ANY_SOURCE with MPI_Send",
+            "Reading the actual source from status"
+          ],
+          "answer": 2,
+          "explanation": "Wildcards are valid only on the receiving side. A sender must specify a real destination rank and a nonnegative tag.",
+          "explanation_ar": "Wildcards للمستقبل فقط؛ المرسل يجب أن يحدد rank حقيقيًا وtag غير سالب.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 16"
+        },
+        {
+          "id": "cccs422-final-t6-q42",
+          "section": "mpi-point-to-point",
+          "q": "After receiving with `MPI_ANY_SOURCE`, how can the program identify the actual sender?",
+          "q_ar": "بعد Receive باستخدام MPI_ANY_SOURCE، كيف تعرف الـsender الحقيقي؟",
+          "hint_ar": "ابحث في كائن `status` بعد اكتمال الاستقبال.",
+          "choices": [
+            "From comm_sz",
+            "From `status.MPI_SOURCE`",
+            "From MPI_Wtime",
+            "From recv_buf_sz"
+          ],
+          "answer": 1,
+          "explanation": "After the receive completes, the status object stores the actual source and tag of the matched message.",
+          "explanation_ar": "status يحتفظ بالمصدر والـtag الفعليين بعد اكتمال Receive.",
+          "src": "exam",
+          "source": "Topic 6 · Slides 17–18"
+        },
+        {
+          "id": "cccs422-final-t6-q43",
+          "section": "mpi-point-to-point",
+          "q": "The program executes `MPI_Isend(&x, ...); x = 99; MPI_Wait(...);`. What is wrong?",
+          "q_ar": "نفّذ البرنامج `MPI_Isend(&x,...); x=99; MPI_Wait(...);`. أين الخطأ؟",
+          "hint_ar": "ركّز على عمر `Send Buffer` في العملية `Non-blocking`.",
+          "choices": [
+            "MPI_Wait must be called before MPI_Isend",
+            "The send buffer is modified before the send completes",
+            "x must be a double",
+            "MPI_Wait cannot be used with MPI_Isend"
+          ],
+          "answer": 1,
+          "explanation": "After `MPI_Isend`, the send buffer must not be accessed or modified until `MPI_Wait` or `MPI_Test` confirms completion.",
+          "explanation_ar": "بعد Isend لا تلمس Send Buffer حتى يؤكد Wait أو Test اكتمال العملية.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 30"
+        },
+        {
+          "id": "cccs422-final-t6-q44",
+          "section": "mpi-point-to-point",
+          "q": "After calling `MPI_Irecv(&x, ...)`, when is it safe to read `x`?",
+          "q_ar": "بعد `MPI_Irecv(&x,...)` متى يجوز قراءة `x`؟",
+          "hint_ar": "قراءة `Receive Buffer` تعتمد على `completion`.",
+          "choices": [
+            "Immediately after MPI_Irecv",
+            "After MPI_Wait completes or MPI_Test reports completion",
+            "Only after MPI_Init",
+            "Before the message arrives"
+          ],
+          "answer": 1,
+          "explanation": "The MPI implementation may be writing into the receive buffer, so the program must wait for completion before reading it.",
+          "explanation_ar": "قد يبدأ النظام الكتابة داخل Receive Buffer؛ لا تقرأه قبل اكتمال العملية.",
+          "src": "exam",
+          "source": "Topic 6 · Slides 26–27"
+        },
+        {
+          "id": "cccs422-final-t6-q45",
+          "section": "mpi-point-to-point",
+          "q": "Rank 0 and rank 1 both call blocking `MPI_Recv` first, each waiting for the other. What is the most likely result?",
+          "q_ar": "rank 0 وrank 1 يستدعيان `MPI_Recv` أولًا، وكل واحد ينتظر رسالة من الآخر. النتيجة الأقرب؟",
+          "hint_ar": "تتبّع أول `Blocking call` عند كل Rank.",
+          "choices": [
+            "Both wait forever because neither reaches its send",
+            "MPI converts each receive into a send",
+            "A data race occurs",
+            "The ranks change automatically"
+          ],
+          "answer": 0,
+          "explanation": "A blocking receive waits for a matching message. If both processes receive first, neither reaches the send operation, causing deadlock.",
+          "explanation_ar": "Blocking Receive ينتظر رسالة مطابقة؛ إذا بدأ الطرفان بالانتظار فلن يصل التنفيذ إلى Send.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 19"
+        },
+        {
+          "id": "cccs422-final-t6-q46",
+          "section": "mpi-collectives",
+          "q": "Which pattern correctly measures the elapsed time of an entire MPI program?",
+          "q_ar": "ما النمط الصحيح لقياس زمن برنامج MPI كامل؟",
+          "hint_ar": "زمن البرنامج تحدده أبطأ `Process`.",
+          "choices": [
+            "Wtime -> Barrier -> SUM",
+            "Barrier -> Wtime -> work -> elapsed time -> Reduce with MPI_MAX",
+            "Comm_rank -> MPI_MIN only",
+            "Send the time to every process before the work"
+          ],
+          "answer": 1,
+          "explanation": "A barrier aligns the starting point approximately, and reducing with `MPI_MAX` reports the slowest process time, which determines the program's elapsed time.",
+          "explanation_ar": "Barrier يقرب نقطة البداية، وMPI_MAX يأخذ زمن أبطأ Process وهو زمن البرنامج الفعلي.",
+          "src": "exam",
+          "source": "Topic 6 · Slides 20, 33, 35"
+        },
+        {
+          "id": "cccs422-final-t6-q47",
+          "section": "mpi-collectives",
+          "q": "Rank 0 reads `n`, and every process needs the same value. Which call is correct?",
+          "q_ar": "rank 0 قرأ `n` ونريد نفس القيمة عند الجميع. ما السطر الصحيح؟",
+          "hint_ar": "نريد القيمة نفسها عند جميع `Processes`.",
+          "choices": [
+            "MPI_Gather(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);",
+            "MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);",
+            "MPI_Scatter(&n, 0, MPI_INT);",
+            "MPI_Reduce(&n, 1, MPI_SUM);"
+          ],
+          "answer": 1,
+          "explanation": "`MPI_Bcast` distributes the same data from the root process to every process in the communicator.",
+          "explanation_ar": "Bcast يرسل نفس البيانات من root إلى جميع Processes.",
+          "src": "exam",
+          "source": "Topic 6 · Slides 39–40"
+        },
+        {
+          "id": "cccs422-final-t6-q48",
+          "section": "mpi-collectives",
+          "q": "Every process has one value, and their product is needed only at rank 0. Which operation is correct?",
+          "q_ar": "كل Process لديها قيمة ونريد حاصل ضربها عند rank 0. أي اختيار صحيح؟",
+          "hint_ar": "نريد عملية ضرب ونتيجة عند `root` فقط.",
+          "choices": [
+            "MPI_Allgather with MPI_SUM",
+            "MPI_Reduce with MPI_PROD and root = 0",
+            "MPI_Bcast with MPI_MAX",
+            "MPI_Barrier with MPI_PROD"
+          ],
+          "answer": 1,
+          "explanation": "`MPI_Reduce` places the combined result at the root, and `MPI_PROD` multiplies the input values.",
+          "explanation_ar": "Reduce يضع الناتج عند root، وMPI_PROD هو عامل الضرب.",
+          "src": "exam",
+          "source": "Topic 6 · Slides 34–35"
+        },
+        {
+          "id": "cccs422-final-t6-q49",
+          "section": "mpi-collectives",
+          "q": "`MPI_Allgather` is logically equivalent to which sequence?",
+          "q_ar": "`MPI_Allgather` يعادل منطقيًا:",
+          "hint_ar": "فكّر في جمع البيانات ثم مشاركتها مع الجميع.",
+          "choices": [
+            "Scatter followed by Reduce",
+            "Gather followed by broadcasting the complete result",
+            "Barrier followed by Send",
+            "Allreduce followed by Scatter"
+          ],
+          "answer": 1,
+          "explanation": "`MPI_Allgather` collects data from every process and makes the complete collected result available to every process.",
+          "explanation_ar": "يجمع أجزاء الجميع ثم يجعل النتيجة المجمعة متاحة للجميع.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 43"
+        },
+        {
+          "id": "cccs422-final-t6-q50",
+          "section": "mpi-collectives",
+          "q": "How are collective calls matched when they do not have a tag?",
+          "q_ar": "كيف تتطابق Collective Calls إذا لم يكن لها tag؟",
+          "hint_ar": "`Collectives` لا تستخدم `tag`؛ راقب ترتيب الاستدعاءات.",
+          "choices": [
+            "By source only",
+            "By communicator and a compatible call order",
+            "By buffer size only",
+            "By rank 0 only"
+          ],
+          "answer": 1,
+          "explanation": "All processes in the communicator must invoke compatible collective operations in the same order.",
+          "explanation_ar": "يجب أن تستدعي جميع Processes نفس Collective بترتيب ومعاملات متوافقة.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 47"
+        },
+        {
+          "id": "cccs422-final-t6-q51",
+          "section": "mpi-collectives",
+          "q": "The root has an array of 16 elements and there are 4 processes. Which operation gives 4 different elements to each process?",
+          "q_ar": "لدى root Array من 16 عنصرًا و4 Processes، ونريد 4 عناصر مختلفة لكل Process. نستخدم:",
+          "hint_ar": "نريد جزءًا مختلفًا لكل `Process`.",
+          "choices": [
+            "MPI_Bcast",
+            "MPI_Scatter",
+            "MPI_Allreduce",
+            "MPI_Barrier"
+          ],
+          "answer": 1,
+          "explanation": "`MPI_Scatter` divides the root's send buffer into chunks and distributes one chunk to each process.",
+          "explanation_ar": "Scatter يقسم Send Buffer إلى أجزاء ويوزع جزءًا على كل Process.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 41"
+        },
+        {
+          "id": "cccs422-final-t6-q52",
+          "section": "mpi-collectives",
+          "q": "Every process computes `local_error`, and every process needs the largest error. Which operation should be used?",
+          "q_ar": "كل Process حسبت `local_error` وتحتاج جميع Processes إلى أكبر خطأ. نستخدم:",
+          "hint_ar": "هل الناتج مطلوب عند `root` أم عند الجميع؟",
+          "choices": [
+            "MPI_Reduce with MPI_MAX",
+            "MPI_Allreduce with MPI_MAX",
+            "MPI_Gather with MPI_PROD",
+            "MPI_Bcast from every process"
+          ],
+          "answer": 1,
+          "explanation": "`MPI_Allreduce` combines the values and returns the maximum result to every process.",
+          "explanation_ar": "Allreduce يدمج القيم ويضع الناتج عند الجميع.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 37"
+        },
+        {
+          "id": "cccs422-final-t6-q53",
+          "section": "mpi-derived-types",
+          "q": "In a 4 x 4 row-major matrix containing 1 through 16, what does `MPI_Type_vector(4, 1, 4, ...)` select when it starts at element 2?",
+          "q_ar": "في مصفوفة 4×4 مرتبة Row-major من 1 إلى 16، ماذا يرسل `Type_vector(4,1,4)` إذا بدأ من العنصر 2؟",
+          "hint_ar": "`stride` يحدد المسافة بين بدايات `Blocks`.",
+          "choices": [
+            "2, 3, 4, 5",
+            "2, 6, 10, 14",
+            "2, 4, 6, 8",
+            "1, 5, 9, 13"
+          ],
+          "answer": 1,
+          "explanation": "The vector selects one element in each of four blocks, with the start of each block four elements after the previous start.",
+          "explanation_ar": "نأخذ عنصرًا واحدًا أربع مرات، وبداية كل Block تبعد 4 عناصر.",
+          "src": "exam",
+          "source": "Topic 6 · Slides 56–59"
+        },
+        {
+          "id": "cccs422-final-t6-q54",
+          "section": "mpi-derived-types",
+          "q": "In the same matrix, what does `MPI_Type_vector(4, 2, 4, ...)` select when it starts at element 2?",
+          "q_ar": "من نفس المصفوفة، ماذا يختار `Type_vector(4,2,4)` ابتداءً من 2؟",
+          "hint_ar": "راقب `blocklength` و`stride` معًا.",
+          "choices": [
+            "2, 3, 6, 7, 10, 11, 14, 15",
+            "2, 6, 10, 14",
+            "2, 3, 4, 5, 6, 7, 8, 9",
+            "1, 2, 5, 6"
+          ],
+          "answer": 0,
+          "explanation": "The datatype has four blocks, two elements per block, and a stride of four elements between block starts.",
+          "explanation_ar": "أربع Blocks، في كل Block عنصران، وبين بدايتي Block وآخر stride يساوي 4.",
+          "src": "exam",
+          "source": "Topic 6 · Slides 60–61"
+        },
+        {
+          "id": "cccs422-final-t6-q55",
+          "section": "mpi-derived-types",
+          "q": "In `MPI_Type_vector(count, blocklength, stride, ...)`, what does `stride` measure?",
+          "q_ar": "في `MPI_Type_vector(count, blocklength, stride, ...)`، ماذا يقيس stride؟",
+          "hint_ar": "قِس المسافة بوحدات `oldtype`.",
+          "choices": [
+            "The total number of bytes in the message",
+            "The distance from the start of one block to the start of the next, in oldtype units",
+            "The number of processes",
+            "The receive buffer size"
+          ],
+          "answer": 1,
+          "explanation": "`stride` is the distance between the starts of consecutive blocks, measured in units of the old datatype; it is not the block size.",
+          "explanation_ar": "stride هو القفزة بين بدايات الـBlocks، وليس حجم Block نفسه.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 56"
+        },
+        {
+          "id": "cccs422-final-t6-q56",
+          "section": "mpi-derived-types",
+          "q": "Which constructor best represents irregular blocks of one base datatype with different lengths and displacements?",
+          "q_ar": "لديك Blocks غير منتظمة من النوع الأساسي نفسه وبأطوال وإزاحات مختلفة. الأنسب هو:",
+          "hint_ar": "اختر النوع الذي يدعم أطوالًا وإزاحات غير منتظمة.",
+          "choices": [
+            "MPI_Type_contiguous",
+            "MPI_Type_vector",
+            "MPI_Type_indexed",
+            "MPI_Bcast"
+          ],
+          "answer": 2,
+          "explanation": "`MPI_Type_indexed` describes irregular blocks of the same old datatype using a block-length array and a displacement array.",
+          "explanation_ar": "Type_indexed يمثل Blocks غير منتظمة من oldtype واحد.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 62"
+        },
+        {
+          "id": "cccs422-final-t6-q57",
+          "section": "mpi-derived-types",
+          "q": "A struct's field addresses are 100, 180, and 200. What are their displacements relative to the first field?",
+          "q_ar": "عناوين حقول Struct هي 100 و180 و200. ما Displacements بالنسبة لأول حقل؟",
+          "hint_ar": "اطرح عنوان أول `field` من جميع العناوين.",
+          "choices": [
+            "100, 180, 200",
+            "0, 80, 100",
+            "0, 180, 200",
+            "100, 80, 0"
+          ],
+          "answer": 1,
+          "explanation": "Subtract the base address, 100, from every field address to obtain displacements 0, 80, and 100.",
+          "explanation_ar": "نطرح Base Address وهو 100 من كل عنوان: 0، 80، 100.",
+          "src": "exam",
+          "source": "Practice PDF · Struct displacement"
+        },
+        {
+          "id": "cccs422-final-t6-q58",
+          "section": "mpi-derived-types",
+          "q": "Which sequence correctly describes the lifecycle of an MPI derived datatype?",
+          "q_ar": "ما دورة حياة Derived Datatype الصحيحة؟",
+          "hint_ar": "هناك خطوة إلزامية قبل استخدام `datatype`.",
+          "choices": [
+            "Create -> Use -> Commit",
+            "Create -> Commit -> Use -> Free",
+            "Commit -> Create -> Free -> Use",
+            "Create -> Finalize -> Use"
+          ],
+          "answer": 1,
+          "explanation": "A derived datatype must be committed before it is used and freed after it is no longer needed.",
+          "explanation_ar": "يجب Commit قبل الاستخدام، ثم Free بعد انتهاء الحاجة إلى النوع.",
+          "src": "exam",
+          "source": "Topic 6 · Derived Datatypes"
+        },
+        {
+          "id": "cccs422-final-t6-q59",
+          "section": "mpi-derived-types",
+          "q": "Why is one large message often faster than several small messages carrying the same total amount of data?",
+          "q_ar": "لماذا رسالة واحدة كبيرة غالبًا أسرع من عدة رسائل صغيرة تحمل الحجم الكلي نفسه؟",
+          "hint_ar": "فكّر في تكلفة بدء كل `message`.",
+          "choices": [
+            "MPI always compresses large messages",
+            "Each message has communication startup overhead",
+            "Small messages use the GPU",
+            "The rank changes after every message"
+          ],
+          "answer": 1,
+          "explanation": "The communication startup cost is paid for every message, so reducing the message count usually reduces total overhead.",
+          "explanation_ar": "تكلفة بدء الرسالة تتكرر؛ تقليل عدد الرسائل يخفض Communication Overhead.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 48"
+        },
+        {
+          "id": "cccs422-final-t6-q60",
+          "section": "mpi-exam-drills",
+          "q": "Complete the code: `MPI_Init(NULL, NULL); _____(MPI_COMM_WORLD, &comm_sz);`",
+          "q_ar": "أكمل الفراغ: `MPI_Init(NULL,NULL); ____ (MPI_COMM_WORLD,&comm_sz);`",
+          "hint_ar": "الدالة المطلوبة تعيد عدد `Processes`.",
+          "choices": [
+            "MPI_Comm_rank",
+            "MPI_Comm_size",
+            "MPI_Wtime",
+            "MPI_Finalize"
+          ],
+          "answer": 1,
+          "explanation": "`MPI_Comm_size` returns the number of processes in a communicator.",
+          "explanation_ar": "Comm_size يعيد عدد Processes داخل Communicator.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 7"
+        },
+        {
+          "id": "cccs422-final-t6-q61",
+          "section": "mpi-exam-drills",
+          "q": "Rank 0 sends `x = 42` to rank 1. Rank 1 performs a matching receive and prints `x`. What is printed?",
+          "q_ar": "rank 0 يرسل `x=42` إلى rank 1، ثم rank 1 ينفذ Receive مطابقًا ويطبع x. ماذا يطبع؟",
+          "hint_ar": "تتبّع القيمة التي يكتبها `Receive`.",
+          "choices": [
+            "0",
+            "1",
+            "42",
+            "An unpredictable value"
+          ],
+          "answer": 2,
+          "explanation": "The matching receive writes the transmitted value, 42, into `x` on rank 1.",
+          "explanation_ar": "Receive المطابق يكتب القيمة المرسلة 42 داخل x عند rank 1.",
+          "src": "exam",
+          "source": "Topic 6 · Send/Recv trace"
+        },
+        {
+          "id": "cccs422-final-t6-q62",
+          "section": "mpi-exam-drills",
+          "q": "Each process computes part of a dot product, and every process needs the final result. Which function should be used?",
+          "q_ar": "كل Process حسبت جزءًا من Dot Product، وجميع Processes تحتاج الناتج النهائي. ما الدالة؟",
+          "hint_ar": "هل الناتج مطلوب عند `root` أم عند الجميع؟",
+          "choices": [
+            "MPI_Reduce",
+            "MPI_Allreduce",
+            "MPI_Scatter",
+            "MPI_Barrier"
+          ],
+          "answer": 1,
+          "explanation": "`MPI_Allreduce` performs a reduction and makes the final result available to every process.",
+          "explanation_ar": "Allreduce ينفذ Reduction ثم يجعل الناتج متاحًا للجميع.",
+          "src": "exam",
+          "source": "Topic 6 · Slides 37–38"
+        },
+        {
+          "id": "cccs422-final-t6-q63",
+          "section": "mpi-exam-drills",
+          "q": "A send uses tag 5, while the receive waits for tag 7 from the same source. What happens?",
+          "q_ar": "Send يستخدم tag=5 وReceive ينتظر tag=7 من المصدر نفسه. ماذا يحدث؟",
+          "hint_ar": "مطابقة الرسائل تعتمد على أكثر من `source`.",
+          "choices": [
+            "They match because the source is the same",
+            "They do not match, so the receive keeps waiting",
+            "MPI changes the tag to 7",
+            "A data race occurs"
+          ],
+          "answer": 1,
+          "explanation": "The tag is part of the message envelope and must satisfy the receive's matching condition.",
+          "explanation_ar": "الـtag جزء من Message Envelope ويجب أن يتطابق.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 14"
+        },
+        {
+          "id": "cccs422-final-t6-q64",
+          "section": "mpi-exam-drills",
+          "q": "Which sequence is safe for a non-blocking send?",
+          "q_ar": "أي ترتيب آمن مع Non-blocking Send؟",
+          "hint_ar": "لا تلمس `Buffer` قبل `completion`.",
+          "choices": [
+            "Isend -> modify buffer -> Wait",
+            "Isend -> Wait -> modify buffer",
+            "Wait -> modify buffer -> Isend",
+            "Modify the buffer while Test is running"
+          ],
+          "answer": 1,
+          "explanation": "The send buffer must not be modified until `MPI_Wait` or a successful `MPI_Test` confirms that `MPI_Isend` has completed.",
+          "explanation_ar": "لا تعدل Buffer حتى يؤكد Wait اكتمال Isend.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 30"
+        },
+        {
+          "id": "cccs422-final-t6-q65",
+          "section": "mpi-exam-drills",
+          "q": "Complete the timing reduction: `MPI_Reduce(&local, &total, 1, MPI_DOUBLE, _____, 0, MPI_COMM_WORLD);`",
+          "q_ar": "أكمل قياس الزمن النهائي: `MPI_Reduce(&local,&total,1,MPI_DOUBLE,____,0,MPI_COMM_WORLD);`",
+          "hint_ar": "الوقت الكلي تحدده أبطأ `Process`.",
+          "choices": [
+            "MPI_SUM",
+            "MPI_MAX",
+            "MPI_MIN",
+            "MPI_PROD"
+          ],
+          "answer": 1,
+          "explanation": "The program's elapsed time is determined by its slowest process, so the reduction must take the maximum.",
+          "explanation_ar": "زمن البرنامج يساوي زمن أبطأ Process، لذلك نأخذ Maximum.",
+          "src": "exam",
+          "source": "Practice PDF · Timing code"
+        },
+        {
+          "id": "cccs422-final-t6-q66",
+          "section": "mpi-derived-types",
+          "q": "Which definition correctly represents one column of an `n x n` row-major matrix of doubles?",
+          "q_ar": "لإرسال Column واحد من مصفوفة n×n من Doubles، ما التعريف الصحيح؟",
+          "hint_ar": "الـ`Column` في `Row-major` يتطلب قفزة بطول الصف.",
+          "choices": [
+            "MPI_Type_vector(n, 1, n, MPI_DOUBLE, &col);",
+            "MPI_Type_contiguous(n*n, MPI_DOUBLE, &col);",
+            "MPI_Type_vector(1, n, 1, MPI_DOUBLE, &col);",
+            "MPI_Type_indexed(n, NULL, NULL, MPI_INT, &col);"
+          ],
+          "answer": 0,
+          "explanation": "A column contains `n` blocks, one double per block, with a stride of `n` doubles between block starts.",
+          "explanation_ar": "نأخذ n Blocks، عنصرًا واحدًا في كل Block، وبقفزة n عناصر.",
+          "src": "exam",
+          "source": "Topic 6 · Slides 56–59"
+        },
+        {
+          "id": "cccs422-final-t6-q67",
+          "section": "mpi-derived-types",
+          "q": "Which constructor represents one contiguous block containing `count` elements of `oldtype`?",
+          "q_ar": "أي Constructor يمثل Block متجاورًا من count عناصر من oldtype؟",
+          "hint_ar": "فكّر في Constructor يضع عناصر `oldtype` متجاورة بلا `stride` أو `displacement`.",
+          "choices": [
+            "MPI_Type_contiguous",
+            "MPI_Type_vector",
+            "MPI_Type_indexed",
+            "MPI_Allgather"
+          ],
+          "answer": 0,
+          "explanation": "`MPI_Type_contiguous` is the simplest derived datatype constructor for adjacent elements.",
+          "explanation_ar": "Type_contiguous هو أبسط Derived Datatype لعناصر متجاورة.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 54"
+        },
+        {
+          "id": "cccs422-final-t6-q68",
+          "section": "mpi-exam-drills",
+          "q": "Which pattern correctly parallelizes the trapezoidal rule?",
+          "q_ar": "في Parallel Trapezoidal Rule، ما النمط الصحيح؟",
+          "hint_ar": "قسّم المجال ثم اجمع النتائج الجزئية.",
+          "choices": [
+            "Every process computes every trapezoid without communication",
+            "Distribute the interval -> compute local integrals -> reduce to the global integral",
+            "Broadcast the result before computation",
+            "Scatter only the timing value"
+          ],
+          "answer": 1,
+          "explanation": "Each process computes its local portion of the integral, and the partial results are then reduced into the global integral.",
+          "explanation_ar": "كل Process تحسب جزءها محليًا، ثم تُجمع النتائج الجزئية.",
+          "src": "exam",
+          "source": "Topic 6 · Slides 21–23"
+        },
+        {
+          "id": "cccs422-final-t6-q69",
+          "section": "mpi-exam-drills",
+          "q": "Why does rank 0 commonly read the input and then call `MPI_Bcast`?",
+          "q_ar": "لماذا يقرأ rank 0 الإدخال ثم ينفذ Bcast؟",
+          "hint_ar": "فكّر في من يقرأ `stdin` وكيف تصل القيمة للآخرين.",
+          "choices": [
+            "Rank 0 is always faster",
+            "Standard input is often available only to rank 0, and the value must be distributed",
+            "MPI_Bcast works only with root 0",
+            "It prevents MPI_Comm_size from running"
+          ],
+          "answer": 1,
+          "explanation": "In many MPI environments, rank 0 safely reads standard input and broadcasts the value so every process receives it.",
+          "explanation_ar": "هذا هو Input Pattern الآمن في معظم MPI implementations.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 24"
+        },
+        {
+          "id": "cccs422-final-t6-q70",
+          "section": "mpi-exam-drills",
+          "q": "Rank 0 calls `MPI_Bcast` and then `MPI_Reduce`, while rank 1 calls them in the reverse order. What is the problem?",
+          "q_ar": "rank 0 يستدعي Bcast ثم Reduce، بينما rank 1 يستدعي Reduce ثم Bcast. ما المشكلة؟",
+          "hint_ar": "قارن ترتيب `Collective calls` بين الـRanks.",
+          "choices": [
+            "There is no problem because both calls are collective",
+            "The collective call order is incompatible and the processes may hang",
+            "MPI automatically corrects the order",
+            "Only the datatype can cause a problem"
+          ],
+          "answer": 1,
+          "explanation": "Collectives are matched by communicator and call order, so participating processes must invoke them in a compatible sequence.",
+          "explanation_ar": "Collectives تتطابق بالـcommunicator وترتيب الاستدعاءات؛ يجب أن يكون الترتيب متوافقًا.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 47"
+        },
+        {
+          "id": "cccs422-final-t6-q71",
+          "section": "mpi-point-to-point",
+          "q": "A sender transmits 8 doubles, but the receive buffer can hold only 4 doubles. Which statement is correct?",
+          "q_ar": "Send يرسل 8 Doubles وReceive Buffer يتسع لـ4 فقط. ما الحكم؟",
+          "hint_ar": "قارن عدد العناصر المرسلة بسعة الاستقبال.",
+          "choices": [
+            "It is safe because the datatype matches",
+            "The receive buffer is smaller than the message, so the receive is invalid",
+            "MPI always discards the last 4 values",
+            "It succeeds only with MPI_ANY_TAG"
+          ],
+          "answer": 1,
+          "explanation": "The receive buffer must have capacity for at least all elements in the incoming message.",
+          "explanation_ar": "يجب أن تكون سعة الاستقبال أكبر من الرسالة أو مساوية لها.",
+          "src": "exam",
+          "source": "Topic 6 · Slide 14"
+        },
+        {
+          "id": "cccs422-final-t6-q72",
+          "section": "mpi-exam-drills",
+          "q": "In `while (!flag) MPI_Test(&request, &flag, MPI_STATUS_IGNORE);`, what does `flag == 1` mean?",
+          "q_ar": "في الحلقة `while (!flag) MPI_Test(&request, &flag, MPI_STATUS_IGNORE);`، ماذا تعني `flag == 1`؟",
+          "hint_ar": "`MPI_Test` يحدّث `flag` حسب حالة `completion`.",
+          "choices": [
+            "The operation is still in progress",
+            "The operation associated with the request has completed",
+            "A tag mismatch occurred",
+            "MPI_Init must be called again"
+          ],
+          "answer": 1,
+          "explanation": "`MPI_Test` is non-blocking: it sets `flag` to 1 when the request has completed and to 0 while it is still incomplete.",
+          "explanation_ar": "MPI_Test لا ينتظر إجباريًا؛ يضع flag=1 عند اكتمال العملية وflag=0 إذا لم تكتمل بعد.",
+          "src": "exam",
+          "source": "Topic 6 · Slides 27–29"
+        }
+      ]
+    },
+    "cccs422-final-t7": {
+      "sections": [
+        {
+          "id": "cuda-architecture",
+          "label": "1 · CPU vs GPU Architecture",
+          "questionIds": ["cccs422-final-t7-q01", "cccs422-final-t7-q02", "cccs422-final-t7-q03", "cccs422-final-t7-q04", "cccs422-final-t7-q05", "cccs422-final-t7-q06", "cccs422-final-t7-q07", "cccs422-final-t7-q08", "cccs422-final-t7-q18", "cccs422-final-t7-q35", "cccs422-final-t7-q36", "cccs422-final-t7-q50"]
+        },
+        {
+          "id": "cuda-hierarchy-indexing",
+          "label": "2 · Threads, Blocks, Grids & Indexing",
+          "questionIds": ["cccs422-final-t7-q09", "cccs422-final-t7-q10", "cccs422-final-t7-q11", "cccs422-final-t7-q12", "cccs422-final-t7-q13", "cccs422-final-t7-q14", "cccs422-final-t7-q15", "cccs422-final-t7-q16", "cccs422-final-t7-q17", "cccs422-final-t7-q30", "cccs422-final-t7-q32", "cccs422-final-t7-q37", "cccs422-final-t7-q38", "cccs422-final-t7-q39", "cccs422-final-t7-q40", "cccs422-final-t7-q41"]
+        },
+        {
+          "id": "cuda-kernels-async",
+          "label": "3 · Kernels, Qualifiers & Async Timing",
+          "questionIds": ["cccs422-final-t7-q19", "cccs422-final-t7-q20", "cccs422-final-t7-q21", "cccs422-final-t7-q22", "cccs422-final-t7-q23", "cccs422-final-t7-q29", "cccs422-final-t7-q31", "cccs422-final-t7-q45", "cccs422-final-t7-q46", "cccs422-final-t7-q47", "cccs422-final-t7-q51"]
+        },
+        {
+          "id": "cuda-memory-lifecycle",
+          "label": "4 · Memory & Host/Device Lifecycle",
+          "questionIds": ["cccs422-final-t7-q24", "cccs422-final-t7-q25", "cccs422-final-t7-q26", "cccs422-final-t7-q27", "cccs422-final-t7-q28", "cccs422-final-t7-q33", "cccs422-final-t7-q34", "cccs422-final-t7-q42", "cccs422-final-t7-q43", "cccs422-final-t7-q44", "cccs422-final-t7-q48", "cccs422-final-t7-q49"]
+        }
+      ],
+      "questions": [
+        {
+          "id": "cccs422-final-t7-q36",
+          "section": "cuda-architecture",
+          "q": "Which workload is best suited to a GPU?",
+          "q_ar": "أي Workload يناسب GPU أكثر؟",
+          "choices": ["A branch-heavy sequential decision process on one item", "The same computation applied to millions of independent elements", "A single latency-sensitive process", "Reading one small file once"],
+          "answer": 1,
+          "hint_ar": "قارن بين Throughput العالي وLatency المنخفضة.",
+          "explanation": "A GPU is designed for high-throughput Data Parallelism across many independent elements.",
+          "explanation_ar": "يتميز GPU في Data Parallelism عندما ينفذ العملية نفسها على عدد كبير من العناصر المستقلة لتحقيق Throughput مرتفع.",
+          "src": "exam",
+          "source": "Topic 7 · Slides 3–4"
+        },
+        {
+          "id": "cccs422-final-t7-q37",
+          "section": "cuda-hierarchy-indexing",
+          "q": "If `blockIdx.x = 2`, `blockDim.x = 4`, and `threadIdx.x = 3`, what is the global index?",
+          "q_ar": "إذا كانت `blockIdx.x = 2` و`blockDim.x = 4` و`threadIdx.x = 3`، فما Global Index؟",
+          "choices": ["9", "10", "11", "12"],
+          "answer": 2,
+          "hint_ar": "طبّق معادلة 1D indexing قبل اختيار الرقم.",
+          "explanation": "Using `i = blockIdx.x * blockDim.x + threadIdx.x` gives `i = 2 * 4 + 3 = 11`.",
+          "explanation_ar": "باستخدام `i = blockIdx.x * blockDim.x + threadIdx.x` نحصل على `2 * 4 + 3 = 11`.",
+          "src": "exam",
+          "source": "Topic 7 · Slide 27"
+        },
+        {
+          "id": "cccs422-final-t7-q38",
+          "section": "cuda-hierarchy-indexing",
+          "q": "Why is `if (i < n)` commonly used inside a CUDA kernel?",
+          "q_ar": "لماذا نكتب غالبًا `if (i < n)` داخل CUDA Kernel؟",
+          "choices": ["To prevent extra threads from accessing data out of bounds", "To run only one thread", "To convert the GPU into a CPU", "To synchronize all blocks"],
+          "answer": 0,
+          "hint_ar": "قارن عدد Threads المطلقة بعدد عناصر البيانات `n`.",
+          "explanation": "A launch may create more threads than there are data elements, so the bounds check prevents invalid memory access.",
+          "explanation_ar": "قد يطلق البرنامج Threads أكثر من عدد عناصر البيانات، لذلك يمنع Bounds Check الوصول إلى ذاكرة خارج الحدود.",
+          "src": "exam",
+          "source": "Topic 7 · Grid indexing"
+        },
+        {
+          "id": "cccs422-final-t7-q39",
+          "section": "cuda-hierarchy-indexing",
+          "q": "How many threads are launched in total by `grid(2,3,1)` and `block(8,4,1)`?",
+          "q_ar": "كم Thread يُطلق إجمالًا باستخدام `grid(2,3,1)` و`block(8,4,1)`؟",
+          "choices": ["32", "64", "96", "192"],
+          "answer": 3,
+          "hint_ar": "احسب عدد Blocks ثم Threads per Block واضرب الناتجين.",
+          "explanation": "The grid has `2 * 3 * 1 = 6` blocks, and each block has `8 * 4 * 1 = 32` threads, for `6 * 32 = 192` threads.",
+          "explanation_ar": "يحتوي Grid على `6` Blocks، ويحتوي كل Block على `32` Threads، لذا يكون الإجمالي `6 * 32 = 192`.",
+          "src": "exam",
+          "source": "Topic 7 · Slides 24–25"
+        },
+        {
+          "id": "cccs422-final-t7-q40",
+          "section": "cuda-hierarchy-indexing",
+          "q": "Which built-in variable identifies a block within a grid?",
+          "q_ar": "أي Built-in Variable يحدد رقم Block داخل Grid؟",
+          "choices": ["threadIdx", "blockIdx", "blockDim", "gridDim"],
+          "answer": 1,
+          "hint_ar": "ميّز بين المتغير الذي يمثل Index والمتغير الذي يمثل Dimensions.",
+          "explanation": "`blockIdx` gives the block index, whereas `blockDim` gives the dimensions of each block.",
+          "explanation_ar": "يعطي `blockIdx` رقم Block، بينما يعطي `blockDim` أبعاد كل Block.",
+          "src": "exam",
+          "source": "Topic 7 · Slides 8–9"
+        },
+        {
+          "id": "cccs422-final-t7-q41",
+          "section": "cuda-hierarchy-indexing",
+          "q": "For a 1D launch of `kernel<<<3,4>>>`, what is the range of global thread indices?",
+          "q_ar": "في إطلاق `kernel<<<3,4>>>` باستخدام 1D indexing، ما مدى Global Index؟",
+          "choices": ["0 through 3", "0 through 7", "0 through 11", "1 through 12"],
+          "answer": 2,
+          "hint_ar": "احسب إجمالي Threads وتذكر أن Index يبدأ من الصفر.",
+          "explanation": "Three blocks with four threads each produce 12 threads, indexed from 0 through 11.",
+          "explanation_ar": "ثلاثة Blocks وفي كل منها أربعة Threads تعطي `12` Thread، وتبدأ المؤشرات من `0` وتنتهي عند `11`.",
+          "src": "exam",
+          "source": "Topic 7 · Slides 27–28"
+        },
+        {
+          "id": "cccs422-final-t7-q42",
+          "section": "cuda-memory-lifecycle",
+          "q": "What is the correct order of the CUDA host/device lifecycle?",
+          "q_ar": "ما الترتيب الصحيح لدورة CUDA Host/Device؟",
+          "choices": ["Kernel → malloc → free → copy", "cudaMalloc → H2D Copy → Kernel → Synchronize → D2H Copy → cudaFree", "D2H → H2D → Kernel → malloc", "cudaFree → Kernel → cudaMalloc"],
+          "answer": 1,
+          "hint_ar": "تتبع رحلة البيانات من Host إلى Device ثم عودتها.",
+          "explanation": "Allocate device memory, copy inputs from host to device, launch and synchronize the kernel, copy results back, and then free device memory.",
+          "explanation_ar": "نحجز Device Memory، ثم ننقل المدخلات من Host إلى Device، ونشغل Kernel ونزامنه، ثم نعيد النتائج ونحرر الذاكرة.",
+          "src": "exam",
+          "source": "Topic 7 · Slides 19–20"
+        },
+        {
+          "id": "cccs422-final-t7-q43",
+          "section": "cuda-memory-lifecycle",
+          "q": "Which statement about a device pointer is correct?",
+          "q_ar": "أي عبارة عن Device Pointer صحيحة؟",
+          "choices": ["The host can dereference it directly", "It points to GPU memory and the host cannot dereference it directly", "It works only with constant memory", "It is identical to a host pointer"],
+          "answer": 1,
+          "hint_ar": "ركز على مكان الذاكرة التي يشير إليها Pointer ومن يستطيع الوصول إليها.",
+          "explanation": "A device pointer can be passed by host code, but it refers to separate GPU memory that host code cannot dereference directly.",
+          "explanation_ar": "يمكن تمرير Device Pointer من Host Code، لكنه يشير إلى GPU Memory منفصلة ولا يستطيع Host عمل Dereference له مباشرة.",
+          "src": "exam",
+          "source": "Topic 7 · Slide 20"
+        },
+        {
+          "id": "cccs422-final-t7-q44",
+          "section": "cuda-memory-lifecycle",
+          "q": "Which copy direction is used to transfer an array from the CPU to the GPU?",
+          "q_ar": "أي Copy Direction يُستخدم لنقل Array من CPU إلى GPU؟",
+          "choices": ["cudaMemcpyDeviceToHost", "cudaMemcpyHostToDevice", "cudaMemcpyDeviceToDevice only", "cudaFreeHost"],
+          "answer": 1,
+          "hint_ar": "حدد أي طرف يمثل Host وأي طرف يمثل Device.",
+          "explanation": "The CPU is the host and the GPU is the device, so the transfer uses `cudaMemcpyHostToDevice`.",
+          "explanation_ar": "يمثل CPU جهة Host ويمثل GPU جهة Device، لذلك نستخدم `cudaMemcpyHostToDevice`.",
+          "src": "exam",
+          "source": "Topic 7 · Slide 20"
+        },
+        {
+          "id": "cccs422-final-t7-q45",
+          "section": "cuda-kernels-async",
+          "q": "A timer is started, a kernel is launched, and the timer is stopped immediately. Why might the measured time be incorrect?",
+          "q_ar": "بدأ Timer ثم شُغّل Kernel ثم توقف Timer فورًا. لماذا قد يكون الزمن المقاس غير صحيح؟",
+          "choices": ["Because kernel launches are asynchronous", "Because GPUs do not support timing", "Because `blockDim` is zero", "Because `__global__` returns an integer"],
+          "answer": 0,
+          "hint_ar": "اسأل هل ينتظر Host انتهاء Kernel تلقائيًا قبل متابعة السطر التالي.",
+          "explanation": "A kernel launch normally returns control to the host before the kernel finishes; call `cudaDeviceSynchronize()` before stopping a host timer.",
+          "explanation_ar": "يعيد Kernel Launch التحكم إلى Host قبل اكتمال التنفيذ غالبًا، لذا نستخدم `cudaDeviceSynchronize()` قبل إيقاف Host Timer.",
+          "src": "exam",
+          "source": "Topic 7 · Slide 18"
+        },
+        {
+          "id": "cccs422-final-t7-q46",
+          "section": "cuda-kernels-async",
+          "q": "Which qualifier declares a kernel that runs on the device and is launched from the host?",
+          "q_ar": "أي Qualifier يعرّف Kernel يعمل على Device ويُطلق من Host؟",
+          "choices": ["__host__", "__device__", "__global__", "__shared__"],
+          "answer": 2,
+          "hint_ar": "اربط كل Qualifier بمكان التنفيذ ومكان الاستدعاء.",
+          "explanation": "A `__global__` function executes on the device, is launched from the host, and has a `void` return type.",
+          "explanation_ar": "تعمل دالة `__global__` على Device ويطلقها Host، ويكون نوع الإرجاع منها `void`.",
+          "src": "exam",
+          "source": "Topic 7 · Slides 13, 17"
+        },
+        {
+          "id": "cccs422-final-t7-q47",
+          "section": "cuda-kernels-async",
+          "q": "Which qualifier declares a helper function that runs on the GPU, is called from a kernel, and may return a value?",
+          "q_ar": "أي Qualifier يعرّف Helper Function تعمل على GPU وتُستدعى من Kernel ويمكنها إعادة قيمة؟",
+          "choices": ["__global__", "__device__", "__host__ only", "MPI_Device"],
+          "answer": 1,
+          "hint_ar": "حدد مكان تنفيذ الدالة ومكان الكود الذي يستدعيها.",
+          "explanation": "A `__device__` function executes on the device, is called from device code, and may return a value.",
+          "explanation_ar": "تعمل دالة `__device__` على Device وتُستدعى من Device Code، ويمكنها إعادة قيمة.",
+          "src": "exam",
+          "source": "Topic 7 · Slide 15"
+        },
+        {
+          "id": "cccs422-final-t7-q48",
+          "section": "cuda-memory-lifecycle",
+          "q": "Which threads can access a given block's shared memory?",
+          "q_ar": "أي Threads تستطيع الوصول إلى Shared Memory الخاصة بـBlock معين؟",
+          "choices": ["Only one thread", "Threads within the same block", "All threads on all GPUs", "Only the host"],
+          "answer": 1,
+          "hint_ar": "قارن Scope على مستويات Thread وBlock وGrid.",
+          "explanation": "Shared memory has block scope, so it is shared only by threads that belong to the same thread block.",
+          "explanation_ar": "يكون Scope الخاص بـShared Memory داخل Thread Block واحد، لذلك تشترك فيها Threads التابعة لذلك Block فقط.",
+          "src": "exam",
+          "source": "Topic 7 · Slide 10"
+        },
+        {
+          "id": "cccs422-final-t7-q49",
+          "section": "cuda-memory-lifecycle",
+          "q": "Which CUDA memory space is read-only for threads and is intended for constant values?",
+          "q_ar": "أي CUDA Memory Space تكون Read-only للـThreads ومخصصة للقيم الثابتة؟",
+          "choices": ["Local memory", "Shared memory", "Constant memory", "Registers only"],
+          "answer": 2,
+          "hint_ar": "ابحث عن Memory Space مهيأة لقيم تقرؤها Threads ولا تعدّلها.",
+          "explanation": "Constant memory is a read-only device memory space suited to constant values that many threads repeatedly access.",
+          "explanation_ar": "تُعد Constant Memory مساحة Read-only على Device، وتناسب القيم الثابتة التي تقرؤها Threads بكثرة.",
+          "src": "exam",
+          "source": "Topic 7 · Slide 10"
+        },
+        {
+          "id": "cccs422-final-t7-q50",
+          "section": "cuda-architecture",
+          "q": "Why is a GPU described as throughput-oriented?",
+          "q_ar": "لماذا يوصف GPU بأنه Throughput-oriented؟",
+          "choices": ["It minimizes the latency of one thread at any cost", "It completes a very large number of parallel operations over time", "It contains one complex core", "It prevents data parallelism"],
+          "answer": 1,
+          "hint_ar": "قارن إجمالي العمل المنجز بزمن تنفيذ مسار واحد.",
+          "explanation": "A GPU prioritizes total parallel work completed per unit time rather than minimizing the latency of one execution path.",
+          "explanation_ar": "يركز GPU على حجم العمل المتوازي الكلي المنجز في وحدة الزمن بدل تقليل Latency لمسار تنفيذ واحد.",
+          "src": "exam",
+          "source": "Topic 7 · Slides 3–4"
+        },
+        {
+          "id": "cccs422-final-t7-q51",
+          "section": "cuda-kernels-async",
+          "q": "How is a CUDA program containing both host code and kernel code compiled?",
+          "q_ar": "كيف يُترجم برنامج CUDA يحتوي على Host Code وKernel Code؟",
+          "choices": ["The host compiler translates everything into one GPU binary", "The host compiler translates CPU code while the CUDA compiler translates kernel code into separate binaries", "An MPI compiler translates only the kernel", "Kernel code does not require compilation"],
+          "answer": 1,
+          "hint_ar": "ميّز بين مسار ترجمة Host Code ومسار ترجمة Device Code.",
+          "explanation": "Host code and device kernel code are compiled through separate paths and then work together at runtime.",
+          "explanation_ar": "يُترجم Host Code وDevice Kernel Code عبر مسارين منفصلين، ثم يعمل المساران معًا وقت التنفيذ.",
+          "src": "exam",
+          "source": "Topic 7 · Slides 11–12"
+        }
+      ]
+    },
+    "cccs422-final-t8": {
+      "sections": [
+        {
+          "id": "trends-laws-parallelism",
+          "label": "1 · Amdahl, Gustafson & Parallelism Types",
+          "questionIds": ["cccs422-final-t8-q01", "cccs422-final-t8-q02", "cccs422-final-t8-q03", "cccs422-final-t8-q04", "cccs422-final-t8-q31", "cccs422-final-t8-q36", "cccs422-final-t8-q37", "cccs422-final-t8-q38", "cccs422-final-t8-q39", "cccs422-final-t8-q46", "cccs422-final-t8-q47"]
+        },
+        {
+          "id": "trends-hardware-future",
+          "label": "2 · Computing Trends & Future Hardware",
+          "questionIds": ["cccs422-final-t8-q05", "cccs422-final-t8-q06", "cccs422-final-t8-q07", "cccs422-final-t8-q08", "cccs422-final-t8-q09", "cccs422-final-t8-q20", "cccs422-final-t8-q21", "cccs422-final-t8-q22", "cccs422-final-t8-q23", "cccs422-final-t8-q24", "cccs422-final-t8-q25", "cccs422-final-t8-q26", "cccs422-final-t8-q34", "cccs422-final-t8-q40", "cccs422-final-t8-q41"]
+        },
+        {
+          "id": "trends-ai-models",
+          "label": "3 · AI, Distributed Training & Models",
+          "questionIds": ["cccs422-final-t8-q10", "cccs422-final-t8-q11", "cccs422-final-t8-q12", "cccs422-final-t8-q13", "cccs422-final-t8-q14", "cccs422-final-t8-q15", "cccs422-final-t8-q16", "cccs422-final-t8-q33", "cccs422-final-t8-q42", "cccs422-final-t8-q43", "cccs422-final-t8-q48"]
+        },
+        {
+          "id": "trends-history-applications",
+          "label": "4 · History, Applications & Ethics",
+          "questionIds": ["cccs422-final-t8-q17", "cccs422-final-t8-q18", "cccs422-final-t8-q19", "cccs422-final-t8-q27", "cccs422-final-t8-q28", "cccs422-final-t8-q29", "cccs422-final-t8-q30", "cccs422-final-t8-q32", "cccs422-final-t8-q35", "cccs422-final-t8-q44", "cccs422-final-t8-q45", "cccs422-final-t8-q49"]
+        }
+      ],
+      "questions": [
+        {
+          "id": "cccs422-final-t8-q36",
+          "section": "trends-laws-parallelism",
+          "q": "If 10% of a program remains sequential, what theoretical maximum speedup does Amdahl's Law predict with infinitely many processors?",
+          "q_ar": "إذا بقي 10% من البرنامج Sequential، فما الحد النظري الأقصى للـSpeedup وفق Amdahl's Law عند عدد لا نهائي من Processors؟",
+          "choices": ["5x", "10x", "90x", "Unbounded"],
+          "answer": 1,
+          "hint_ar": "عند عدد لا نهائي من Processors استخدم مقلوب Sequential Fraction.",
+          "explanation": "With infinitely many processors, the parallel portion approaches zero time, so the limit is `1 / 0.1 = 10x`.",
+          "explanation_ar": "عند عدد لا نهائي من Processors يقترب زمن الجزء Parallel من الصفر، فيكون الحد `1 / 0.1 = 10x`.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 5"
+        },
+        {
+          "id": "cccs422-final-t8-q37",
+          "section": "trends-laws-parallelism",
+          "q": "Which scenario best represents Gustafson's Law?",
+          "q_ar": "أي موقف يعبّر بصورة أفضل عن Gustafson's Law؟",
+          "choices": ["Keeping the problem size fixed while increasing the sequential portion", "Increasing the problem size to use more parallel resources", "Running only one thread", "Removing all accelerators"],
+          "answer": 1,
+          "hint_ar": "فكر فيما يحدث لحجم المشكلة عندما تزداد الموارد المتاحة.",
+          "explanation": "Gustafson's Law emphasizes scaling the problem size as more parallel computing resources become available.",
+          "explanation_ar": "تركز Gustafson's Law على زيادة Problem Size مع زيادة موارد Parallel Computing المتاحة.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 5"
+        },
+        {
+          "id": "cccs422-final-t8-q38",
+          "section": "trends-laws-parallelism",
+          "q": "Applying the same filter to one million independent images is an example of which type of parallelism?",
+          "q_ar": "تطبيق الفلتر نفسه على مليون صورة مستقلة مثال على أي نوع من Parallelism؟",
+          "choices": ["Task Parallelism", "Data Parallelism", "Sequential Computing", "Edge Storage"],
+          "answer": 1,
+          "hint_ar": "حدد هل العمليات مختلفة أم أن العملية نفسها تتكرر على بيانات مختلفة.",
+          "explanation": "Data Parallelism applies the same operation independently to different partitions or elements of a dataset.",
+          "explanation_ar": "في Data Parallelism تُطبّق العملية نفسها بصورة مستقلة على أجزاء أو عناصر مختلفة من البيانات.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 2"
+        },
+        {
+          "id": "cccs422-final-t8-q39",
+          "section": "trends-laws-parallelism",
+          "q": "Running download, data cleaning, and model evaluation as different concurrent jobs is an example of which type of parallelism?",
+          "q_ar": "تشغيل Download وData Cleaning وModel Evaluation كمهام مختلفة بالتزامن مثال على أي نوع من Parallelism؟",
+          "choices": ["Data Parallelism", "Task Parallelism", "Vector operations only", "MPI_Bcast"],
+          "answer": 1,
+          "hint_ar": "ركز على كون الأعمال نفسها مختلفة وتعمل في الوقت نفسه.",
+          "explanation": "Task Parallelism executes different operations concurrently rather than repeating one operation over different data.",
+          "explanation_ar": "يشغّل Task Parallelism عمليات مختلفة بالتزامن بدل تكرار العملية نفسها على بيانات مختلفة.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 2"
+        },
+        {
+          "id": "cccs422-final-t8-q40",
+          "section": "trends-hardware-future",
+          "q": "Using a CPU for control flow and a GPU for compute-intensive operations in the same program is called what?",
+          "q_ar": "ماذا يسمى استخدام CPU للتحكم وGPU للعمليات الحسابية الكثيفة داخل البرنامج نفسه؟",
+          "choices": ["Homogeneous Sequential Computing", "Heterogeneous Computing", "Edge-only Computing", "Task Serialization"],
+          "answer": 1,
+          "hint_ar": "فكر في نظام يجمع أكثر من نوع Processor وفق نقاط القوة.",
+          "explanation": "Heterogeneous Computing combines different processor types and assigns work according to their strengths.",
+          "explanation_ar": "يجمع Heterogeneous Computing أنواعًا مختلفة من Processors ويوزع العمل وفق نقاط قوة كل نوع.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 3"
+        },
+        {
+          "id": "cccs422-final-t8-q41",
+          "section": "trends-hardware-future",
+          "q": "Analyzing a camera feed on a nearby device instead of sending the entire video to the cloud is an example of what?",
+          "q_ar": "تحليل Camera Feed على جهاز قريب بدل إرسال الفيديو كاملًا إلى Cloud مثال على ماذا؟",
+          "choices": ["Edge Computing", "Amdahl's Law", "Distributed Training", "Vector Processor"],
+          "answer": 0,
+          "hint_ar": "ركز على مكان معالجة البيانات بالنسبة إلى مصدرها.",
+          "explanation": "Edge Computing processes data close to its source, reducing latency and the amount of network traffic sent to the cloud.",
+          "explanation_ar": "يعالج Edge Computing البيانات قرب مصدرها، مما يقلل Latency وحجم Network Traffic المرسل إلى Cloud.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 3"
+        },
+        {
+          "id": "cccs422-final-t8-q42",
+          "section": "trends-ai-models",
+          "q": "What is the central idea of distributed AI training?",
+          "q_ar": "ما الفكرة الأساسية لـDistributed AI Training؟",
+          "choices": ["Running the model on one CPU", "Partitioning the data or model and executing the work across multiple nodes or GPUs", "Removing parallelism during training", "Storing the dataset only at the edge"],
+          "answer": 1,
+          "hint_ar": "فكر في كيفية توزيع Workload كبير على أكثر من جهاز.",
+          "explanation": "Distributed training partitions a large training workload across multiple nodes or GPUs that execute work in parallel.",
+          "explanation_ar": "يقسم Distributed Training Workload الكبير بين عدة Nodes أو GPUs تنفذ أجزاء العمل بالتوازي.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 4"
+        },
+        {
+          "id": "cccs422-final-t8-q43",
+          "section": "trends-ai-models",
+          "q": "Which mapping between a programming model and its target platform is correct?",
+          "q_ar": "أي Mapping بين Programming Model وTarget Platform صحيح؟",
+          "choices": ["OpenMP→Distributed, MPI→Shared", "OpenMP→Shared Memory, MPI→Distributed Memory, CUDA→NVIDIA GPU", "CUDA→CPU only, MPI→TensorFlow", "TensorFlow→Message Tag"],
+          "answer": 1,
+          "hint_ar": "اربط كل Model بنوع Memory أو Hardware الذي صُمم له.",
+          "explanation": "OpenMP targets shared-memory systems, MPI targets distributed-memory systems, and CUDA targets NVIDIA GPUs.",
+          "explanation_ar": "يستهدف OpenMP أنظمة Shared Memory، ويستهدف MPI أنظمة Distributed Memory، بينما يستهدف CUDA أجهزة NVIDIA GPU.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 5"
+        },
+        {
+          "id": "cccs422-final-t8-q44",
+          "section": "trends-history-applications",
+          "q": "Which set contains ethical concerns directly associated with large-scale computing and AI?",
+          "q_ar": "أي مجموعة تتضمن قضايا أخلاقية مرتبطة مباشرة بالحوسبة وAI واسعة النطاق؟",
+          "choices": ["Increasing the number of MPI tags", "Energy consumption, job displacement, and bias and fairness", "Only the size of `blockDim`", "The ordering of `MPI_Init`"],
+          "answer": 1,
+          "hint_ar": "ابحث عن آثار اجتماعية وبيئية، لا عن تفاصيل API.",
+          "explanation": "Large-scale computing and AI raise environmental, economic, employment, bias, and fairness concerns.",
+          "explanation_ar": "تثير الحوسبة وAI واسعة النطاق قضايا تتعلق بالبيئة والاقتصاد والوظائف وBias & Fairness.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 8"
+        },
+        {
+          "id": "cccs422-final-t8-q45",
+          "section": "trends-history-applications",
+          "q": "Climate modeling and drug discovery are examples of which parallel-computing application area?",
+          "q_ar": "يُعد Climate Modeling وDrug Discovery مثالين على أي مجال لتطبيق Parallel Computing؟",
+          "choices": ["Scientific simulations", "Social media only", "MPI wildcards", "Thread qualifiers"],
+          "answer": 0,
+          "hint_ar": "فكر في نوع Workload المستخدم لنمذجة ظواهر معقدة.",
+          "explanation": "Both fields rely on large numerical computations and simulations that benefit from parallel computing.",
+          "explanation_ar": "يعتمد المجالان على حسابات رقمية ومحاكاة كبيرة تستفيد من Parallel Computing.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 6"
+        },
+        {
+          "id": "cccs422-final-t8-q46",
+          "section": "trends-laws-parallelism",
+          "q": "If 80% of a program is parallel and four processors are used, what speedup does Amdahl's Law predict?",
+          "q_ar": "إذا كان 80% من البرنامج Parallel واستُخدم 4 Processors، فما Speedup المتوقع وفق Amdahl's Law؟",
+          "choices": ["1.6", "2.5", "4.0", "5.0"],
+          "answer": 1,
+          "hint_ar": "عوّض في `1 / ((1-p) + p/N)`.",
+          "explanation": "Substituting into Amdahl's formula gives `1 / ((1 - 0.8) + 0.8 / 4) = 1 / 0.4 = 2.5`.",
+          "explanation_ar": "بالتعويض في معادلة Amdahl نحصل على `1 / ((1 - 0.8) + 0.8 / 4) = 1 / 0.4 = 2.5`.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 5"
+        },
+        {
+          "id": "cccs422-final-t8-q47",
+          "section": "trends-laws-parallelism",
+          "q": "Which statement correctly distinguishes Data Parallelism from Task Parallelism?",
+          "q_ar": "أي عبارة تميّز Data Parallelism عن Task Parallelism بدقة؟",
+          "choices": ["Data uses different tasks, while Task repeats the same operation", "Data applies the same operation to different data, while Task runs different operations concurrently", "Both mean using one process", "Both are exclusive to CUDA"],
+          "answer": 1,
+          "hint_ar": "قارن ما إذا كان الاختلاف في البيانات أم في نوع العملية.",
+          "explanation": "Data Parallelism repeats one operation across data partitions, whereas Task Parallelism runs different operations concurrently.",
+          "explanation_ar": "يكرر Data Parallelism العملية نفسها على أجزاء بيانات مختلفة، بينما يشغل Task Parallelism عمليات مختلفة بالتزامن.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 2"
+        },
+        {
+          "id": "cccs422-final-t8-q48",
+          "section": "trends-ai-models",
+          "q": "Which workload does a GPU commonly accelerate in AI training and inference?",
+          "q_ar": "أي Workload يسرّعه GPU عادة داخل AI Training وInference؟",
+          "choices": ["Message tags", "Massively parallel matrix operations", "Reading only from stdin", "MPI_Finalize"],
+          "answer": 1,
+          "hint_ar": "فكر في العملية العددية المتكررة بكثافة داخل Neural Networks.",
+          "explanation": "Dense matrix operations expose massive data parallelism, making them well suited to GPU acceleration in training and inference.",
+          "explanation_ar": "توفر Matrix Operations الكثيفة Data Parallelism واسعًا، ولذلك تناسب تسريع GPU في Training وInference.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 4"
+        },
+        {
+          "id": "cccs422-final-t8-q49",
+          "section": "trends-history-applications",
+          "q": "Which chronological order is correct?",
+          "q_ar": "أي ترتيب زمني صحيح؟",
+          "choices": ["Cray-1 in the 1940s → ENIAC in the 1970s", "ENIAC in the 1940s → ILLIAC IV in the 1960s → Cray-1 in the 1970s", "ILLIAC IV in the 1940s → Cray-1 in the 1960s", "All appeared in the same decade"],
+          "answer": 1,
+          "hint_ar": "ابدأ بأقدم General-purpose Electronic Computer ثم انتقل إلى Parallel Machines.",
+          "explanation": "The sequence is ENIAC in the 1940s, ILLIAC IV in the 1960s, and Cray-1 in the 1970s.",
+          "explanation_ar": "الترتيب هو ENIAC في الأربعينيات، ثم ILLIAC IV في الستينيات، ثم Cray-1 في السبعينيات.",
+          "src": "exam",
+          "source": "Topic 8 · Slide 2"
+        }
+      ]
+    }
+  },
+  "presets": [
+    {
+      "id": "mpi-quick-15",
+      "label": "⚡ MPI سريع · 15 سؤال",
+      "description": "فحص سريع لكل Topic 6",
+      "parts": [{"chapterId": "cccs422-final-t6", "count": 15}],
+      "timed": true
+    },
+    {
+      "id": "mpi-mastery-30",
+      "label": "🎯 MPI إتقان · 30 سؤال",
+      "description": "اختبار شامل لـMPI",
+      "parts": [{"chapterId": "cccs422-final-t6", "count": 30}],
+      "timed": true
+    },
+    {
+      "id": "mpi-code-types-20",
+      "label": "💻 MPI Code + Datatypes · 20",
+      "description": "Matching, Non-blocking, Collectives, Derived Datatypes",
+      "lessonIds": ["mpi-point-to-point", "mpi-collectives", "mpi-derived-types", "mpi-exam-drills"],
+      "count": 20,
+      "timed": true
+    },
+    {
+      "id": "cuda-check-15",
+      "label": "🧩 CUDA Check · 15 سؤال",
+      "description": "Architecture, Indexing, Qualifiers, Memory",
+      "parts": [{"chapterId": "cccs422-final-t7", "count": 15}],
+      "timed": true
+    },
+    {
+      "id": "final-weighted-40",
+      "label": "🏁 Final Mock · 40 سؤال",
+      "description": "MPI 65% · CUDA 25% · Topic 8 10%",
+      "parts": [
+        {"chapterId": "cccs422-final-t6", "count": 26},
+        {"chapterId": "cccs422-final-t7", "count": 10},
+        {"chapterId": "cccs422-final-t8", "count": 4}
+      ],
+      "timed": true
+    }
+  ]
+}
