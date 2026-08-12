@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { beforeEach, expect, it, vi } from 'vitest'
 import { mathTextToSafeHtml } from '../../components/MathText'
 import type { ChoiceQuestion, MatchQuestion, PracticeQuestion, SessionMeta } from '../../types'
@@ -61,6 +61,51 @@ it('keeps the original MCQ id, supports keys, RTL, and moves focus to the next a
   await waitFor(() => expect(screen.getByRole('button', { name: /التالي/ })).toHaveFocus())
 })
 
+it('keeps the Arabic translation and hint hidden until each one is requested', () => {
+  const question: ChoiceQuestion = {
+    id: 'assist-001',
+    q: 'What does `MPI_Comm_rank` return?',
+    q_ar: 'ما الذي تعيده الدالة MPI_Comm_rank؟',
+    hint_ar: 'فكّر في هوية العملية داخل communicator.',
+    choices: ['The rank', 'The size'],
+    answer: 0,
+  }
+
+  render(<SessionScreen {...baseProps} questions={[question]} />)
+
+  expect(screen.queryByText(question.q_ar!)).not.toBeInTheDocument()
+  expect(screen.queryByText(question.hint_ar!)).not.toBeInTheDocument()
+
+  fireEvent.click(screen.getByRole('button', { name: /إظهار الترجمة/ }))
+  expect(screen.getByText('الترجمة العربية').closest('section')).toHaveTextContent(question.q_ar!)
+  expect(screen.queryByText(question.hint_ar!)).not.toBeInTheDocument()
+
+  fireEvent.click(screen.getByRole('button', { name: /إظهار التلميح/ }))
+  expect(screen.getByText('تلميح بدون كشف الإجابة').closest('section')).toHaveTextContent(question.hint_ar!)
+})
+
+it('closes assistance when a failed card is requeued for a new attempt', () => {
+  const question: ChoiceQuestion = {
+    id: 'assist-requeue-001',
+    q: 'Choose the correct answer.',
+    q_ar: 'اختر الإجابة الصحيحة.',
+    hint_ar: 'هذه محاولة جديدة.',
+    choices: ['Wrong', 'Correct'],
+    answer: 1,
+  }
+
+  const { container } = render(<SessionScreen {...baseProps} questions={[question]} />)
+  const view = within(container)
+
+  fireEvent.click(view.getByRole('button', { name: /إظهار الترجمة/ }))
+  expect(view.getByText(question.q_ar!)).toBeVisible()
+  fireEvent.click(view.getByRole('button', { name: /Wrong/ }))
+  fireEvent.click(view.getByRole('button', { name: /التالي/ }))
+
+  expect(view.queryByText(question.q_ar!)).not.toBeInTheDocument()
+  expect(view.getByRole('button', { name: /إظهار الترجمة/ })).toHaveAttribute('aria-expanded', 'false')
+})
+
 it('reveals a practice solution before self-grading', () => {
   const question: PracticeQuestion = {
     id: 'practice-001',
@@ -109,6 +154,9 @@ it('supports matching by tap plus number keys and exposes per-row Arabic hints',
     />,
   )
 
+  expect(screen.getByText('تم 0 من 2')).toBeVisible()
+  expect(screen.queryByText('تلميح الصف الأول')).not.toBeInTheDocument()
+
   fireEvent.click(screen.getByRole('button', { name: /تلميح للصف 1/ }))
   expect(screen.getByText('تلميح الصف الأول')).toBeVisible()
 
@@ -122,6 +170,29 @@ it('supports matching by tap plus number keys and exposes per-row Arabic hints',
     'match-001',
     expect.objectContaining({ correct: 1, seen: 1 }),
   )
+})
+
+it('uses the full answer card as the native drag preview', () => {
+  const question: MatchQuestion = {
+    id: 'match-drag-001',
+    type: 'match',
+    q: 'Match each item.',
+    pairs: [
+      ['MPI_Init', 'Starts MPI'],
+      ['MPI_Finalize', 'Ends MPI'],
+    ],
+  }
+  const setData = vi.fn()
+  const setDragImage = vi.fn()
+
+  render(<SessionScreen {...baseProps} questions={[question]} />)
+
+  fireEvent.dragStart(screen.getByRole('button', { name: /Starts MPI/ }), {
+    dataTransfer: { setData, setDragImage, effectAllowed: 'none' },
+  })
+
+  expect(setData).toHaveBeenCalledWith('application/x-studyflow-match-answer', '0')
+  expect(setDragImage).toHaveBeenCalledWith(expect.any(HTMLElement), expect.any(Number), expect.any(Number))
 })
 
 it('escapes caller HTML inside the MathText boundary while protecting technical identifiers', () => {

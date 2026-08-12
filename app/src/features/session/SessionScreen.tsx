@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import type { DragEvent, KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { MathText } from '../../components/MathText'
+import { StudyText } from '../../components/StudyText'
 import { MASTERY_BOX } from '../../lib/constants'
 import { isChoice, isMatch, isPractice } from '../../lib/utils'
 import type { QuestionProgress, SessionMeta, StudyQuestion } from '../../types'
@@ -14,6 +15,8 @@ import {
 } from './sessionEngine'
 import type { SessionEngineState, SessionGradeResult, SessionSummary } from './sessionEngine'
 import './session.css'
+
+const MATCH_DRAG_MIME = 'application/x-studyflow-match-answer'
 
 export interface SessionScreenProps {
   /** Change this value to restart an otherwise identical question pool. */
@@ -155,6 +158,12 @@ function SessionRun({
   const [viewState, setViewState] = useState(initialState.current)
   const stateRef = useRef(viewState)
   const [localStars, setLocalStars] = useState<Record<string, boolean>>({ ...starred })
+  const [assistance, setAssistance] = useState({
+    questionId: '',
+    translationOpen: false,
+    hintOpen: false,
+  })
+  const [dragOverRow, setDragOverRow] = useState<number | null>(null)
   const [guardOpen, setGuardOpen] = useState(false)
   const [announcement, setAnnouncement] = useState('')
   const durationMinutes = Math.max(1, Math.min(120, sessionMinutes || 20))
@@ -169,6 +178,7 @@ function SessionRun({
   const stayButtonRef = useRef<HTMLButtonElement>(null)
   const leaveButtonRef = useRef<HTMLButtonElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
+  const dragPreviewRef = useRef<HTMLElement | null>(null)
   const domId = useId().replaceAll(':', '')
 
   function commit(nextState: SessionEngineState): void {
@@ -222,6 +232,7 @@ function SessionRun({
     const current = stateRef.current
     if (current.active && !current.active.answered) return
     const next = moveToNextCard(current, randomRef.current)
+    setAssistance({ questionId: '', translationOpen: false, hintOpen: false })
     commit(next)
     if (next.status === 'complete' && current.status !== 'complete') {
       const completedSummary = getSessionSummary(next, Date.now())
@@ -248,13 +259,24 @@ function SessionRun({
     setAnnouncement(nextValue ? 'أضيف السؤال إلى المميّزة' : 'أزيل السؤال من المميّزة')
   }
 
-  function toggleAssistance(): void {
-    commit(
-      replaceActiveCard(stateRef.current, (active) => ({
-        ...active,
-        assistanceOpen: !active.assistanceOpen,
-      })),
-    )
+  function toggleTranslation(): void {
+    const questionId = stateRef.current.active?.cardId
+    if (!questionId) return
+    setAssistance((current) => ({
+      questionId,
+      translationOpen: current.questionId === questionId ? !current.translationOpen : true,
+      hintOpen: current.questionId === questionId ? current.hintOpen : false,
+    }))
+  }
+
+  function toggleHint(): void {
+    const questionId = stateRef.current.active?.cardId
+    if (!questionId) return
+    setAssistance((current) => ({
+      questionId,
+      translationOpen: current.questionId === questionId ? current.translationOpen : false,
+      hintOpen: current.questionId === questionId ? !current.hintOpen : true,
+    }))
   }
 
   function selectMatchAnswer(answer: number): void {
@@ -317,10 +339,45 @@ function SessionRun({
     )
   }
 
+  function clearMatchDrag(): void {
+    dragPreviewRef.current?.remove()
+    dragPreviewRef.current = null
+    setDragOverRow(null)
+  }
+
+  function beginMatchDrag(event: DragEvent<HTMLButtonElement>, answer: number): void {
+    const current = stateRef.current
+    if (!current.active || current.active.answered) {
+      event.preventDefault()
+      return
+    }
+
+    clearMatchDrag()
+    event.dataTransfer.setData(MATCH_DRAG_MIME, String(answer))
+    event.dataTransfer.effectAllowed = 'move'
+
+    const source = event.currentTarget
+    const bounds = source.getBoundingClientRect()
+    const preview = source.cloneNode(true) as HTMLElement
+    preview.classList.remove('is-selected')
+    preview.classList.add('sf-session__drag-preview')
+    preview.setAttribute('aria-hidden', 'true')
+    preview.style.width = `${bounds.width}px`
+    document.body.append(preview)
+    dragPreviewRef.current = preview
+
+    event.dataTransfer.setDragImage(
+      preview,
+      Math.max(0, Math.min(bounds.width, event.clientX - bounds.left)),
+      Math.max(0, Math.min(bounds.height, event.clientY - bounds.top)),
+    )
+  }
+
   function dropMatch(event: DragEvent<HTMLElement>, row: number): void {
     event.preventDefault()
-    const answer = Number(event.dataTransfer.getData('text/plain'))
-    if (Number.isInteger(answer)) assignMatch(row, answer)
+    const rawAnswer = event.dataTransfer.getData(MATCH_DRAG_MIME)
+    if (/^\d+$/.test(rawAnswer)) assignMatch(row, Number(rawAnswer))
+    clearMatchDrag()
   }
 
   function gradeMatch(): void {
@@ -367,6 +424,8 @@ function SessionRun({
     if (!viewState.active?.cardId) return
     window.requestAnimationFrame(() => cardRef.current?.focus())
   }, [viewState.active?.cardId])
+
+  useEffect(() => () => dragPreviewRef.current?.remove(), [])
 
   useEffect(() => {
     if (!guardOpen) return undefined
@@ -490,6 +549,8 @@ function SessionRun({
   const isMatching = isMatch(currentQuestion)
   const isPracticing = isPractice(currentQuestion)
   const hasAssistance = Boolean(currentQuestion.q_ar || currentQuestion.hint_ar)
+  const translationOpen = assistance.questionId === currentQuestion.id && assistance.translationOpen
+  const hintOpen = assistance.questionId === currentQuestion.id && assistance.hintOpen
   const questionSource = !isMatching && !isPracticing ? sourceLabel(currentQuestion) : ''
   const usedAnswers = new Set(Object.values(active.matchAssignments))
   const remainingAnswers = active.matchAnswerOrder.filter((answer) => !usedAnswers.has(answer))
@@ -548,34 +609,47 @@ function SessionRun({
         </div>
 
         <h1 className="sf-session__question" id={`sf-question-${domId}`}>
-          <MathText text={currentQuestion.q} />
+          <StudyText text={currentQuestion.q} variant="question" />
         </h1>
 
         {hasAssistance ? (
           <div className="sf-session__assist">
-            <button
-              type="button"
-              onClick={toggleAssistance}
-              aria-expanded={active.assistanceOpen}
-              aria-controls={`sf-assist-${domId}`}
-            >
-              <span aria-hidden="true">{active.assistanceOpen ? '−' : '+'}</span>
-              {active.assistanceOpen ? 'إخفاء المساعدة' : 'ترجمة وتلميح'}
-            </button>
-            <div id={`sf-assist-${domId}`} hidden={!active.assistanceOpen} dir="rtl" lang="ar">
+            <div className="sf-session__assist-actions" role="group" aria-label="مساعدة السؤال">
               {currentQuestion.q_ar ? (
-                <section>
-                  <strong>الترجمة العربية</strong>
-                  <MathText text={currentQuestion.q_ar} as="div" />
-                </section>
+                <button
+                  type="button"
+                  onClick={toggleTranslation}
+                  aria-expanded={translationOpen}
+                  aria-controls={`sf-translation-${domId}`}
+                >
+                  <span aria-hidden="true">{translationOpen ? '−' : '+'}</span>
+                  {translationOpen ? 'إخفاء الترجمة' : 'إظهار الترجمة'}
+                </button>
               ) : null}
               {currentQuestion.hint_ar ? (
-                <section>
-                  <strong>تلميح بدون كشف الإجابة</strong>
-                  <MathText text={currentQuestion.hint_ar} as="div" />
-                </section>
+                <button
+                  type="button"
+                  onClick={toggleHint}
+                  aria-expanded={hintOpen}
+                  aria-controls={`sf-hint-${domId}`}
+                >
+                  <span aria-hidden="true">{hintOpen ? '−' : '+'}</span>
+                  {hintOpen ? 'إخفاء التلميح' : 'إظهار التلميح'}
+                </button>
               ) : null}
             </div>
+            {translationOpen && currentQuestion.q_ar ? (
+              <section id={`sf-translation-${domId}`} className="sf-session__assist-panel" dir="rtl" lang="ar">
+                <strong>الترجمة العربية</strong>
+                <MathText text={currentQuestion.q_ar} as="div" />
+              </section>
+            ) : null}
+            {hintOpen && currentQuestion.hint_ar ? (
+              <section id={`sf-hint-${domId}`} className="sf-session__assist-panel sf-session__assist-panel--hint" dir="rtl" lang="ar">
+                <strong>تلميح بدون كشف الإجابة</strong>
+                <MathText text={currentQuestion.hint_ar} as="div" />
+              </section>
+            ) : null}
           </div>
         ) : null}
 
@@ -601,7 +675,7 @@ function SessionRun({
                   aria-label={`${choiceKey(displayedIndex)}. ${currentQuestion.choices[originalIndex]}`}
                 >
                   <span aria-hidden="true">{choiceKey(displayedIndex)}</span>
-                  <MathText text={currentQuestion.choices[originalIndex]} />
+                  <StudyText text={currentQuestion.choices[originalIndex]} variant="choice" />
                 </button>
               )
             })}
@@ -642,12 +716,12 @@ function SessionRun({
             {!active.answered ? (
               <>
                 <p className="sf-session__match-help">
-                  اختر إجابة ثم اضغط خانتها أو رقم الصف، أو اسحبها مباشرة · <span dir="ltr">tap, keys, or drag</span>
+                  اضغط الإجابة ثم رقم الصف، أو اسحب البطاقة كاملة إلى مكانها.
                 </p>
                 <section className="sf-session__bank" aria-label="بنك الإجابات">
                   <header>
                     <strong>بنك الإجابات · Answer bank</strong>
-                    <span aria-live="polite">{usedAnswers.size} / {currentQuestion.pairs.length}</span>
+                    <span aria-live="polite">تم {usedAnswers.size} من {currentQuestion.pairs.length}</span>
                   </header>
                   {remainingAnswers.length ? (
                     <div>
@@ -658,13 +732,14 @@ function SessionRun({
                           className={active.selectedMatchAnswer === answer ? 'is-selected' : ''}
                           draggable
                           aria-pressed={active.selectedMatchAnswer === answer}
+                          aria-label={`الإجابة: ${currentQuestion.pairs[answer][1]}. اضغط لاختيارها أو اسحبها إلى صف`}
                           onClick={() => selectMatchAnswer(answer)}
-                          onDragStart={(event) => {
-                            event.dataTransfer.setData('text/plain', String(answer))
-                            event.dataTransfer.effectAllowed = 'move'
-                          }}
+                          onDragStart={(event) => beginMatchDrag(event, answer)}
+                          onDragEnd={clearMatchDrag}
                         >
-                          <span aria-hidden="true">{active.selectedMatchAnswer === answer ? '✓' : '↕'}</span>
+                          <span className="sf-session__drag-handle" aria-hidden="true">
+                            {active.selectedMatchAnswer === answer ? '✓' : '⠿'}
+                          </span>
                           <MathText text={currentQuestion.pairs[answer][1]} />
                         </button>
                       ))}
@@ -684,8 +759,21 @@ function SessionRun({
                 return (
                   <section
                     key={`${currentQuestion.id}-${row}`}
-                    className={active.answered ? (rowCorrect ? 'is-correct' : 'is-wrong') : ''}
-                    onDragOver={(event) => event.preventDefault()}
+                    data-match-row={row}
+                    aria-label={`الصف ${row + 1}: ${pair[0]}`}
+                    className={[
+                      active.answered ? (rowCorrect ? 'is-correct' : 'is-wrong') : '',
+                      dragOverRow === row ? 'is-drag-over' : '',
+                    ].filter(Boolean).join(' ')}
+                    onDragEnter={() => setDragOverRow(row)}
+                    onDragLeave={(event) => {
+                      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDragOverRow(null)
+                    }}
+                    onDragOver={(event) => {
+                      event.preventDefault()
+                      event.dataTransfer.dropEffect = 'move'
+                      if (dragOverRow !== row) setDragOverRow(row)
+                    }}
                     onDrop={(event) => dropMatch(event, row)}
                   >
                     <span className="sf-session__match-number">{row + 1}</span>
@@ -708,7 +796,7 @@ function SessionRun({
                         onClick={() => chooseMatchSlot(row)}
                         aria-label={
                           answer !== undefined
-                            ? `تغيير إجابة الصف ${row + 1}`
+                            ? `تغيير إجابة الصف ${row + 1}: ${currentQuestion.pairs[answer][1]}`
                             : `ضع إجابة في الصف ${row + 1}`
                         }
                       >
@@ -736,15 +824,16 @@ function SessionRun({
                         >
                           {active.openHints[row] ? '−' : '؟'}
                         </button>
-                        <div
-                          id={`sf-pair-hint-${domId}-${row}`}
-                          className="sf-session__pair-hint"
-                          hidden={!active.openHints[row]}
-                          dir="rtl"
-                          lang="ar"
-                        >
-                          <MathText text={hint} />
-                        </div>
+                        {active.openHints[row] ? (
+                          <div
+                            id={`sf-pair-hint-${domId}-${row}`}
+                            className="sf-session__pair-hint"
+                            dir="rtl"
+                            lang="ar"
+                          >
+                            <MathText text={hint} />
+                          </div>
+                        ) : null}
                       </>
                     ) : null}
                   </section>

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { StudyText } from '../../components/StudyText'
 import { Button, ScreenHeader } from '../../components/Ui'
 import { readiness, shuffle, subjectShortName } from '../../lib/utils'
 import type { ChoiceQuestion, DrillPreset, DrillsBundle, Lesson, Subject } from '../../types'
@@ -40,7 +41,8 @@ export function MockScreen({ data, order, hidden, drills, initialLesson, onBack,
   const [items, setItems] = useState<MockItem[]>([])
   const [index, setIndex] = useState(0)
   const [secondsLeft, setSecondsLeft] = useState(0)
-  const [assistOpen, setAssistOpen] = useState(false)
+  const [translationOpen, setTranslationOpen] = useState(false)
+  const [hintOpen, setHintOpen] = useState(false)
   const [label, setLabel] = useState('اختبار مخصص')
   const [presetId, setPresetId] = useState<string | undefined>()
 
@@ -89,7 +91,8 @@ export function MockScreen({ data, order, hidden, drills, initialLesson, onBack,
     setLessonIds(new Set(nextLessons))
     setTimed(forceTimed)
     setSecondsLeft(Math.max(5, next.length) * 60)
-    setAssistOpen(false)
+    setTranslationOpen(false)
+    setHintOpen(false)
     setStage('run')
   }
 
@@ -133,10 +136,19 @@ export function MockScreen({ data, order, hidden, drills, initialLesson, onBack,
         <ScreenHeader title="🎯 اختبار تجريبي" subtitle={label} onBack={() => window.confirm('الخروج من الاختبار الحالي؟') && onBack()} actions={timed ? <span className={`timer-chip ${secondsLeft <= 60 ? 'bad' : ''}`} dir="ltr">⏱ {minutes}:{String(seconds).padStart(2, '0')}</span> : undefined} />
         <div className="mock-progress"><span>{index + 1}/{items.length}</span><i><b style={{ width: `${index / items.length * 100}%` }} /></i><span>متبقي {items.length - index - 1}</span></div>
         <section className="question-card" style={{ '--subject-color': subject?.color ?? '#2dd4bf' } as React.CSSProperties}>
-          <h2 dir="auto">{item.question.q}</h2>
-          {(item.question.q_ar || item.question.hint_ar) && <div className="assist-block"><button type="button" onClick={() => setAssistOpen(value => !value)} aria-expanded={assistOpen}>{assistOpen ? '− إخفاء المساعدة' : '+ ترجمة وتلميح'}</button>{assistOpen && <div><article><small>الترجمة العربية</small><p dir="rtl">{item.question.q_ar}</p></article><article><small>تلميح بدون كشف الإجابة</small><p dir="rtl">{item.question.hint_ar}</p></article></div>}</div>}
-          <div className="choice-list">{item.choices.map((choice, choiceIndex) => <button type="button" className={item.pick === choiceIndex ? 'selected' : ''} key={`${choice}-${choiceIndex}`} onClick={() => setItems(current => current.map((entry, itemIndex) => itemIndex === index ? { ...entry, pick: choiceIndex } : entry))}><kbd>{String.fromCharCode(65 + choiceIndex)}</kbd><span dir="auto">{choice}</span></button>)}</div>
-          <div className="question-actions"><Button variant="secondary" onClick={() => { setAssistOpen(false); if (index < items.length - 1) setIndex(value => value + 1); else finish() }}>تخطٍّ</Button><Button onClick={() => { setAssistOpen(false); if (index < items.length - 1) setIndex(value => value + 1); else finish() }}>{index === items.length - 1 ? 'إنهاء ✓' : 'التالي'}</Button></div>
+          <h2 dir="auto"><StudyText text={item.question.q} variant="question" /></h2>
+          {(item.question.q_ar || item.question.hint_ar) && (
+            <div className="assist-block">
+              <div className="assist-block__actions" role="group" aria-label="مساعدة السؤال">
+                {item.question.q_ar ? <button type="button" onClick={() => setTranslationOpen(value => !value)} aria-expanded={translationOpen}>{translationOpen ? '− إخفاء الترجمة' : '+ إظهار الترجمة'}</button> : null}
+                {item.question.hint_ar ? <button type="button" onClick={() => setHintOpen(value => !value)} aria-expanded={hintOpen}>{hintOpen ? '− إخفاء التلميح' : '+ إظهار التلميح'}</button> : null}
+              </div>
+              {translationOpen && item.question.q_ar ? <article><small>الترجمة العربية</small><p dir="rtl">{item.question.q_ar}</p></article> : null}
+              {hintOpen && item.question.hint_ar ? <article><small>تلميح بدون كشف الإجابة</small><p dir="rtl">{item.question.hint_ar}</p></article> : null}
+            </div>
+          )}
+          <div className="choice-list">{item.choices.map((choice, choiceIndex) => <button type="button" className={item.pick === choiceIndex ? 'selected' : ''} key={`${choice}-${choiceIndex}`} onClick={() => setItems(current => current.map((entry, itemIndex) => itemIndex === index ? { ...entry, pick: choiceIndex } : entry))}><kbd>{String.fromCharCode(65 + choiceIndex)}</kbd><StudyText text={choice} variant="choice" /></button>)}</div>
+          <div className="question-actions"><Button variant="secondary" onClick={() => { setTranslationOpen(false); setHintOpen(false); if (index < items.length - 1) setIndex(value => value + 1); else finish() }}>تخطٍّ</Button><Button onClick={() => { setTranslationOpen(false); setHintOpen(false); if (index < items.length - 1) setIndex(value => value + 1); else finish() }}>{index === items.length - 1 ? 'إنهاء ✓' : 'التالي'}</Button></div>
         </section>
       </main>
     )

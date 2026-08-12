@@ -43,7 +43,7 @@
 .sf-session__icon,
 .sf-session__notes,
 .sf-session__star,
-.sf-session__assist > button,
+.sf-session__assist-actions button,
 .sf-session__guard button,
 .sf-session__self-grade button {
   border: 1px solid var(--sf-line);
@@ -152,19 +152,17 @@
   unicode-bidi: plaintext;
 }
 
-.sf-session__assist { margin-block-end: 1rem; }
-.sf-session__assist > button { color: #7defcf; }
-.sf-session__assist > div {
-  display: grid;
-  gap: .5rem;
-  margin-block-start: .55rem;
+.sf-session__assist { display: grid; gap: .55rem; margin-block-end: 1rem; }
+.sf-session__assist-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.sf-session__assist-actions button { color: #7defcf; }
+.sf-session__assist-panel {
   border: 1px solid color-mix(in srgb, var(--session-accent) 35%, transparent);
   border-radius: .75rem;
   background: color-mix(in srgb, var(--session-accent) 7%, var(--sf-raised));
-  padding: .65rem;
+  padding: .75rem;
 }
-.sf-session__assist section { background: var(--sf-panel); border-radius: .55rem; padding: .6rem; }
-.sf-session__assist section strong { display: block; color: #7defcf; font-size: .75rem; margin-block-end: .25rem; }
+.sf-session__assist-panel--hint { border-style: dashed; }
+.sf-session__assist-panel strong { display: block; color: #7defcf; font-size: .78rem; margin-block-end: .3rem; }
 
 .sf-session__choices { display: grid; gap: .65rem; }
 .sf-session__choice {
@@ -238,15 +236,39 @@
   display: flex;
   gap: .5rem;
   align-items: center;
+  min-height: 3.25rem;
   border: 1px solid var(--sf-line);
   border-radius: .6rem;
   background: var(--sf-raised);
   color: var(--sf-text);
-  padding: .55rem;
+  padding: .7rem;
   text-align: start;
   cursor: grab;
+  user-select: none;
 }
+.sf-session__bank button:active { cursor: grabbing; }
 .sf-session__bank button.is-selected { border-color: var(--session-accent); background: color-mix(in srgb, var(--session-accent) 12%, var(--sf-raised)); }
+.sf-session__drag-handle { display: grid; place-items: center; flex: 0 0 2rem; min-height: 2rem; border-radius: .45rem; background: var(--sf-panel); color: var(--session-accent); font-size: 1.2rem; }
+
+.sf-session__drag-preview {
+  position: fixed;
+  inset: -10000px auto auto -10000px;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  min-height: 3.25rem;
+  max-width: min(32rem, calc(100vw - 2rem));
+  border: 2px solid #2dd4bf;
+  border-radius: .7rem;
+  background: #1a202b;
+  color: #eef2f7;
+  padding: .7rem;
+  text-align: start;
+  font: inherit;
+  box-shadow: 0 18px 45px rgb(0 0 0 / 45%);
+  opacity: .98;
+}
 
 .sf-session__match-rows { display: grid; gap: .5rem; }
 .sf-session__match-rows > section {
@@ -258,7 +280,9 @@
   border-radius: .75rem;
   background: var(--sf-raised);
   padding: .55rem;
+  transition: border-color .15s ease, background-color .15s ease, transform .15s ease;
 }
+.sf-session__match-rows > section.is-drag-over { border-color: var(--session-accent); background: color-mix(in srgb, var(--session-accent) 10%, var(--sf-raised)); transform: translateY(-2px); }
 .sf-session__match-number { display: grid; place-items: center; width: 1.7rem; height: 1.7rem; border-radius: .45rem; background: var(--sf-panel); }
 .sf-session__match-left { font-weight: 700; text-align: start; unicode-bidi: plaintext; }
 .sf-session__match-slot {
@@ -276,7 +300,7 @@
   cursor: pointer;
 }
 .sf-session__match-slot.is-filled { border-style: solid; border-color: var(--session-accent); color: var(--sf-text); }
-.sf-session__pair-hint-button { width: 2rem; height: 2rem; border: 1px solid var(--sf-line); border-radius: .5rem; background: var(--sf-panel); color: var(--session-accent); cursor: pointer; }
+.sf-session__pair-hint-button { width: 2.75rem; height: 2.75rem; border: 1px solid var(--sf-line); border-radius: .6rem; background: var(--sf-panel); color: var(--session-accent); cursor: pointer; }
 .sf-session__pair-hint { grid-column: 2 / -1; color: var(--sf-muted); padding: .45rem; }
 .sf-session__match-result { display: grid; grid-template-columns: 1fr auto; gap: .4rem; text-align: start; }
 .sf-session__match-result small { grid-column: 1 / -1; color: #fca5a5; }

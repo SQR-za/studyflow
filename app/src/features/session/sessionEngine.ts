@@ -186,7 +186,7 @@ export function gradeActiveCard(
   const done =
     state.meta.mode === 'learn'
       ? learnStreak >= 2 || sessionAttempts >= 7
-      : sessionAttempts >= SESSION_CAP
+      : correct || sessionAttempts >= SESSION_CAP
 
   const nextProgress: QuestionProgress = {
     box,

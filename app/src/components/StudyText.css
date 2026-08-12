@@ -1,0 +1,50 @@
+.study-code-block {
+  box-sizing: border-box;
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  direction: ltr;
+  unicode-bidi: isolate;
+  color: inherit;
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: .86em;
+  line-height: 1.6;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  tab-size: 2;
+}
+
+.study-code-block--statement {
+  width: 100%;
+  margin-block: .65rem;
+  border: 1px solid var(--sf-line, #2a3342);
+  border-inline-start: .2rem solid var(--session-accent, #2dd4bf);
+  border-radius: .65rem;
+  background: var(--sf-raised, #1a202b);
+  padding: .65rem .8rem;
+  overflow-x: auto;
+}
+.study-code-block--statement::before {
+  content: "C / MPI";
+  display: block;
+  width: max-content;
+  margin-block-end: .35rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--session-accent, #2dd4bf) 14%, transparent);
+  color: var(--session-accent, #2dd4bf);
+  padding: .08rem .45rem;
+  font: 700 .64rem/1.5 system-ui, sans-serif;
+  letter-spacing: .04em;
+}
+
+.study-code-block--choice {
+  flex: 1 1 auto;
+  width: auto;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: .92em;
+  line-height: inherit;
+}
