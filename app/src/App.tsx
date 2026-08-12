@@ -11,7 +11,7 @@ import { WeakScreen } from './features/weak/WeakScreen'
 import { SessionScreen } from './features/session'
 import { createDailyStore, createProgressStore, incrementDaily, recordAnswer, setStarred, setTestResult } from './lib/progress'
 import { chapterById, dueQuestions, isWeak, starredQuestions, visibleLessonQuestions, visibleQuestions } from './lib/stats'
-import { STORAGE_KEYS } from './lib/constants'
+import { APP_BUILD, STORAGE_KEYS } from './lib/constants'
 import { downloadJson } from './lib/storage'
 import { isChoice, subjectShortName } from './lib/utils'
 import { useApp } from './state/AppContext'
@@ -159,7 +159,7 @@ export function App() {
       {screen === 'settings' && <SettingsScreen data={app.data} order={app.order} settings={app.settings} sync={app.sync} passwordEnabled={passwordEnabled} syncStatus={app.syncState.message} onBack={() => setScreen('home')} onUpdateSettings={patch => app.updateSettings(patch)} onToggleSubject={code => app.updateSettings(current => ({ hidden: current.hidden.includes(code) ? current.hidden.filter(item => item !== code) : [...current.hidden, code] }))} onImportContent={async content => { app.replaceCustomContent(content); notify('تم استيراد المحتوى ✓') }} onExportContent={() => downloadJson('studyflow-data.json', app.customContent)} onClearContent={() => { app.clearCustomContent(); notify('تمت إزالة المحتوى الخاص') }} onImportProgress={backup => { app.importProgress(backup); notify('تم استرجاع التقدم ✓') }} onExportProgress={() => downloadJson('studyflow-progress.json', app.exportProgress())} onSetPassword={password => { localStorage.setItem(STORAGE_KEYS.password, password); setPasswordVersion(value => value + 1); notify('تم تفعيل القفل') }} onClearPassword={() => { localStorage.removeItem(STORAGE_KEYS.password); setPasswordVersion(value => value + 1); setUnlocked(true); notify('تم إلغاء القفل') }} onResetProgress={() => { app.updateStore(createProgressStore()); app.setDaily(createDailyStore()); notify('تم تصفير التقدم') }} onEnableSync={async token => { app.updateSync({ token, enabled: true, gistId: '' }); await app.pullSync(); await app.pushSync(); notify('تم تفعيل المزامنة') }} onDisableSync={() => app.updateSync({ enabled: false })} onSyncNow={async () => { await app.pullSync(); await app.pushSync(); }} onTestSync={async token => { const response = await fetch('https://api.github.com/gists?per_page=1', { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }, cache: 'no-store' }); if (!response.ok) throw new Error(`التوكن غير صالح (${response.status})`); notify('الاتصال ناجح ✓') }} onDownloadCalendar={downloadCalendar} />}
 
       {toast && <Toast message={toast} onDone={() => setToast('')} />}
-      <span className="build-marker">v2.0.0-preview.1</span>
+      <span className="build-marker">{APP_BUILD}</span>
     </div>
   )
 }
