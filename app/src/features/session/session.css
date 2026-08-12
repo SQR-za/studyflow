@@ -8,7 +8,7 @@
   --sf-good: var(--good, #22c55e);
   --sf-bad: var(--bad, #ef4444);
   --session-accent: #2dd4bf;
-  width: min(100%, 980px);
+  width: min(100%, 1280px);
   margin-inline: auto;
   color: var(--sf-text);
 }
@@ -359,6 +359,46 @@
   .sf-session__match-result { grid-column: 2 / 3; }
   .sf-session__pair-hint { grid-column: 1 / -1; }
   .sf-session__keys { display: none; }
+}
+
+@media (min-width: 1000px) {
+  .sf-session__topbar { margin-block-end: 1rem; }
+  .sf-session__icon,
+  .sf-session__notes,
+  .sf-session__star,
+  .sf-session__assist-actions button,
+  .sf-session__guard button,
+  .sf-session__self-grade button { min-height: 2.75rem; padding: .6rem .9rem; }
+  .sf-session__icon { width: 2.75rem; padding: 0; }
+  .sf-session__mode,
+  .sf-session__stats > span { font-size: .84rem; }
+  .sf-session__stats > span { padding: .4rem .8rem; }
+  .sf-session__mastery { height: .65rem; margin-block: .7rem 1.15rem; }
+  .sf-session__card,
+  .sf-session__empty-card { border-radius: 1.2rem; padding: 2rem; }
+  .sf-session__source { font-size: .82rem; }
+  .sf-session__question { margin-block: 1.05rem; font-size: clamp(1.35rem, 1.3vw, 1.65rem); line-height: 1.7; }
+  .sf-session__assist { gap: .7rem; margin-block-end: 1.2rem; }
+  .sf-session__assist-actions button { font-size: .9rem; }
+  .sf-session__assist-panel { padding: 1rem; font-size: 1rem; }
+  .sf-session__assist-panel strong { font-size: .86rem; }
+  .sf-session__choices { gap: .8rem; }
+  .sf-session__choice { min-height: 4.15rem; gap: .85rem; padding: 1rem 1.1rem; font-size: 1.04rem; }
+  .sf-session__choice > span:first-child { flex-basis: 2rem; min-height: 2rem; border-radius: .55rem; }
+  .sf-session__primary { min-height: 3.1rem; font-size: 1rem; }
+  .sf-session__solution,
+  .sf-session__explanation { padding: 1rem; font-size: 1rem; }
+  .sf-session__bank { padding: .85rem; }
+  .sf-session__bank header { font-size: .88rem; }
+  .sf-session__bank > div { gap: .65rem; margin-block-start: .75rem; }
+  .sf-session__bank button { min-height: 4rem; padding: .9rem; font-size: 1rem; }
+  .sf-session__match-rows { gap: .7rem; }
+  .sf-session__match-rows > section { grid-template-columns: 2.25rem minmax(10rem, .8fr) minmax(12rem, 1.2fr) auto; gap: .75rem; padding: .75rem; }
+  .sf-session__match-number { width: 2rem; height: 2rem; }
+  .sf-session__match-slot { min-height: 3.25rem; padding: .75rem; }
+  .sf-session__pair-hint-button { width: 3.1rem; height: 3.1rem; }
+  .sf-session__next { margin-block-start: 1.25rem; padding-block-start: 1rem; }
+  .sf-session__keys { margin-block-start: .8rem; font-size: .8rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

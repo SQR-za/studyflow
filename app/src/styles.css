@@ -27,7 +27,14 @@
 }
 
 * { box-sizing: border-box; }
-html { min-width: 320px; min-height: 100%; background: var(--bg); }
+html {
+  min-width: 320px;
+  min-height: 100%;
+  background: var(--bg);
+  font-size: clamp(16px, calc(14px + .2vw), 18px);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 body { margin: 0; min-width: 320px; min-height: 100vh; background: radial-gradient(circle at 75% -10%, rgba(45, 212, 191, .07), transparent 30rem), var(--bg); }
 button, input { font: inherit; }
 button { color: inherit; border: 0; cursor: pointer; }
@@ -41,7 +48,7 @@ a { color: var(--accent); }
 .info-text { color: var(--info) !important; }
 
 #root { min-height: 100vh; }
-.app-shell { width: min(100%, 1120px); margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(70px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)); }
+.app-shell { width: min(100%, 1440px); margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(70px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)); }
 .screen { animation: screen-in .22s ease; }
 @keyframes screen-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
@@ -224,6 +231,36 @@ a { color: var(--accent); }
 .toast { position: fixed; z-index: 120; left: 50%; bottom: max(24px, env(safe-area-inset-bottom)); transform: translateX(-50%); max-width: min(90vw, 520px); padding: 11px 16px; border-radius: 12px; background: var(--surface-3); border: 1px solid var(--line); box-shadow: var(--shadow); font-weight: 700; text-align: center; animation: toast-in .2s ease; }
 @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 7px); } }
 .boot-card details { margin-top: 14px; text-align: start; color: var(--muted); }.boot-card pre { overflow: auto; white-space: pre-wrap; color: var(--bad); font-size: .72rem; }
+
+@media (min-width: 1100px) {
+  .app-shell { padding-inline: clamp(24px, 2.2vw, 40px); }
+  .app-header { min-height: 66px; margin-bottom: 16px; }
+  .brand-mark { width: 48px; height: 48px; border-radius: 15px; }
+  .quick-nav { gap: 11px; margin-bottom: 17px; }
+  .quick-nav button { min-height: 58px; font-size: .92rem; }
+  .today-card { padding: 22px; margin-bottom: 15px; }
+  .overview-card { padding: 18px; margin-bottom: 15px; }
+  .overview-card span { font-size: .78rem; }
+  .study-controls { gap: 10px; margin-block: 15px; }
+  .study-controls > button,
+  .duration-control { min-height: 46px; padding-inline: 16px; font-size: .88rem; }
+  .subject-stack { gap: 13px; }
+  .subject-card__header { min-height: 90px; padding: 18px 21px; }
+  .subject-card__identity strong { font-size: 1.08rem; }
+  .subject-card__identity small,
+  .subject-card__mastery small { font-size: .72rem; }
+  .chapter-row { gap: 14px; padding: 16px 19px; }
+  .chapter-row__main strong { font-size: 1rem; }
+  .chapter-row__main small { font-size: .76rem; }
+  .chapter-row__actions button { width: 44px; height: 44px; font-size: .84rem; }
+  .lesson-list { margin: 0 19px 17px; }
+  .lesson-row { gap: 12px; padding: 13px 15px; }
+  .lesson-row__main strong { font-size: .9rem; }
+  .lesson-row__main small { font-size: .72rem; }
+  .lesson-row__actions button { min-height: 42px; padding-inline: 12px; font-size: .75rem; }
+  .subject-card__footer { padding: 15px 19px 19px; }
+  .subject-card__footer button { min-height: 46px; font-size: .84rem; }
+}
 
 @media (max-width: 680px) {
   .app-shell { padding-inline: 11px; padding-top: max(12px, env(safe-area-inset-top)); }
