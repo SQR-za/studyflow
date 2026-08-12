@@ -24,7 +24,7 @@ import type {
 } from '../types'
 import {
   createEmptyContent,
-  createEmptyDrills,
+  loadCachedPreparedContent,
   loadPreparedContent,
   prepareContent,
   validateContent,
@@ -113,13 +113,14 @@ function errorMessage(error: unknown): string {
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [customContent, setCustomContent] = useState<ContentBundle>(initialCustomContent)
-  const [prepared, setPrepared] = useState(() => prepareContent(createEmptyContent(), customContent, createEmptyDrills()))
+  const [initialContent] = useState(() => loadCachedPreparedContent({ customContent }))
+  const [prepared, setPrepared] = useState(() => prepareContent(initialContent.builtinContent, customContent, initialContent.drills))
   const [store, setStore] = useState(() => normalizeProgressStore(loadJson<unknown>(STORAGE_KEYS.progress, createProgressStore())))
   const [settings, setSettings] = useState<AppSettings>(initialSettings)
   const [planDone, setPlanDoneState] = useState(() => normalizePlanDone(loadJson<unknown>(STORAGE_KEYS.plan, {})))
   const [daily, setDailyState] = useState(() => normalizeDailyStore(loadJson<unknown>(STORAGE_KEYS.daily, createDailyStore())))
   const [sync, setSync] = useState(() => normalizeSyncSettings(loadJson<unknown>(STORAGE_KEYS.sync, createSyncSettings())))
-  const [ready, setReady] = useState(false)
+  const [ready, setReady] = useState(initialContent.order.length > 0)
   const [error, setError] = useState<string | null>(null)
   const [syncState, setSyncState] = useState<SyncState>({ phase: 'off', message: 'مطفّأة' })
 
@@ -129,7 +130,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const planRef = useRef(planDone)
   const dailyRef = useRef(daily)
   const syncRef = useRef(sync)
-  const bundlesRef = useRef({ builtin: createEmptyContent(), drills: createEmptyDrills() })
+  const bundlesRef = useRef({ builtin: initialContent.builtinContent, drills: initialContent.drills })
   const pushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pushSyncRef = useRef<() => Promise<boolean>>(async () => false)
   const initialPullRef = useRef(false)

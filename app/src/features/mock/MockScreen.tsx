@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { StudyText } from '../../components/StudyText'
 import { Button, ScreenHeader } from '../../components/Ui'
 import { readiness, shuffle, subjectShortName } from '../../lib/utils'
@@ -10,6 +10,31 @@ interface MockItem {
   choices: string[]
   correct: number
   pick: number
+}
+
+function MockTimer({ endAt, onElapsed }: { endAt: number; onElapsed: () => void }) {
+  const [secondsLeft, setSecondsLeft] = useState(() => Math.max(0, Math.ceil((endAt - Date.now()) / 1_000)))
+  const onElapsedRef = useRef(onElapsed)
+  const elapsedRef = useRef(false)
+
+  useEffect(() => { onElapsedRef.current = onElapsed }, [onElapsed])
+  useEffect(() => {
+    const update = () => {
+      const next = Math.max(0, Math.ceil((endAt - Date.now()) / 1_000))
+      setSecondsLeft(next)
+      if (next === 0 && !elapsedRef.current) {
+        elapsedRef.current = true
+        onElapsedRef.current()
+      }
+    }
+    update()
+    const timer = window.setInterval(update, 1_000)
+    return () => window.clearInterval(timer)
+  }, [endAt])
+
+  const minutes = Math.floor(secondsLeft / 60)
+  const seconds = secondsLeft % 60
+  return <span className={`timer-chip ${secondsLeft <= 60 ? 'bad' : ''}`} dir="ltr">⏱ {minutes}:{String(seconds).padStart(2, '0')}</span>
 }
 
 export interface MockResultPayload {
@@ -40,7 +65,7 @@ export function MockScreen({ data, order, hidden, drills, initialLesson, onBack,
   const [timed, setTimed] = useState(true)
   const [items, setItems] = useState<MockItem[]>([])
   const [index, setIndex] = useState(0)
-  const [secondsLeft, setSecondsLeft] = useState(0)
+  const [timerEndAt, setTimerEndAt] = useState(0)
   const [translationOpen, setTranslationOpen] = useState(false)
   const [hintOpen, setHintOpen] = useState(false)
   const [label, setLabel] = useState('اختبار مخصص')
@@ -66,13 +91,6 @@ export function MockScreen({ data, order, hidden, drills, initialLesson, onBack,
     setStage('result')
   }, [code, items, label, lessonIds, onRecord, presetId, stage])
 
-  useEffect(() => {
-    if (stage !== 'run' || !timed) return
-    if (secondsLeft <= 0) { finish(); return }
-    const timer = window.setTimeout(() => setSecondsLeft(value => value - 1), 1_000)
-    return () => window.clearTimeout(timer)
-  }, [finish, secondsLeft, stage, timed])
-
   function makeItems(pool: ChoiceQuestion[]): MockItem[] {
     return shuffle(pool).map(question => {
       const indexed = question.choices.map((text, answer) => ({ text, answer }))
@@ -90,7 +108,7 @@ export function MockScreen({ data, order, hidden, drills, initialLesson, onBack,
     setPresetId(nextPreset)
     setLessonIds(new Set(nextLessons))
     setTimed(forceTimed)
-    setSecondsLeft(Math.max(5, next.length) * 60)
+    setTimerEndAt(Date.now() + Math.max(5, next.length) * 60_000)
     setTranslationOpen(false)
     setHintOpen(false)
     setStage('run')
@@ -119,10 +137,10 @@ export function MockScreen({ data, order, hidden, drills, initialLesson, onBack,
       <ScreenHeader title="🎯 اختبار تجريبي" onBack={onBack} />
       <section className="mock-panel">
         <h2>اختر المادة</h2>
-        <div className="subject-toggles">{visible.map(item => <button type="button" className={item === code ? 'selected' : ''} key={item} onClick={() => { setCode(item); setLessonIds(new Set()) }}>{data[item].name}</button>)}</div>
+        <div className="subject-toggles" role="group" aria-label="اختيار المادة">{visible.map(item => <button type="button" className={item === code ? 'selected' : ''} aria-pressed={item === code} key={item} onClick={() => { setCode(item); setLessonIds(new Set()) }}>{data[item].name}</button>)}</div>
       </section>
       {!!presets.length && <section className="mock-panel"><h2>اختبارات جاهزة</h2><div className="preset-grid">{presets.map(preset => <button type="button" key={preset.id} onClick={() => startPreset(preset)}><strong>{preset.label}</strong><span>{preset.count ?? preset.parts?.reduce((sum, part) => sum + part.count, 0) ?? '—'} سؤال {preset.timed === false ? '· بلا وقت' : '· بوقت'}</span></button>)}</div></section>}
-      {!!lessons.length && <section className="mock-panel"><h2>الأقسام</h2><div className="lesson-picker">{subject.chapters.filter(chapter => chapter.lessons?.length).map(chapter => <div key={chapter.id}><h3>{chapter.label}</h3><div>{chapter.lessons?.map(lesson => <button type="button" className={lessonIds.has(lesson.id) ? 'selected' : ''} key={lesson.id} onClick={() => setLessonIds(current => { const next = new Set(current); next.has(lesson.id) ? next.delete(lesson.id) : next.add(lesson.id); return next })}>{lesson.label}</button>)}</div></div>)}</div></section>}
+      {!!lessons.length && <section className="mock-panel"><h2>الأقسام</h2><div className="lesson-picker">{subject.chapters.filter(chapter => chapter.lessons?.length).map(chapter => <div key={chapter.id}><h3>{chapter.label}</h3><div role="group" aria-label={chapter.label}>{chapter.lessons?.map(lesson => <button type="button" className={lessonIds.has(lesson.id) ? 'selected' : ''} aria-pressed={lessonIds.has(lesson.id)} key={lesson.id} onClick={() => setLessonIds(current => { const next = new Set(current); next.has(lesson.id) ? next.delete(lesson.id) : next.add(lesson.id); return next })}>{lesson.label}</button>)}</div></div>)}</div></section>}
       <section className="mock-panel mock-options"><div><label htmlFor="mock-count">عدد الأسئلة</label><select id="mock-count" value={count} onChange={event => setCount(Number(event.target.value))}>{[10, 20, 30, 40].map(value => <option key={value} value={value}>{value}</option>)}</select></div><label className="check-label"><input type="checkbox" checked={timed} onChange={event => setTimed(event.target.checked)} /> مؤقت</label><Button onClick={startCustom}>ابدأ الاختبار</Button></section>
     </main>
   )
@@ -130,12 +148,11 @@ export function MockScreen({ data, order, hidden, drills, initialLesson, onBack,
   if (stage === 'run') {
     const item = items[index]
     if (!item) return null
-    const minutes = Math.floor(secondsLeft / 60); const seconds = secondsLeft % 60
     return (
       <main className="screen mock-screen">
-        <ScreenHeader title="🎯 اختبار تجريبي" subtitle={label} onBack={() => window.confirm('الخروج من الاختبار الحالي؟') && onBack()} actions={timed ? <span className={`timer-chip ${secondsLeft <= 60 ? 'bad' : ''}`} dir="ltr">⏱ {minutes}:{String(seconds).padStart(2, '0')}</span> : undefined} />
-        <div className="mock-progress"><span>{index + 1}/{items.length}</span><i><b style={{ width: `${index / items.length * 100}%` }} /></i><span>متبقي {items.length - index - 1}</span></div>
-        <section className="question-card" style={{ '--subject-color': subject?.color ?? '#2dd4bf' } as React.CSSProperties}>
+        <ScreenHeader title="🎯 اختبار تجريبي" subtitle={label} onBack={() => window.confirm('الخروج من الاختبار الحالي؟') && onBack()} actions={timed ? <MockTimer key={timerEndAt} endAt={timerEndAt} onElapsed={finish} /> : undefined} />
+        <div className="mock-progress"><span>{index + 1}/{items.length}</span><i role="progressbar" aria-label="تقدم الاختبار" aria-valuemin={0} aria-valuemax={items.length} aria-valuenow={index}><b style={{ '--mock-progress': items.length ? index / items.length : 0 } as React.CSSProperties} /></i><span>متبقي {items.length - index - 1}</span></div>
+        <section key={item.question.id} className="question-card" style={{ '--subject-color': subject?.color ?? '#2dd4bf' } as React.CSSProperties}>
           <h2 dir="auto"><StudyText text={item.question.q} variant="question" /></h2>
           {(item.question.q_ar || item.question.hint_ar) && (
             <div className="assist-block">
@@ -147,7 +164,7 @@ export function MockScreen({ data, order, hidden, drills, initialLesson, onBack,
               {hintOpen && item.question.hint_ar ? <article><small>تلميح بدون كشف الإجابة</small><p dir="rtl">{item.question.hint_ar}</p></article> : null}
             </div>
           )}
-          <div className="choice-list">{item.choices.map((choice, choiceIndex) => <button type="button" className={item.pick === choiceIndex ? 'selected' : ''} key={`${choice}-${choiceIndex}`} onClick={() => setItems(current => current.map((entry, itemIndex) => itemIndex === index ? { ...entry, pick: choiceIndex } : entry))}><kbd>{String.fromCharCode(65 + choiceIndex)}</kbd><StudyText text={choice} variant="choice" /></button>)}</div>
+          <div className="choice-list" role="radiogroup" aria-label="خيارات الإجابة">{item.choices.map((choice, choiceIndex) => <button type="button" role="radio" aria-checked={item.pick === choiceIndex} className={item.pick === choiceIndex ? 'selected' : ''} key={`${choice}-${choiceIndex}`} onClick={() => setItems(current => current.map((entry, itemIndex) => itemIndex === index ? { ...entry, pick: choiceIndex } : entry))}><kbd>{String.fromCharCode(65 + choiceIndex)}</kbd><StudyText text={choice} variant="choice" /></button>)}</div>
           <div className="question-actions"><Button variant="secondary" onClick={() => { setTranslationOpen(false); setHintOpen(false); if (index < items.length - 1) setIndex(value => value + 1); else finish() }}>تخطٍّ</Button><Button onClick={() => { setTranslationOpen(false); setHintOpen(false); if (index < items.length - 1) setIndex(value => value + 1); else finish() }}>{index === items.length - 1 ? 'إنهاء ✓' : 'التالي'}</Button></div>
         </section>
       </main>

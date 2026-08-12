@@ -77,7 +77,7 @@ export function SettingsScreen({ data, order, settings, sync, passwordEnabled, s
       <section className="settings-section">
         <h2>👁 المواد الظاهرة</h2>
         <p>إخفاء المادة لا يحذف بياناتها أو تقدمك.</p>
-        <div className="subject-toggles">{order.map(code => <button type="button" key={code} className={settings.hidden.includes(code) ? '' : 'selected'} onClick={() => onToggleSubject(code)}>{data[code]?.name ?? code}</button>)}</div>
+        <div className="subject-toggles" role="group" aria-label="المواد الظاهرة">{order.map(code => <button type="button" key={code} aria-pressed={!settings.hidden.includes(code)} className={settings.hidden.includes(code) ? '' : 'selected'} onClick={() => onToggleSubject(code)}>{data[code]?.name ?? code}</button>)}</div>
       </section>
 
       <section className="settings-section">
@@ -90,7 +90,7 @@ export function SettingsScreen({ data, order, settings, sync, passwordEnabled, s
         <p>التوكن يبقى محليًا في جهازك، ويُستخدم لتشفير ملف تقدمك قبل رفعه إلى Gist خاص.</p>
         <div className="settings-row settings-row--token"><input aria-label="GitHub gist token" type="password" value={token} onChange={event => setToken(event.target.value)} placeholder="Classic token بصلاحية gist" /><Button disabled={busy || !token.trim()} onClick={() => run(() => onEnableSync(token.trim()))}>تفعيل</Button></div>
         <div className="settings-actions"><Button variant="secondary" disabled={busy || !token.trim()} onClick={() => run(() => onTestSync(token.trim()))}>🔌 اختبر الاتصال</Button><Button variant="secondary" disabled={busy || !sync.enabled} onClick={() => run(onSyncNow)}>⟳ زامن الآن</Button><Button variant="danger" disabled={busy || !sync.enabled} onClick={onDisableSync}>إيقاف</Button></div>
-        <div className={`sync-status ${syncStatus.includes('فشل') || syncStatus.includes('تعذّر') ? 'bad' : syncStatus.includes('✓') ? 'good' : ''}`}>الحالة: {busy ? 'جارٍ…' : syncStatus}</div>
+        <div role="status" aria-live="polite" className={`sync-status ${syncStatus.includes('فشل') || syncStatus.includes('تعذّر') ? 'bad' : syncStatus.includes('✓') ? 'good' : ''}`}>الحالة: {busy ? 'جارٍ…' : syncStatus}</div>
       </section>
 
       <section className="settings-section">
@@ -114,5 +114,5 @@ export function SettingsScreen({ data, order, settings, sync, passwordEnabled, s
 }
 
 function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (value: boolean) => void }) {
-  return <div className="settings-row"><span>{label}</span><button type="button" className={`toggle-switch ${checked ? 'is-on' : ''}`} role="switch" aria-checked={checked} onClick={() => onChange(!checked)}><i /></button></div>
+  return <div className="settings-row"><span>{label}</span><button type="button" aria-label={label} className={`toggle-switch ${checked ? 'is-on' : ''}`} role="switch" aria-checked={checked} onClick={() => onChange(!checked)}><i /></button></div>
 }

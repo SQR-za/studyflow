@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { prepareContent } from './content'
+import { loadCachedPreparedContent, prepareContent } from './content'
 import type { ContentBundle, DrillsBundle } from '../types'
 
 const builtin: ContentBundle = {
@@ -32,5 +32,11 @@ describe('prepareContent', () => {
     expect(second.data.TEST.chapters[0].questions).toHaveLength(2)
     expect(builtin.subjects.TEST.chapters[0].questions).toHaveLength(1)
   })
-})
 
+  it('composes cached/custom content synchronously before network refresh', () => {
+    localStorage.clear()
+    const cached = loadCachedPreparedContent({ customContent: builtin, storage: localStorage })
+    expect(cached.order).toEqual(['TEST'])
+    expect(cached.data.TEST.chapters[0].questions[0].id).toBe('q1')
+  })
+})

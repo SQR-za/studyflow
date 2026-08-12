@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useId, useMemo, useState } from 'react'
 import { ProgressRing } from '../../components/Ui'
-import { MASTERY_BOX } from '../../lib/constants'
+import { APP_BUILD, MASTERY_BOX } from '../../lib/constants'
 import { daysBetween, subjectShortName, todayString } from '../../lib/utils'
 import type { AppSettings, Chapter, DailyStore, Lesson, NotesBlock, ProgressStore, StudySchedule, Subject } from '../../types'
 
@@ -56,13 +56,14 @@ function SubjectCard({ subject, store, settings, onStart, onStartLessonTest, onO
   onOpenNotes: HomeScreenProps['onOpenNotes']
 }) {
   const [open, setOpen] = useState(subject.code === 'CCCS422-FINAL')
+  const bodyId = `subject-${useId().replaceAll(':', '')}`
   const subjectItems = subject.chapters.flatMap(chapter => questionsOf(chapter, settings.includeExtra))
   const subjectStats = statsFor(subjectItems, store)
   const mastery = subjectStats.total ? subjectStats.mastered / subjectStats.total * 100 : 0
 
   return (
     <section className={`subject-card ${open ? 'is-open' : ''}`} style={{ '--subject-color': subject.color } as React.CSSProperties}>
-      <button className="subject-card__header" type="button" onClick={() => setOpen(value => !value)} aria-expanded={open}>
+      <button className="subject-card__header" type="button" onClick={() => setOpen(value => !value)} aria-expanded={open} aria-controls={bodyId}>
         <span className="subject-card__dot" />
         <span className="subject-card__identity">
           <strong>{subject.name}</strong>
@@ -73,7 +74,7 @@ function SubjectCard({ subject, store, settings, onStart, onStartLessonTest, onO
       </button>
 
       {open && (
-        <div className="subject-card__body">
+        <div className="subject-card__body" id={bodyId}>
           {subject.chapters.map(chapter => {
             const items = questionsOf(chapter, settings.includeExtra)
             const chapterStats = statsFor(items, store)
@@ -170,7 +171,7 @@ export function HomeScreen(props: HomeScreenProps) {
 
       <section className="today-card">
         <div className="today-card__top"><strong>📅 اليوم</strong><span dir="ltr">{today}</span></div>
-        <div className="daily-goal"><span>هدفك</span><div><i style={{ width: `${Math.min(100, todayCount / props.settings.goal * 100)}%` }} /></div><b>{todayCount}/{props.settings.goal}</b></div>
+        <div className="daily-goal"><span>هدفك</span><div role="progressbar" aria-label="تقدم الهدف اليومي" aria-valuemin={0} aria-valuemax={props.settings.goal} aria-valuenow={Math.min(todayCount, props.settings.goal)}><i style={{ '--goal-progress': props.settings.goal > 0 ? Math.min(1, todayCount / props.settings.goal) : 0 } as React.CSSProperties} /></div><b>{todayCount}/{props.settings.goal}</b></div>
         <div className="exam-countdown">
           {upcoming.length ? upcoming.map(exam => (
             <article key={exam.c} style={{ '--subject-color': props.data[exam.c].color } as React.CSSProperties}>
@@ -190,8 +191,8 @@ export function HomeScreen(props: HomeScreenProps) {
       </section>
 
       <section className="study-controls">
-        <button type="button" className={props.settings.includeExtra ? 'is-on' : ''} onClick={props.onToggleExtra}><i />{props.settings.includeExtra ? 'يشمل الأسئلة الإضافية' : 'الأسئلة الأساسية فقط'}</button>
-        <div className="duration-control"><span>⏱ {props.settings.sessionMins} دقيقة</span><button type="button" onClick={() => props.onChangeDuration(Math.max(5, props.settings.sessionMins - 5))}>−</button><button type="button" onClick={() => props.onChangeDuration(Math.min(120, props.settings.sessionMins + 5))}>+</button></div>
+        <button type="button" className={props.settings.includeExtra ? 'is-on' : ''} aria-pressed={props.settings.includeExtra} onClick={props.onToggleExtra}><i />{props.settings.includeExtra ? 'يشمل الأسئلة الإضافية' : 'الأسئلة الأساسية فقط'}</button>
+        <div className="duration-control"><span>⏱ {props.settings.sessionMins} دقيقة</span><button type="button" aria-label="تقليل مدة الجلسة 5 دقائق" onClick={() => props.onChangeDuration(Math.max(5, props.settings.sessionMins - 5))}>−</button><button type="button" aria-label="زيادة مدة الجلسة 5 دقائق" onClick={() => props.onChangeDuration(Math.min(120, props.settings.sessionMins + 5))}>+</button></div>
         <button type="button" onClick={props.onStartDue}>🔁 مراجعة اليوم {dueCount ? `(${dueCount})` : ''}</button>
         <button type="button" onClick={() => props.onOpenScreen('weak')}>📉 أضعف الفصول</button>
         <button type="button" onClick={props.onStartStarred}>⭐ المميزة ({starredCount})</button>
@@ -203,7 +204,7 @@ export function HomeScreen(props: HomeScreenProps) {
         ))}
       </div>
 
-      <footer className="app-footer">StudyFlow 2 Preview · تقدمك يبقى في متصفحك · MIT</footer>
+      <footer className="app-footer">StudyFlow {APP_BUILD} · تقدمك يبقى في متصفحك · MIT</footer>
     </main>
   )
 }

@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useState } from 'react'
+import { Activity, useCallback, useMemo, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { Button } from './components/Ui'
 import { Toast } from './components/Toast'
 import { HomeScreen, type StartRequest } from './features/home/HomeScreen'
@@ -28,7 +29,8 @@ export function App() {
   const [notes, setNotes] = useState<{ notes?: NotesBlock | null; title: string; returnTo: Screen }>({ title: '', returnTo: 'home' })
   const [session, setSession] = useState<SessionLaunch | null>(null)
   const [mockLesson, setMockLesson] = useState<{ code: string; lessonId: string } | null>(null)
-  const [toast, setToast] = useState('')
+  const [toast, setToast] = useState<{ id: number; message: string } | null>(null)
+  const toastIdRef = useRef(0)
   const [passwordVersion, setPasswordVersion] = useState(0)
   const [unlocked, setUnlocked] = useState(() => !localStorage.getItem(STORAGE_KEYS.password))
 
@@ -37,17 +39,33 @@ export function App() {
     return Boolean(localStorage.getItem(STORAGE_KEYS.password))
   }, [passwordVersion])
 
-  const notify = useCallback((message: string) => setToast(message), [])
+  const notify = useCallback((message: string) => {
+    toastIdRef.current += 1
+    setToast({ id: toastIdRef.current, message })
+  }, [])
+  const dismissToast = useCallback(() => setToast(null), [])
+
+  function transitionTo(next: Screen, update?: () => void) {
+    const apply = () => {
+      update?.()
+      setScreen(next)
+    }
+    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (reducedMotion || typeof document.startViewTransition !== 'function') {
+      apply()
+      return
+    }
+    const transition = document.startViewTransition(() => flushSync(apply))
+    void transition.finished.catch(() => undefined)
+  }
 
   function openNotes(nextNotes: NotesBlock | undefined | null, title: string) {
-    setNotes({ notes: nextNotes, title, returnTo: screen === 'session' ? 'session' : 'home' })
-    setScreen('notes')
+    transitionTo('notes', () => setNotes({ notes: nextNotes, title, returnTo: screen === 'session' ? 'session' : 'home' }))
   }
 
   function launch(items: StudyQuestion[], meta: SessionMeta) {
     if (!items.length) { notify(meta.mode === 'review' ? 'لا توجد أخطاء في هذا القسم 👏' : 'لا توجد أسئلة في هذا الاختيار'); return }
-    setSession({ items, meta })
-    setScreen('session')
+    transitionTo('session', () => setSession({ items, meta }))
   }
 
   function start(request: StartRequest) {
@@ -126,39 +144,45 @@ export function App() {
 
   return (
     <div className="app-shell">
-      {screen === 'home' && <HomeScreen data={app.data} order={app.order} schedule={app.schedule} store={app.store} settings={app.settings} daily={app.daily} onOpenScreen={next => { if (next === 'mock') setMockLesson(null); setScreen(next) }} onStart={start} onStartStarred={startStarred} onStartDue={startDue} onStartLessonTest={(code, lesson) => { setMockLesson({ code, lessonId: lesson.id }); setScreen('mock') }} onOpenNotes={openNotes} onToggleExtra={() => app.updateSettings(current => ({ includeExtra: !current.includeExtra }))} onChangeDuration={sessionMins => app.updateSettings({ sessionMins })} />}
+      <Activity mode={screen === 'home' ? 'visible' : 'hidden'}>
+        <HomeScreen data={app.data} order={app.order} schedule={app.schedule} store={app.store} settings={app.settings} daily={app.daily} onOpenScreen={next => transitionTo(next, () => { if (next === 'mock') setMockLesson(null) })} onStart={start} onStartStarred={startStarred} onStartDue={startDue} onStartLessonTest={(code, lesson) => transitionTo('mock', () => setMockLesson({ code, lessonId: lesson.id }))} onOpenNotes={openNotes} onToggleExtra={() => app.updateSettings(current => ({ includeExtra: !current.includeExtra }))} onChangeDuration={sessionMins => app.updateSettings({ sessionMins })} />
+      </Activity>
 
-      {screen === 'session' && session && <SessionScreen
-        questions={session.items}
-        meta={session.meta}
-        progress={app.store.q}
-        starred={app.store.star}
-        sessionMinutes={app.settings.sessionMins}
-        sound={app.settings.sound}
-        fullscreen={app.settings.fullscreen}
-        onProgressChange={app.updateQuestionProgress}
-        onStarChange={(id, active) => app.updateStore(current => setStarred(current, id, active))}
-        onDailyAnswer={() => app.setDaily(current => incrementDaily(current))}
-        onComplete={summary => notify(`🎉 انتهت الجلسة · ${summary.good} صحيحة`)}
-        onExit={() => { setSession(null); setScreen('home') }}
-        onOpenNotes={() => {
-          if (session.meta.lesson?.notes) openNotes(session.meta.lesson.notes, `${session.meta.subject} · ${session.meta.lesson.label}`)
-          else if (session.meta.code && !session.meta.scope.startsWith('__')) {
-            const chapter = chapterById(app.data, session.meta.code, session.meta.scope)
-            openNotes(chapter?.notes, `${session.meta.subject} · ${session.meta.label}`)
-          }
-        }}
-      />}
+      {session ? (
+        <Activity mode={screen === 'session' ? 'visible' : 'hidden'}>
+          <SessionScreen
+            questions={session.items}
+            meta={session.meta}
+            progress={app.store.q}
+            starred={app.store.star}
+            sessionMinutes={app.settings.sessionMins}
+            sound={app.settings.sound}
+            fullscreen={app.settings.fullscreen}
+            onProgressChange={app.updateQuestionProgress}
+            onStarChange={(id, active) => app.updateStore(current => setStarred(current, id, active))}
+            onDailyAnswer={() => app.setDaily(current => incrementDaily(current))}
+            onComplete={summary => notify(`🎉 انتهت الجلسة · ${summary.good} صحيحة`)}
+            onExit={() => transitionTo('home', () => setSession(null))}
+            onOpenNotes={() => {
+              if (session.meta.lesson?.notes) openNotes(session.meta.lesson.notes, `${session.meta.subject} · ${session.meta.lesson.label}`)
+              else if (session.meta.code && !session.meta.scope.startsWith('__')) {
+                const chapter = chapterById(app.data, session.meta.code, session.meta.scope)
+                openNotes(chapter?.notes, `${session.meta.subject} · ${session.meta.label}`)
+              }
+            }}
+          />
+        </Activity>
+      ) : null}
 
-      {screen === 'mock' && <MockScreen key={mockLesson ? `${mockLesson.code}:${mockLesson.lessonId}` : 'general'} data={app.data} order={app.order} hidden={app.settings.hidden} drills={app.drills} initialLesson={mockLesson} onBack={() => { setMockLesson(null); setScreen('home') }} onRecord={recordMock} onReviewWrong={(questions, code, label) => launch(questions, { code, scope: '__MOCKREV__', mode: 'review', color: app.data[code]?.color ?? '#2dd4bf', subject: app.data[code] ? subjectShortName(app.data[code].name) : code, label })} />}
+      {screen === 'mock' && <MockScreen key={mockLesson ? `${mockLesson.code}:${mockLesson.lessonId}` : 'general'} data={app.data} order={app.order} hidden={app.settings.hidden} drills={app.drills} initialLesson={mockLesson} onBack={() => transitionTo('home', () => setMockLesson(null))} onRecord={recordMock} onReviewWrong={(questions, code, label) => launch(questions, { code, scope: '__MOCKREV__', mode: 'review', color: app.data[code]?.color ?? '#2dd4bf', subject: app.data[code] ? subjectShortName(app.data[code].name) : code, label })} />}
 
-      {screen === 'notes' && <NotesScreen title={notes.title} notes={notes.notes} onBack={() => setScreen(notes.returnTo)} />}
-      {screen === 'plan' && <PlanScreen data={app.data} schedule={app.schedule} planDone={app.planDone} onToggle={key => app.setPlanDone(current => { const next = { ...current }; if (next[key]) delete next[key]; else next[key] = true; return next })} onStart={(code, chapterId, review) => start({ code, scope: chapterId, mode: review ? 'review' : 'all' })} onBack={() => setScreen('home')} />}
-      {screen === 'weak' && <WeakScreen data={app.data} order={app.order} settings={app.settings} store={app.store} onStart={(code, chapterId) => start({ code, scope: chapterId, mode: 'all' })} onBack={() => setScreen('home')} />}
-      {screen === 'search' && <SearchScreen data={app.data} order={app.order} onBack={() => setScreen('home')} />}
-      {screen === 'settings' && <SettingsScreen data={app.data} order={app.order} settings={app.settings} sync={app.sync} passwordEnabled={passwordEnabled} syncStatus={app.syncState.message} onBack={() => setScreen('home')} onUpdateSettings={patch => app.updateSettings(patch)} onToggleSubject={code => app.updateSettings(current => ({ hidden: current.hidden.includes(code) ? current.hidden.filter(item => item !== code) : [...current.hidden, code] }))} onImportContent={async content => { app.replaceCustomContent(content); notify('تم استيراد المحتوى ✓') }} onExportContent={() => downloadJson('studyflow-data.json', app.customContent)} onClearContent={() => { app.clearCustomContent(); notify('تمت إزالة المحتوى الخاص') }} onImportProgress={backup => { app.importProgress(backup); notify('تم استرجاع التقدم ✓') }} onExportProgress={() => downloadJson('studyflow-progress.json', app.exportProgress())} onSetPassword={password => { localStorage.setItem(STORAGE_KEYS.password, password); setPasswordVersion(value => value + 1); notify('تم تفعيل القفل') }} onClearPassword={() => { localStorage.removeItem(STORAGE_KEYS.password); setPasswordVersion(value => value + 1); setUnlocked(true); notify('تم إلغاء القفل') }} onResetProgress={() => { app.updateStore(createProgressStore()); app.setDaily(createDailyStore()); notify('تم تصفير التقدم') }} onEnableSync={async token => { app.updateSync({ token, enabled: true, gistId: '' }); await app.pullSync(); await app.pushSync(); notify('تم تفعيل المزامنة') }} onDisableSync={() => app.updateSync({ enabled: false })} onSyncNow={async () => { await app.pullSync(); await app.pushSync(); }} onTestSync={async token => { const response = await fetch('https://api.github.com/gists?per_page=1', { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }, cache: 'no-store' }); if (!response.ok) throw new Error(`التوكن غير صالح (${response.status})`); notify('الاتصال ناجح ✓') }} onDownloadCalendar={downloadCalendar} />}
+      {screen === 'notes' && <NotesScreen title={notes.title} notes={notes.notes} onBack={() => transitionTo(notes.returnTo)} />}
+      {screen === 'plan' && <PlanScreen data={app.data} schedule={app.schedule} planDone={app.planDone} onToggle={key => app.setPlanDone(current => { const next = { ...current }; if (next[key]) delete next[key]; else next[key] = true; return next })} onStart={(code, chapterId, review) => start({ code, scope: chapterId, mode: review ? 'review' : 'all' })} onBack={() => transitionTo('home')} />}
+      {screen === 'weak' && <WeakScreen data={app.data} order={app.order} settings={app.settings} store={app.store} onStart={(code, chapterId) => start({ code, scope: chapterId, mode: 'all' })} onBack={() => transitionTo('home')} />}
+      {screen === 'search' && <SearchScreen data={app.data} order={app.order} onBack={() => transitionTo('home')} />}
+      {screen === 'settings' && <SettingsScreen data={app.data} order={app.order} settings={app.settings} sync={app.sync} passwordEnabled={passwordEnabled} syncStatus={app.syncState.message} onBack={() => transitionTo('home')} onUpdateSettings={patch => app.updateSettings(patch)} onToggleSubject={code => app.updateSettings(current => ({ hidden: current.hidden.includes(code) ? current.hidden.filter(item => item !== code) : [...current.hidden, code] }))} onImportContent={async content => { app.replaceCustomContent(content); notify('تم استيراد المحتوى ✓') }} onExportContent={() => downloadJson('studyflow-data.json', app.customContent)} onClearContent={() => { app.clearCustomContent(); notify('تمت إزالة المحتوى الخاص') }} onImportProgress={backup => { app.importProgress(backup); notify('تم استرجاع التقدم ✓') }} onExportProgress={() => downloadJson('studyflow-progress.json', app.exportProgress())} onSetPassword={password => { localStorage.setItem(STORAGE_KEYS.password, password); setPasswordVersion(value => value + 1); notify('تم تفعيل القفل') }} onClearPassword={() => { localStorage.removeItem(STORAGE_KEYS.password); setPasswordVersion(value => value + 1); setUnlocked(true); notify('تم إلغاء القفل') }} onResetProgress={() => { app.updateStore(createProgressStore()); app.setDaily(createDailyStore()); notify('تم تصفير التقدم') }} onEnableSync={async token => { app.updateSync({ token, enabled: true, gistId: '' }); await app.pullSync(); await app.pushSync(); notify('تم تفعيل المزامنة') }} onDisableSync={() => app.updateSync({ enabled: false })} onSyncNow={async () => { await app.pullSync(); await app.pushSync(); }} onTestSync={async token => { const response = await fetch('https://api.github.com/gists?per_page=1', { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }, cache: 'no-store' }); if (!response.ok) throw new Error(`التوكن غير صالح (${response.status})`); notify('الاتصال ناجح ✓') }} onDownloadCalendar={downloadCalendar} />}
 
-      {toast && <Toast message={toast} onDone={() => setToast('')} />}
+      {toast ? <Toast key={toast.id} message={toast.message} onDone={dismissToast} /> : null}
       <span className="build-marker">{APP_BUILD}</span>
     </div>
   )
@@ -166,5 +190,5 @@ export function App() {
 
 function LockScreen({ onUnlock }: { onUnlock: (value: string) => void }) {
   const [value, setValue] = useState('')
-  return <div className="app-shell"><main className="lock-screen"><form className="lock-card" onSubmit={event => { event.preventDefault(); onUnlock(value) }}><div className="brand-mark">SF</div><h1>StudyFlow مقفل</h1><p className="muted">أدخل الرمز المحلي</p><input autoFocus type="password" inputMode="numeric" value={value} onChange={event => setValue(event.target.value)} /><Button type="submit">دخول</Button></form></main></div>
+  return <div className="app-shell"><main className="lock-screen"><form className="lock-card" onSubmit={event => { event.preventDefault(); onUnlock(value) }}><div className="brand-mark">SF</div><h1>StudyFlow مقفل</h1><p className="muted">أدخل الرمز المحلي</p><input aria-label="رمز القفل المحلي" autoFocus type="password" inputMode="numeric" value={value} onChange={event => setValue(event.target.value)} /><Button type="submit">دخول</Button></form></main></div>
 }

@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import type { DragEvent, KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { MathText } from '../../components/MathText'
 import { StudyText } from '../../components/StudyText'
@@ -60,6 +60,27 @@ function formatTimer(totalSeconds: number): string {
   const minutes = Math.floor(totalSeconds / 60)
   const seconds = totalSeconds % 60
   return `${minutes}:${String(seconds).padStart(2, '0')}`
+}
+
+function SessionTimer({ endAt, onElapsed }: { endAt: number; onElapsed: () => void }) {
+  const [secondsLeft, setSecondsLeft] = useState(() => Math.max(0, Math.round((endAt - Date.now()) / 1_000)))
+  const elapsedAnnouncedRef = useRef(false)
+
+  useEffect(() => {
+    const update = () => {
+      const next = Math.max(0, Math.round((endAt - Date.now()) / 1_000))
+      setSecondsLeft(next)
+      if (next === 0 && !elapsedAnnouncedRef.current) {
+        elapsedAnnouncedRef.current = true
+        onElapsed()
+      }
+    }
+    update()
+    const interval = window.setInterval(update, 1_000)
+    return () => window.clearInterval(interval)
+  }, [endAt, onElapsed])
+
+  return <b dir="ltr">{formatTimer(secondsLeft)}</b>
 }
 
 function choiceKey(index: number): string {
@@ -164,14 +185,12 @@ function SessionRun({
     hintOpen: false,
   })
   const [dragOverRow, setDragOverRow] = useState<number | null>(null)
+  const [draggingAnswer, setDraggingAnswer] = useState<number | null>(null)
+  const [cardMotionKey, setCardMotionKey] = useState(0)
   const [guardOpen, setGuardOpen] = useState(false)
   const [announcement, setAnnouncement] = useState('')
   const durationMinutes = Math.max(1, Math.min(120, sessionMinutes || 20))
   const timerEndRef = useRef(startedAtRef.current + durationMinutes * 60_000)
-  const [secondsLeft, setSecondsLeft] = useState(() =>
-    Math.max(0, Math.round((timerEndRef.current - Date.now()) / 1_000)),
-  )
-  const timerAnnouncedRef = useRef(false)
   const cardRef = useRef<HTMLElement>(null)
   const nextButtonRef = useRef<HTMLButtonElement>(null)
   const gradeYesRef = useRef<HTMLButtonElement>(null)
@@ -180,6 +199,9 @@ function SessionRun({
   const previousFocusRef = useRef<HTMLElement | null>(null)
   const dragPreviewRef = useRef<HTMLElement | null>(null)
   const domId = useId().replaceAll(':', '')
+  const announceTimerEnd = useCallback(() => {
+    setAnnouncement('انتهى وقت الجلسة. أكمل البطاقات المتبقية')
+  }, [])
 
   function commit(nextState: SessionEngineState): void {
     stateRef.current = nextState
@@ -233,6 +255,7 @@ function SessionRun({
     if (current.active && !current.active.answered) return
     const next = moveToNextCard(current, randomRef.current)
     setAssistance({ questionId: '', translationOpen: false, hintOpen: false })
+    setCardMotionKey((value) => value + 1)
     commit(next)
     if (next.status === 'complete' && current.status !== 'complete') {
       const completedSummary = getSessionSummary(next, Date.now())
@@ -343,6 +366,7 @@ function SessionRun({
     dragPreviewRef.current?.remove()
     dragPreviewRef.current = null
     setDragOverRow(null)
+    setDraggingAnswer(null)
   }
 
   function beginMatchDrag(event: DragEvent<HTMLButtonElement>, answer: number): void {
@@ -353,6 +377,7 @@ function SessionRun({
     }
 
     clearMatchDrag()
+    setDraggingAnswer(answer)
     event.dataTransfer.setData(MATCH_DRAG_MIME, String(answer))
     event.dataTransfer.effectAllowed = 'move'
 
@@ -392,21 +417,6 @@ function SessionRun({
   }
 
   useEffect(() => {
-    if (viewState.status !== 'active') return undefined
-    const updateTimer = () => {
-      const nextSeconds = Math.max(0, Math.round((timerEndRef.current - Date.now()) / 1_000))
-      setSecondsLeft(nextSeconds)
-      if (nextSeconds === 0 && !timerAnnouncedRef.current) {
-        timerAnnouncedRef.current = true
-        setAnnouncement('انتهى وقت الجلسة. أكمل البطاقات المتبقية')
-      }
-    }
-    updateTimer()
-    const interval = window.setInterval(updateTimer, 1_000)
-    return () => window.clearInterval(interval)
-  }, [viewState.status])
-
-  useEffect(() => {
     if (viewState.status !== 'active' || !fullscreen) return undefined
     let enteredFullscreen = false
     void document.documentElement
@@ -423,7 +433,7 @@ function SessionRun({
   useEffect(() => {
     if (!viewState.active?.cardId) return
     window.requestAnimationFrame(() => cardRef.current?.focus())
-  }, [viewState.active?.cardId])
+  }, [cardMotionKey, viewState.active?.cardId])
 
   useEffect(() => () => dragPreviewRef.current?.remove(), [])
 
@@ -513,7 +523,7 @@ function SessionRun({
 
   if (viewState.status === 'empty') {
     return (
-      <main className="sf-session sf-session--empty" dir="rtl">
+      <main className="screen sf-session sf-session--empty" dir="rtl">
         <div className="sf-session__empty-card">
           <span aria-hidden="true">🎉</span>
           <h1>لا توجد عناصر في هذه الجلسة</h1>
@@ -529,7 +539,7 @@ function SessionRun({
   if (viewState.status === 'complete') {
     const finalSummary = summary(viewState)
     return (
-      <main className="sf-session sf-session--complete" dir="rtl">
+      <main className="screen sf-session sf-session--complete" dir="rtl">
         <div className="sf-session__empty-card">
           <span className="sf-session__celebration" aria-hidden="true">🎉</span>
           <h1>خلّصت الجلسة كاملة!</h1>
@@ -555,9 +565,10 @@ function SessionRun({
   const usedAnswers = new Set(Object.values(active.matchAssignments))
   const remainingAnswers = active.matchAnswerOrder.filter((answer) => !usedAnswers.has(answer))
   const allMatched = isMatching && Object.keys(active.matchAssignments).length === currentQuestion.pairs.length
+  const guardSecondsLeft = Math.max(0, Math.round((timerEndRef.current - Date.now()) / 1_000))
 
   return (
-    <main className="sf-session" dir="rtl" style={{ '--session-accent': meta.color } as React.CSSProperties}>
+    <main className="screen sf-session" dir="rtl" style={{ '--session-accent': meta.color } as React.CSSProperties}>
       <header className="sf-session__topbar">
         <button type="button" className="sf-session__icon" onClick={requestExit} aria-label="الخروج من الجلسة">
           →
@@ -575,18 +586,18 @@ function SessionRun({
       </header>
 
       <section className="sf-session__stats" aria-label="إحصاءات الجلسة">
-        <span>⏱ <b dir="ltr">{formatTimer(secondsLeft)}</b></span>
+        <span>⏱ <SessionTimer endAt={timerEndRef.current} onElapsed={announceTimerEnd} /></span>
         <span className="sf-session__stat-good">صح <b>{viewState.stats.good}</b></span>
         <span className="sf-session__stat-bad">غلط <b>{viewState.stats.bad}</b></span>
         <span>الدقّة <b>{attempts ? `${Math.round((viewState.stats.good / attempts) * 100)}%` : '—'}</b></span>
         <span>🔥 <b>{viewState.stats.streak}</b></span>
         <span>الإتقان <b>{mastered}/{viewState.cards.length}</b></span>
       </section>
-      <div className="sf-session__mastery" aria-label={`أتقنت ${mastered} من ${viewState.cards.length}`}>
-        <i style={{ width: `${viewState.cards.length ? (mastered / viewState.cards.length) * 100 : 0}%` }} />
+      <div className="sf-session__mastery" role="progressbar" aria-label={`أتقنت ${mastered} من ${viewState.cards.length}`} aria-valuemin={0} aria-valuemax={viewState.cards.length} aria-valuenow={mastered}>
+        <i style={{ '--mastery-ratio': viewState.cards.length ? mastered / viewState.cards.length : 0 } as React.CSSProperties} />
       </div>
 
-      <article className="sf-session__card" ref={cardRef} tabIndex={-1} aria-labelledby={`sf-question-${domId}`}>
+      <article key={`${currentQuestion.id}-${cardMotionKey}`} className={`sf-session__card ${active.answered ? (active.correct ? 'has-correct-result' : 'has-wrong-result') : ''}`} ref={cardRef} tabIndex={-1} aria-labelledby={`sf-question-${domId}`}>
         <div className="sf-session__accent" />
         <div className="sf-session__meta">
           <span className="sf-session__source" title={currentQuestion.source ?? ''}>{questionSource}</span>
@@ -729,7 +740,10 @@ function SessionRun({
                         <button
                           type="button"
                           key={answer}
-                          className={active.selectedMatchAnswer === answer ? 'is-selected' : ''}
+                          className={[
+                            active.selectedMatchAnswer === answer ? 'is-selected' : '',
+                            draggingAnswer === answer ? 'is-dragging' : '',
+                          ].filter(Boolean).join(' ')}
                           draggable
                           aria-pressed={active.selectedMatchAnswer === answer}
                           aria-label={`الإجابة: ${currentQuestion.pairs[answer][1]}. اضغط لاختيارها أو اسحبها إلى صف`}
@@ -790,6 +804,7 @@ function SessionRun({
                       </div>
                     ) : (
                       <button
+                        key={answer ?? 'empty'}
                         type="button"
                         id={`sf-slot-${domId}-${row}`}
                         className={`sf-session__match-slot ${answer !== undefined ? 'is-filled' : ''}`}
@@ -895,12 +910,12 @@ function SessionRun({
             }}
           >
             <span className="sf-session__guard-emoji" aria-hidden="true">
-              {secondsLeft > 0 ? '⏳' : summary().remaining > 8 ? '⏰' : '🔥'}
+              {guardSecondsLeft > 0 ? '⏳' : summary().remaining > 8 ? '⏰' : '🔥'}
             </span>
             <h2 id={`sf-guard-title-${domId}`}>هل تريد الخروج؟</h2>
             <p id={`sf-guard-message-${domId}`}>
-              {secondsLeft > 0
-                ? `باقي ${formatTimer(secondsLeft)} من وقتك. كمّل الجلسة ولا تقطع تركيزك.`
+              {guardSecondsLeft > 0
+                ? `باقي ${formatTimer(guardSecondsLeft)} من وقتك. كمّل الجلسة ولا تقطع تركيزك.`
                 : `باقي ${summary().remaining} بطاقة. تقدّمك محفوظ، لكن إنهاء الجولة أفضل.`}
             </p>
             <div>

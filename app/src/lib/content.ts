@@ -302,25 +302,40 @@ async function refreshBundle<T>(
   }
 }
 
+/** Read valid cached bundles synchronously so the app can paint before network revalidation. */
+export function loadCachedPreparedContent(options: LoadPreparedContentOptions = {}): LoadedPreparedContent {
+  const storage = options.storage
+  const customRaw = options.customContent ?? loadJson<unknown>(STORAGE_KEYS.content, createEmptyContent(), storage)
+  const customContent = validateContent(customRaw)
+
+  const builtinContent = validatedOrFallback(
+    loadJson<unknown>(STORAGE_KEYS.builtin, createEmptyContent(), storage),
+    validateBuiltinFinals,
+    createEmptyContent,
+  )
+  const drills = validatedOrFallback(
+    loadJson<unknown>(STORAGE_KEYS.drills, createEmptyDrills(), storage),
+    validatePdcDrills,
+    createEmptyDrills,
+  )
+
+  return {
+    ...prepareContent(builtinContent, customContent, drills),
+    builtinContent,
+    customContent,
+  }
+}
+
 /**
  * Load both checked-in public bundles, falling back to their exact legacy
  * localStorage caches, then compose them with the user's private content.
  */
 export async function loadPreparedContent(options: LoadPreparedContentOptions = {}): Promise<LoadedPreparedContent> {
+  const cached = loadCachedPreparedContent(options)
   const storage = options.storage
-  const customRaw = options.customContent ?? loadJson<unknown>(STORAGE_KEYS.content, createEmptyContent(), storage)
-  const customContent = validateContent(customRaw)
-
-  let builtinContent = validatedOrFallback(
-    loadJson<unknown>(STORAGE_KEYS.builtin, createEmptyContent(), storage),
-    validateBuiltinFinals,
-    createEmptyContent,
-  )
-  let drills = validatedOrFallback(
-    loadJson<unknown>(STORAGE_KEYS.drills, createEmptyDrills(), storage),
-    validatePdcDrills,
-    createEmptyDrills,
-  )
+  let builtinContent = cached.builtinContent
+  let drills = cached.drills
+  const customContent = cached.customContent
 
   const fetcher = options.fetcher ?? (typeof globalThis.fetch === 'function' ? globalThis.fetch.bind(globalThis) : undefined)
   const baseUrl = options.baseUrl ?? APP_BASE_PATH
