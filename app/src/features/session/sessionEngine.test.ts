@@ -78,10 +78,17 @@ it('uses SESSION_CAP only as a wrong-answer safety cap outside learn mode', () =
 })
 
 it('runs test mode as one attempt per question, including wrong answers', () => {
-  const wrong = gradeActiveCard(start('test'), false, 2_000, noRandom)
+  const initialProgress = { box: 4, seen: 9, correct: 7, wrong: 2, due: 9_999, last: 1_500 }
+  const state = moveToNextCard(
+    createSessionEngine([question], { ...baseMeta, mode: 'test' }, { [question.id]: initialProgress }, 1_000, noRandom),
+    noRandom,
+  )
+  const wrong = gradeActiveCard(state, false, 2_000, noRandom)
 
   expect(wrong).not.toBeNull()
-  expect(wrong!.state.cards[0]).toMatchObject({ done: true, sessionAttempts: 1 })
+  expect(wrong!.state.cards[0]).toMatchObject({ done: true, sessionAttempts: 1, box: 4 })
   expect(wrong!.state.stats).toEqual({ good: 0, bad: 1, streak: 0 })
+  expect(wrong!.state.progress[question.id]).toEqual(initialProgress)
+  expect(wrong!.progress).toEqual(initialProgress)
   expect(moveToNextCard(wrong!.state, noRandom).status).toBe('complete')
 })

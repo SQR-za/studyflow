@@ -9,6 +9,11 @@ export interface SessionCardRuntime {
   sessionAttempts: number
   learnStreak: number
   done: boolean
+  testAnswer?: {
+    selectedChoice: number | null
+    matchAssignments: Record<number, number>
+    practiceCorrect: boolean | null
+  }
 }
 
 export interface ActiveCardRuntime {
@@ -177,26 +182,29 @@ export function gradeActiveCard(
   const previousProgress = state.progress[card.question.id] ?? defaultQuestionProgress()
   const step = state.step + 1
   const sessionAttempts = card.sessionAttempts + 1
+  const isTest = state.meta.mode === 'test'
 
-  const box = correct ? Math.min(5, card.box + 1) : 1
+  const box = isTest ? card.box : correct ? Math.min(5, card.box + 1) : 1
   const dueStep = correct
     ? step + GAPS[box] + Math.floor(random() * 3)
     : step + 2 + Math.floor(random() * 2)
   const learnStreak = correct ? card.learnStreak + 1 : 0
-  const done = state.meta.mode === 'test'
+  const done = isTest
     ? true
     : state.meta.mode === 'learn'
       ? learnStreak >= 2 || sessionAttempts >= 7
       : correct || sessionAttempts >= SESSION_CAP
 
-  const nextProgress: QuestionProgress = {
-    box,
-    seen: previousProgress.seen + 1,
-    correct: previousProgress.correct + (correct ? 1 : 0),
-    wrong: previousProgress.wrong + (correct ? 0 : 1),
-    due: now + (correct ? GAPS[box] : 1) * DAY_MS,
-    last: now,
-  }
+  const nextProgress: QuestionProgress = isTest
+    ? previousProgress
+    : {
+        box,
+        seen: previousProgress.seen + 1,
+        correct: previousProgress.correct + (correct ? 1 : 0),
+        wrong: previousProgress.wrong + (correct ? 0 : 1),
+        due: now + (correct ? GAPS[box] : 1) * DAY_MS,
+        last: now,
+      }
 
   const cards = [...state.cards]
   cards[cardIndex] = {
@@ -206,12 +214,19 @@ export function gradeActiveCard(
     sessionAttempts,
     learnStreak,
     done,
+    testAnswer: isTest
+      ? {
+          selectedChoice: active.selectedChoice,
+          matchAssignments: { ...active.matchAssignments },
+          practiceCorrect: isChoice(card.question) || isMatch(card.question) ? null : correct,
+        }
+      : card.testAnswer,
   }
 
   const nextState: SessionEngineState = {
     ...state,
     cards,
-    progress: { ...state.progress, [card.question.id]: nextProgress },
+    progress: isTest ? state.progress : { ...state.progress, [card.question.id]: nextProgress },
     step,
     previousId: card.question.id,
     active: {

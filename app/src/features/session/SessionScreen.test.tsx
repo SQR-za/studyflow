@@ -172,31 +172,80 @@ it('supports matching by tap plus number keys and exposes per-row Arabic hints',
   )
 })
 
-it('includes matching questions in test mode and completes each after one attempt', () => {
-  const questions: [ChoiceQuestion, MatchQuestion] = [
-    { id: 'test-choice-001', q: 'Choose A.', choices: ['A', 'B'], answer: 0 },
-    { id: 'test-match-001', type: 'match', q: 'Match it.', pairs: [['MPI_Init', 'Starts MPI']] },
-  ]
+it('runs a section test without study assistance or immediate feedback, then shows a scored review', () => {
+  const choice: ChoiceQuestion = {
+    id: 'test-choice-001',
+    q: 'What must happen before reusing an `MPI_Isend` buffer?',
+    q_ar: 'متى يمكن إعادة استخدام مخزن الإرسال؟',
+    hint_ar: 'فكّر في اكتمال عملية الإرسال.',
+    choices: ['Call `MPI_Finalize`', 'Call `MPI_Wait`'],
+    answer: 1,
+    explanation: 'The send buffer is safe only after the non-blocking operation completes.',
+  }
+  const match: MatchQuestion = {
+    id: 'test-match-001',
+    type: 'match',
+    q: 'Match the function to its purpose.',
+    pairs: [['MPI_Comm_rank', 'Returns the calling process rank']],
+    pairHints_ar: { 1: 'يعيد رقم العملية الحالية.' },
+    explanation: '`MPI_Comm_rank` identifies the calling process inside a communicator.',
+  }
   const onComplete = vi.fn()
+  const onProgressChange = vi.fn()
 
   render(
     <SessionScreen
       {...baseProps}
       meta={{ ...meta, mode: 'test' }}
-      questions={questions}
+      questions={[choice, match]}
       random={() => 0.999}
       onComplete={onComplete}
+      onProgressChange={onProgressChange}
     />,
   )
 
-  fireEvent.click(screen.getByRole('button', { name: /^A\. A$/ }))
-  fireEvent.click(screen.getByRole('button', { name: /التالي/ }))
-  fireEvent.click(screen.getByRole('button', { name: /Starts MPI/ }))
-  fireEvent.click(screen.getByRole('button', { name: /ضع إجابة في الصف 1/ }))
-  fireEvent.click(screen.getByRole('button', { name: /تحقّق من التوصيل/ }))
+  expect(screen.queryByRole('group', { name: 'مساعدة السؤال' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /تلميح/ })).not.toBeInTheDocument()
+
+  const correctChoice = screen.getByRole('button', { name: /^B\. Call `MPI_Wait`$/ })
+  const finalChoice = screen.getByRole('button', { name: /^A\. Call `MPI_Finalize`$/ })
+  fireEvent.click(correctChoice)
+  fireEvent.click(finalChoice)
+
+  expect(correctChoice).toBeEnabled()
+  expect(finalChoice).toBeEnabled()
+  expect(correctChoice).toHaveAttribute('aria-pressed', 'false')
+  expect(finalChoice).toHaveAttribute('aria-pressed', 'true')
+  expect(screen.queryByText(choice.explanation!)).not.toBeInTheDocument()
+  expect(screen.queryByText('✓ صحيح')).not.toBeInTheDocument()
+  expect(screen.queryByText('✕ راجعها')).not.toBeInTheDocument()
+  expect(onProgressChange).not.toHaveBeenCalled()
+
   fireEvent.click(screen.getByRole('button', { name: /التالي/ }))
 
-  expect(onComplete).toHaveBeenCalledWith(expect.objectContaining({ totalUnique: 2, attempts: 2, good: 2, accuracy: 100 }))
+  expect(screen.getByRole('heading', { name: match.q })).toBeVisible()
+  expect(onProgressChange).not.toHaveBeenCalled()
+  expect(screen.queryByRole('button', { name: /تلميح للصف 1/ })).not.toBeInTheDocument()
+
+  fireEvent.click(screen.getByRole('button', { name: /Returns the calling process rank/ }))
+  fireEvent.click(screen.getByRole('button', { name: /ضع إجابة في الصف 1/ }))
+
+  expect(screen.queryByText(match.explanation!)).not.toBeInTheDocument()
+  expect(screen.queryByText('✓ صحيح')).not.toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: /التالي/ }))
+
+  expect(screen.getByRole('heading', { name: /نتيجة اختبار القسم/ })).toBeVisible()
+  expect(screen.getByText(/1 صح من 2/)).toBeVisible()
+  expect(screen.getByText(/50%/)).toBeVisible()
+  expect(screen.getByText('MPI_Wait')).toBeVisible()
+  expect(screen.getByText(choice.explanation!)).toBeVisible()
+  expect(screen.getAllByRole('complementary', { name: 'شرح الإجابة' })[1]).toHaveTextContent(
+    'MPI_Comm_rank identifies the calling process inside a communicator.',
+  )
+  expect(onProgressChange).not.toHaveBeenCalled()
+  expect(onComplete).toHaveBeenCalledWith(
+    expect.objectContaining({ totalUnique: 2, attempts: 2, good: 1, accuracy: 50 }),
+  )
 })
 
 it('uses the full answer card as the native drag preview', () => {

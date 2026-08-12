@@ -45,7 +45,7 @@ const MODE_LABELS: Record<SessionMeta['mode'], string> = {
   star: '⭐ المميّزة',
   due: '🔁 مراجعة مستحقّة',
   learn: '🧠 حفظ · مرتان صحيحتان',
-  test: '⚡ اختبار القسم · محاولة واحدة',
+  test: '⚡ اختبار حقيقي · التصحيح في النهاية',
 }
 
 const SOURCE_LABELS: Record<string, string> = {
@@ -144,6 +144,70 @@ function Explanation({ question, show }: { question: StudyQuestion; show: boolea
   )
 }
 
+function TestReview({ state }: { state: SessionEngineState }) {
+  return (
+    <section className="sf-session__test-review" aria-label="مراجعة إجابات الاختبار">
+      <h2>مراجعة الإجابات</h2>
+      {state.cards.map((card, index) => {
+        const question = card.question
+        const answer = card.testAnswer
+        const correct = card.learnStreak > 0
+        return (
+          <article key={question.id} className={correct ? 'is-correct' : 'is-wrong'}>
+            <header>
+              <b>{index + 1}</b>
+              <span>{correct ? '✓ صحيح' : '✗ خطأ'}</span>
+            </header>
+            <h3><StudyText text={question.q} variant="question" /></h3>
+            {isChoice(question) ? (
+              <div className="sf-session__test-answers">
+                <p>
+                  <strong>إجابتك</strong>
+                  <StudyText
+                    text={answer?.selectedChoice === null || answer?.selectedChoice === undefined
+                      ? '—'
+                      : question.choices[answer.selectedChoice]}
+                    variant="choice"
+                  />
+                </p>
+                <p>
+                  <strong>الإجابة الصحيحة</strong>
+                  <StudyText text={question.choices[question.answer]} variant="choice" />
+                </p>
+              </div>
+            ) : null}
+            {isMatch(question) ? (
+              <div className="sf-session__test-pairs">
+                {question.pairs.map((pair, row) => {
+                  const selected = answer?.matchAssignments[row]
+                  const rowCorrect = selected === row
+                  return (
+                    <p key={`${question.id}-${row}`} className={rowCorrect ? 'is-correct' : 'is-wrong'}>
+                      <MathText text={pair[0]} />
+                      <span aria-hidden="true">←</span>
+                      <MathText text={pair[1]} />
+                      {!rowCorrect && selected !== undefined ? (
+                        <small>إجابتك: <MathText text={question.pairs[selected][1]} /></small>
+                      ) : null}
+                    </p>
+                  )
+                })}
+              </div>
+            ) : null}
+            {isPractice(question) ? (
+              <div className="sf-session__solution">
+                <strong>الحل</strong>
+                <MathText text={question.solution} as="div" />
+              </div>
+            ) : null}
+            <Explanation question={question} show />
+          </article>
+        )
+      })}
+    </section>
+  )
+}
+
 export function SessionScreen(props: SessionScreenProps) {
   const generatedKey = `${props.meta.code ?? ''}:${props.meta.scope}:${props.meta.mode}:${props.questions
     .map((question) => question.id)
@@ -167,6 +231,7 @@ function SessionRun({
   onOpenNotes,
   random = Math.random,
 }: SessionScreenProps) {
+  const isTest = meta.mode === 'test'
   const randomRef = useRef(random)
   const startedAtRef = useRef(Date.now())
   const initialState = useRef<SessionEngineState | null>(null)
@@ -235,6 +300,11 @@ function SessionRun({
       ...active,
       selectedChoice: originalChoiceIndex,
     }))
+    if (isTest) {
+      commit(selected)
+      setAnnouncement('تم اختيار الإجابة. يمكنك تغييرها قبل الانتقال')
+      return
+    }
     gradeFrom(selected, originalChoiceIndex === card.question.answer)
   }
 
@@ -263,6 +333,35 @@ function SessionRun({
       setAnnouncement('اكتملت الجلسة')
       onComplete?.(completedSummary)
     }
+  }
+
+  function submitTestAnswer(): void {
+    const current = stateRef.current
+    const card = getActiveCard(current)
+    const active = current.active
+    if (!isTest || !card || !active || active.answered) return
+
+    let correct: boolean
+    if (isChoice(card.question)) {
+      if (active.selectedChoice === null) return
+      correct = active.selectedChoice === card.question.answer
+    } else if (isMatch(card.question)) {
+      if (Object.keys(active.matchAssignments).length !== card.question.pairs.length) return
+      correct = card.question.pairs.every((_pair, row) => active.matchAssignments[row] === row)
+    } else {
+      return
+    }
+
+    const result = gradeActiveCard(current, correct, Date.now(), randomRef.current)
+    if (!result) return
+    onDailyAnswer?.()
+
+    const next = moveToNextCard(result.state, randomRef.current)
+    setAssistance({ questionId: '', translationOpen: false, hintOpen: false })
+    setCardMotionKey((value) => value + 1)
+    setAnnouncement('تم تسجيل الإجابة')
+    commit(next)
+    if (next.status === 'complete') onComplete?.(getSessionSummary(next, Date.now()))
   }
 
   function requestExit(): void {
@@ -476,6 +575,13 @@ function SessionRun({
       const active = current.active
       if (!card || !active) return
 
+      if (isTest && !active.answered && (event.key === 'Enter' || event.key === ' ')) {
+        if (target?.tagName === 'BUTTON') return
+        event.preventDefault()
+        submitTestAnswer()
+        return
+      }
+
       if (active.answered && (event.key === 'Enter' || event.key === ' ')) {
         if (target?.tagName === 'BUTTON') return
         event.preventDefault()
@@ -520,6 +626,7 @@ function SessionRun({
   const mastered = viewState.cards.filter(
     (card) => (viewState.progress[card.question.id]?.box ?? card.box) >= MASTERY_BOX,
   ).length
+  const completedCount = viewState.cards.filter((card) => card.done).length
   const modeLabel = MODE_LABELS[meta.mode]
 
   if (viewState.status === 'empty') {
@@ -539,6 +646,22 @@ function SessionRun({
 
   if (viewState.status === 'complete') {
     const finalSummary = summary(viewState)
+    if (isTest) {
+      return (
+        <main className="screen sf-session sf-session--complete sf-session--test-result" dir="rtl" style={{ '--session-accent': meta.color } as React.CSSProperties}>
+          <section className="sf-session__test-summary">
+            <span className="sf-session__celebration" aria-hidden="true">🎯</span>
+            <h1>نتيجة اختبار القسم</h1>
+            <strong>{finalSummary.accuracy}%</strong>
+            <p>{finalSummary.good} صح من {finalSummary.totalUnique} · {finalSummary.bad} خطأ · {formatTimer(finalSummary.elapsedSeconds)}</p>
+          </section>
+          <TestReview state={viewState} />
+          <button type="button" className="sf-session__primary sf-session__test-return" onClick={() => onExit(finalSummary)}>
+            العودة للرئيسية
+          </button>
+        </main>
+      )
+    }
     return (
       <main className="screen sf-session sf-session--complete" dir="rtl">
         <div className="sf-session__empty-card">
@@ -559,7 +682,7 @@ function SessionRun({
 
   const isMatching = isMatch(currentQuestion)
   const isPracticing = isPractice(currentQuestion)
-  const hasAssistance = Boolean(currentQuestion.q_ar || currentQuestion.hint_ar)
+  const hasAssistance = !isTest && Boolean(currentQuestion.q_ar || currentQuestion.hint_ar)
   const translationOpen = assistance.questionId === currentQuestion.id && assistance.translationOpen
   const hintOpen = assistance.questionId === currentQuestion.id && assistance.hintOpen
   const questionSource = !isMatching && !isPracticing ? sourceLabel(currentQuestion) : ''
@@ -579,7 +702,7 @@ function SessionRun({
           {meta.label ? <span> · {meta.label}</span> : null}
         </div>
         {modeLabel ? <span className={`sf-session__mode sf-session__mode--${meta.mode}`}>{modeLabel}</span> : null}
-        {onOpenNotes ? (
+        {onOpenNotes && !isTest ? (
           <button type="button" className="sf-session__notes" onClick={onOpenNotes}>
             📝 الناقص
           </button>
@@ -588,36 +711,47 @@ function SessionRun({
 
       <section className="sf-session__stats" aria-label="إحصاءات الجلسة">
         <span>⏱ <SessionTimer endAt={timerEndRef.current} onElapsed={announceTimerEnd} /></span>
-        <span className="sf-session__stat-good">صح <b>{viewState.stats.good}</b></span>
-        <span className="sf-session__stat-bad">غلط <b>{viewState.stats.bad}</b></span>
-        <span>الدقّة <b>{attempts ? `${Math.round((viewState.stats.good / attempts) * 100)}%` : '—'}</b></span>
-        <span>🔥 <b>{viewState.stats.streak}</b></span>
-        <span>الإتقان <b>{mastered}/{viewState.cards.length}</b></span>
+        {isTest ? (
+          <>
+            <span>السؤال <b>{completedCount + 1}/{viewState.cards.length}</b></span>
+            <span>متبقي <b>{Math.max(0, viewState.cards.length - completedCount - 1)}</b></span>
+          </>
+        ) : (
+          <>
+            <span className="sf-session__stat-good">صح <b>{viewState.stats.good}</b></span>
+            <span className="sf-session__stat-bad">غلط <b>{viewState.stats.bad}</b></span>
+            <span>الدقّة <b>{attempts ? `${Math.round((viewState.stats.good / attempts) * 100)}%` : '—'}</b></span>
+            <span>🔥 <b>{viewState.stats.streak}</b></span>
+            <span>الإتقان <b>{mastered}/{viewState.cards.length}</b></span>
+          </>
+        )}
       </section>
-      <div className="sf-session__mastery" role="progressbar" aria-label={`أتقنت ${mastered} من ${viewState.cards.length}`} aria-valuemin={0} aria-valuemax={viewState.cards.length} aria-valuenow={mastered}>
-        <i style={{ '--mastery-ratio': viewState.cards.length ? mastered / viewState.cards.length : 0 } as React.CSSProperties} />
+      <div className="sf-session__mastery" role="progressbar" aria-label={isTest ? `أجبت عن ${completedCount} من ${viewState.cards.length}` : `أتقنت ${mastered} من ${viewState.cards.length}`} aria-valuemin={0} aria-valuemax={viewState.cards.length} aria-valuenow={isTest ? completedCount : mastered}>
+        <i style={{ '--mastery-ratio': viewState.cards.length ? (isTest ? completedCount : mastered) / viewState.cards.length : 0 } as React.CSSProperties} />
       </div>
 
-      <article key={`${currentQuestion.id}-${cardMotionKey}`} className={`sf-session__card ${active.answered ? (active.correct ? 'has-correct-result' : 'has-wrong-result') : ''}`} ref={cardRef} tabIndex={-1} aria-labelledby={`sf-question-${domId}`}>
+      <article key={`${currentQuestion.id}-${cardMotionKey}`} className={`sf-session__card ${!isTest && active.answered ? (active.correct ? 'has-correct-result' : 'has-wrong-result') : ''}`} ref={cardRef} tabIndex={-1} aria-labelledby={`sf-question-${domId}`}>
         <div className="sf-session__accent" />
         <div className="sf-session__meta">
           <span className="sf-session__source" title={currentQuestion.source ?? ''}>{questionSource}</span>
-          <div className="sf-session__question-actions">
-            <span className="sf-session__boxes" aria-label={`الصندوق ${activeCard.box} من 5`}>
-              {Array.from({ length: 5 }, (_item, index) => (
-                <i key={index} className={index < activeCard.box ? 'is-on' : ''} aria-hidden="true" />
-              ))}
-            </span>
-            <button
-              type="button"
-              className={`sf-session__star ${localStars[currentQuestion.id] ? 'is-on' : ''}`}
-              onClick={toggleStar}
-              aria-pressed={Boolean(localStars[currentQuestion.id])}
-              aria-label={localStars[currentQuestion.id] ? 'إزالة النجمة' : 'تمييز السؤال بنجمة'}
-            >
-              {localStars[currentQuestion.id] ? '★' : '☆'}
-            </button>
-          </div>
+          {!isTest ? (
+            <div className="sf-session__question-actions">
+              <span className="sf-session__boxes" aria-label={`الصندوق ${activeCard.box} من 5`}>
+                {Array.from({ length: 5 }, (_item, index) => (
+                  <i key={index} className={index < activeCard.box ? 'is-on' : ''} aria-hidden="true" />
+                ))}
+              </span>
+              <button
+                type="button"
+                className={`sf-session__star ${localStars[currentQuestion.id] ? 'is-on' : ''}`}
+                onClick={toggleStar}
+                aria-pressed={Boolean(localStars[currentQuestion.id])}
+                aria-label={localStars[currentQuestion.id] ? 'إزالة النجمة' : 'تمييز السؤال بنجمة'}
+              >
+                {localStars[currentQuestion.id] ? '★' : '☆'}
+              </button>
+            </div>
+          ) : null}
         </div>
 
         <h1 className="sf-session__question" id={`sf-question-${domId}`}>
@@ -670,7 +804,9 @@ function SessionRun({
             {active.choiceOrder.map((originalIndex, displayedIndex) => {
               const wasSelected = active.selectedChoice === originalIndex
               const isCorrectAnswer = currentQuestion.answer === originalIndex
-              const resultClass = active.answered
+              const resultClass = isTest
+                ? wasSelected ? 'is-selected' : ''
+                : active.answered
                 ? isCorrectAnswer
                   ? 'is-correct'
                   : wasSelected
@@ -683,7 +819,8 @@ function SessionRun({
                   key={originalIndex}
                   className={`sf-session__choice ${resultClass}`}
                   onClick={() => answerChoice(originalIndex)}
-                  disabled={active.answered}
+                  disabled={!isTest && active.answered}
+                  aria-pressed={isTest ? wasSelected : undefined}
                   aria-label={`${choiceKey(displayedIndex)}. ${currentQuestion.choices[originalIndex]}`}
                 >
                   <span aria-hidden="true">{choiceKey(displayedIndex)}</span>
@@ -828,7 +965,7 @@ function SessionRun({
                         )}
                       </button>
                     )}
-                    {hint && !active.answered ? (
+                    {hint && !active.answered && !isTest ? (
                       <>
                         <button
                           type="button"
@@ -857,16 +994,23 @@ function SessionRun({
               })}
             </div>
             {!active.answered ? (
-              <button type="button" className="sf-session__primary" onClick={gradeMatch} disabled={!allMatched}>
-                تحقّق من التوصيل ✓
+              <button type="button" className="sf-session__primary" onClick={isTest ? submitTestAnswer : gradeMatch} disabled={!allMatched}>
+                {isTest ? 'التالي ←' : 'تحقّق من التوصيل ✓'}
               </button>
             ) : null}
           </div>
         ) : null}
 
-        {!isPracticing ? <Explanation question={currentQuestion} show={active.answered} /> : null}
+        {!isTest && !isPracticing ? <Explanation question={currentQuestion} show={active.answered} /> : null}
 
-        {active.answered ? (
+        {isTest && isChoice(currentQuestion) ? (
+          <footer className="sf-session__next sf-session__next--test">
+            <span>{active.selectedChoice === null ? 'اختر إجابة للمتابعة' : 'يمكنك تغيير اختيارك قبل الانتقال'}</span>
+            <button ref={nextButtonRef} type="button" className="sf-session__primary" onClick={submitTestAnswer} disabled={active.selectedChoice === null}>
+              التالي <span aria-hidden="true">←</span>
+            </button>
+          </footer>
+        ) : active.answered ? (
           <footer className="sf-session__next">
             <strong className={active.correct ? 'is-correct' : 'is-wrong'}>
               {active.correct ? '✓ صحيح' : '✗ راجعها'}
@@ -913,18 +1057,20 @@ function SessionRun({
             <span className="sf-session__guard-emoji" aria-hidden="true">
               {guardSecondsLeft > 0 ? '⏳' : summary().remaining > 8 ? '⏰' : '🔥'}
             </span>
-            <h2 id={`sf-guard-title-${domId}`}>هل تريد الخروج؟</h2>
+            <h2 id={`sf-guard-title-${domId}`}>{isTest ? 'إلغاء الاختبار؟' : 'هل تريد الخروج؟'}</h2>
             <p id={`sf-guard-message-${domId}`}>
-              {guardSecondsLeft > 0
+              {isTest
+                ? 'لن تُحفظ نتيجة نهائية لهذا الاختبار إذا خرجت الآن.'
+                : guardSecondsLeft > 0
                 ? `باقي ${formatTimer(guardSecondsLeft)} من وقتك. كمّل الجلسة ولا تقطع تركيزك.`
                 : `باقي ${summary().remaining} بطاقة. تقدّمك محفوظ، لكن إنهاء الجولة أفضل.`}
             </p>
             <div>
               <button ref={stayButtonRef} type="button" className="sf-session__primary" onClick={() => setGuardOpen(false)}>
-                أكمل الجلسة
+                {isTest ? 'متابعة الاختبار' : 'أكمل الجلسة'}
               </button>
               <button ref={leaveButtonRef} type="button" onClick={() => onExit(summary())}>
-                خروج وحفظ التقدّم
+                {isTest ? 'إلغاء الاختبار' : 'خروج وحفظ التقدّم'}
               </button>
             </div>
           </div>
