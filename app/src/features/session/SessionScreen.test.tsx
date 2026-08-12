@@ -172,6 +172,33 @@ it('supports matching by tap plus number keys and exposes per-row Arabic hints',
   )
 })
 
+it('includes matching questions in test mode and completes each after one attempt', () => {
+  const questions: [ChoiceQuestion, MatchQuestion] = [
+    { id: 'test-choice-001', q: 'Choose A.', choices: ['A', 'B'], answer: 0 },
+    { id: 'test-match-001', type: 'match', q: 'Match it.', pairs: [['MPI_Init', 'Starts MPI']] },
+  ]
+  const onComplete = vi.fn()
+
+  render(
+    <SessionScreen
+      {...baseProps}
+      meta={{ ...meta, mode: 'test' }}
+      questions={questions}
+      random={() => 0.999}
+      onComplete={onComplete}
+    />,
+  )
+
+  fireEvent.click(screen.getByRole('button', { name: /^A\. A$/ }))
+  fireEvent.click(screen.getByRole('button', { name: /التالي/ }))
+  fireEvent.click(screen.getByRole('button', { name: /Starts MPI/ }))
+  fireEvent.click(screen.getByRole('button', { name: /ضع إجابة في الصف 1/ }))
+  fireEvent.click(screen.getByRole('button', { name: /تحقّق من التوصيل/ }))
+  fireEvent.click(screen.getByRole('button', { name: /التالي/ }))
+
+  expect(onComplete).toHaveBeenCalledWith(expect.objectContaining({ totalUnique: 2, attempts: 2, good: 2, accuracy: 100 }))
+})
+
 it('uses the full answer card as the native drag preview', () => {
   const question: MatchQuestion = {
     id: 'match-drag-001',

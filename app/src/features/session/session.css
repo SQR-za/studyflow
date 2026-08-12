@@ -83,6 +83,7 @@
 .sf-session__mode--learn,
 .sf-session__mode--practice,
 .sf-session__mode--due { color: #7dd3fc; }
+.sf-session__mode--test { color: #fbbf24; }
 
 .sf-session__stats {
   flex-wrap: wrap;

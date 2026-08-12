@@ -183,8 +183,9 @@ export function gradeActiveCard(
     ? step + GAPS[box] + Math.floor(random() * 3)
     : step + 2 + Math.floor(random() * 2)
   const learnStreak = correct ? card.learnStreak + 1 : 0
-  const done =
-    state.meta.mode === 'learn'
+  const done = state.meta.mode === 'test'
+    ? true
+    : state.meta.mode === 'learn'
       ? learnStreak >= 2 || sessionAttempts >= 7
       : correct || sessionAttempts >= SESSION_CAP
 

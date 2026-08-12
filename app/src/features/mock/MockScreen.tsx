@@ -47,20 +47,19 @@ export interface MockResultPayload {
   correct: number
 }
 
-export function MockScreen({ data, order, hidden, drills, initialLesson, onBack, onRecord, onReviewWrong }: {
+export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onReviewWrong }: {
   data: Record<string, Subject>
   order: string[]
   hidden: string[]
   drills: DrillsBundle
-  initialLesson?: { code: string; lessonId: string } | null
   onBack: () => void
   onRecord: (result: MockResultPayload) => void
   onReviewWrong: (questions: ChoiceQuestion[], code: string, label: string) => void
 }) {
   const visible = order.filter(code => !hidden.includes(code))
   const [stage, setStage] = useState<'setup' | 'run' | 'result'>('setup')
-  const [code, setCode] = useState(initialLesson?.code ?? visible[0] ?? order[0] ?? '')
-  const [lessonIds, setLessonIds] = useState<Set<string>>(() => initialLesson ? new Set([initialLesson.lessonId]) : new Set())
+  const [code, setCode] = useState(visible[0] ?? order[0] ?? '')
+  const [lessonIds, setLessonIds] = useState<Set<string>>(() => new Set())
   const [count, setCount] = useState(20)
   const [timed, setTimed] = useState(true)
   const [items, setItems] = useState<MockItem[]>([])
@@ -74,14 +73,6 @@ export function MockScreen({ data, order, hidden, drills, initialLesson, onBack,
   const subject = data[code]
   const lessons = useMemo(() => subject?.chapters.flatMap(chapter => chapter.lessons ?? []) ?? [], [subject])
   const presets = code === drills.subject ? drills.presets : []
-
-  useEffect(() => {
-    if (!initialLesson) return
-    const lesson = data[initialLesson.code]?.chapters.flatMap(chapter => chapter.lessons ?? []).find(item => item.id === initialLesson.lessonId)
-    if (lesson) startWithPool(lesson.questions.filter(isChoiceQuestion), `اختبار القسم · ${lesson.label}`, [lesson.id], undefined, true)
-    // Initial lesson is an explicit one-shot launch request.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const finish = useCallback(() => {
     if (!items.length || stage === 'result') return

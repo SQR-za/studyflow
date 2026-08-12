@@ -245,7 +245,7 @@ export interface SyncState {
 export interface SessionMeta {
   code: string | null
   scope: string
-  mode: 'all' | 'review' | 'practice' | 'star' | 'due' | 'learn'
+  mode: 'all' | 'review' | 'practice' | 'star' | 'due' | 'learn' | 'test'
   color: string
   subject: string
   label: string

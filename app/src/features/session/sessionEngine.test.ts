@@ -76,3 +76,12 @@ it('uses SESSION_CAP only as a wrong-answer safety cap outside learn mode', () =
     box: 1,
   })
 })
+
+it('runs test mode as one attempt per question, including wrong answers', () => {
+  const wrong = gradeActiveCard(start('test'), false, 2_000, noRandom)
+
+  expect(wrong).not.toBeNull()
+  expect(wrong!.state.cards[0]).toMatchObject({ done: true, sessionAttempts: 1 })
+  expect(wrong!.state.stats).toEqual({ good: 0, bad: 1, streak: 0 })
+  expect(moveToNextCard(wrong!.state, noRandom).status).toBe('complete')
+})

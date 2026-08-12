@@ -45,6 +45,7 @@ const MODE_LABELS: Record<SessionMeta['mode'], string> = {
   star: '⭐ المميّزة',
   due: '🔁 مراجعة مستحقّة',
   learn: '🧠 حفظ · مرتان صحيحتان',
+  test: '⚡ اختبار القسم · محاولة واحدة',
 }
 
 const SOURCE_LABELS: Record<string, string> = {

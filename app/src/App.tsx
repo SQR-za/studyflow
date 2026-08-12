@@ -9,7 +9,7 @@ import { PlanScreen } from './features/plan/PlanScreen'
 import { SearchScreen } from './features/search/SearchScreen'
 import { SettingsScreen } from './features/settings/SettingsScreen'
 import { WeakScreen } from './features/weak/WeakScreen'
-import { SessionScreen } from './features/session'
+import { SessionScreen, type SessionSummary } from './features/session'
 import { createDailyStore, createProgressStore, incrementDaily, recordAnswer, setStarred, setTestResult } from './lib/progress'
 import { chapterById, dueQuestions, isWeak, starredQuestions, visibleLessonQuestions, visibleQuestions } from './lib/stats'
 import { APP_BUILD, STORAGE_KEYS } from './lib/constants'
@@ -28,7 +28,6 @@ export function App() {
   const [screen, setScreen] = useState<Screen>('home')
   const [notes, setNotes] = useState<{ notes?: NotesBlock | null; title: string; returnTo: Screen }>({ title: '', returnTo: 'home' })
   const [session, setSession] = useState<SessionLaunch | null>(null)
-  const [mockLesson, setMockLesson] = useState<{ code: string; lessonId: string } | null>(null)
   const [toast, setToast] = useState<{ id: number; message: string } | null>(null)
   const toastIdRef = useRef(0)
   const [passwordVersion, setPasswordVersion] = useState(0)
@@ -100,6 +99,48 @@ export function App() {
     launch(dueQuestions(app.data, app.order, app.store, app.settings.includeExtra), { code: null, scope: '__DUE__', mode: 'due', color: '#a78bfa', subject: 'مراجعة اليوم 🔁', label: '' })
   }
 
+  function startLessonTest(code: string, lesson: Lesson) {
+    const subject = app.data[code]
+    if (!subject) return
+    launch([...lesson.questions], {
+      code,
+      scope: '__LESSON_TEST__',
+      mode: 'test',
+      color: subject.color,
+      subject: subjectShortName(subject.name),
+      label: `اختبار القسم · ${lesson.label}`,
+      lesson,
+    })
+  }
+
+  function completeSession(summary: SessionSummary) {
+    const currentSession = session
+    if (currentSession?.meta.mode === 'test' && currentSession.meta.code && currentSession.meta.lesson) {
+      const at = new Date().toISOString()
+      const test = { at, pct: summary.accuracy, correct: summary.good, total: summary.totalUnique }
+      const lessonId = currentSession.meta.lesson.id
+      app.updateStore(current => {
+        const next = setTestResult(current, lessonId, test)
+        return {
+          ...next,
+          attempts: [{
+            id: `section-test-${Date.now()}`,
+            at,
+            code: currentSession.meta.code,
+            label: currentSession.meta.label,
+            pct: summary.accuracy,
+            correct: summary.good,
+            total: summary.totalUnique,
+            lessonIds: [lessonId],
+          }, ...next.attempts].slice(0, 100),
+        }
+      })
+      notify(`⚡ انتهى اختبار القسم · ${summary.good}/${summary.totalUnique}`)
+      return
+    }
+    notify(`🎉 انتهت الجلسة · ${summary.good} صحيحة`)
+  }
+
   function recordMock(result: MockResultPayload) {
     const at = new Date().toISOString()
     app.updateStore(current => {
@@ -145,7 +186,7 @@ export function App() {
   return (
     <div className="app-shell">
       <Activity mode={screen === 'home' ? 'visible' : 'hidden'}>
-        <HomeScreen data={app.data} order={app.order} schedule={app.schedule} store={app.store} settings={app.settings} daily={app.daily} onOpenScreen={next => transitionTo(next, () => { if (next === 'mock') setMockLesson(null) })} onStart={start} onStartStarred={startStarred} onStartDue={startDue} onStartLessonTest={(code, lesson) => transitionTo('mock', () => setMockLesson({ code, lessonId: lesson.id }))} onOpenNotes={openNotes} onToggleExtra={() => app.updateSettings(current => ({ includeExtra: !current.includeExtra }))} onChangeDuration={sessionMins => app.updateSettings({ sessionMins })} />
+        <HomeScreen data={app.data} order={app.order} schedule={app.schedule} store={app.store} settings={app.settings} daily={app.daily} onOpenScreen={next => transitionTo(next)} onStart={start} onStartStarred={startStarred} onStartDue={startDue} onStartLessonTest={startLessonTest} onOpenNotes={openNotes} onToggleExtra={() => app.updateSettings(current => ({ includeExtra: !current.includeExtra }))} onChangeDuration={sessionMins => app.updateSettings({ sessionMins })} />
       </Activity>
 
       {session ? (
@@ -161,7 +202,7 @@ export function App() {
             onProgressChange={app.updateQuestionProgress}
             onStarChange={(id, active) => app.updateStore(current => setStarred(current, id, active))}
             onDailyAnswer={() => app.setDaily(current => incrementDaily(current))}
-            onComplete={summary => notify(`🎉 انتهت الجلسة · ${summary.good} صحيحة`)}
+            onComplete={completeSession}
             onExit={() => transitionTo('home', () => setSession(null))}
             onOpenNotes={() => {
               if (session.meta.lesson?.notes) openNotes(session.meta.lesson.notes, `${session.meta.subject} · ${session.meta.lesson.label}`)
@@ -174,7 +215,7 @@ export function App() {
         </Activity>
       ) : null}
 
-      {screen === 'mock' && <MockScreen key={mockLesson ? `${mockLesson.code}:${mockLesson.lessonId}` : 'general'} data={app.data} order={app.order} hidden={app.settings.hidden} drills={app.drills} initialLesson={mockLesson} onBack={() => transitionTo('home', () => setMockLesson(null))} onRecord={recordMock} onReviewWrong={(questions, code, label) => launch(questions, { code, scope: '__MOCKREV__', mode: 'review', color: app.data[code]?.color ?? '#2dd4bf', subject: app.data[code] ? subjectShortName(app.data[code].name) : code, label })} />}
+      {screen === 'mock' && <MockScreen data={app.data} order={app.order} hidden={app.settings.hidden} drills={app.drills} onBack={() => transitionTo('home')} onRecord={recordMock} onReviewWrong={(questions, code, label) => launch(questions, { code, scope: '__MOCKREV__', mode: 'review', color: app.data[code]?.color ?? '#2dd4bf', subject: app.data[code] ? subjectShortName(app.data[code].name) : code, label })} />}
 
       {screen === 'notes' && <NotesScreen title={notes.title} notes={notes.notes} onBack={() => transitionTo(notes.returnTo)} />}
       {screen === 'plan' && <PlanScreen data={app.data} schedule={app.schedule} planDone={app.planDone} onToggle={key => app.setPlanDone(current => { const next = { ...current }; if (next[key]) delete next[key]; else next[key] = true; return next })} onStart={(code, chapterId, review) => start({ code, scope: chapterId, mode: review ? 'review' : 'all' })} onBack={() => transitionTo('home')} />}
