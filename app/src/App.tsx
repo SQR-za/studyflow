@@ -16,7 +16,7 @@ import { APP_BUILD, STORAGE_KEYS } from './lib/constants'
 import { downloadJson } from './lib/storage'
 import { isChoice, subjectShortName } from './lib/utils'
 import { useApp } from './state/AppContext'
-import type { ChoiceQuestion, Lesson, NotesBlock, Screen, SessionMeta, StudyQuestion } from './types'
+import type { ChoiceQuestion, DrillPreset, Lesson, NotesBlock, Screen, SessionMeta, StudyQuestion } from './types'
 
 interface SessionLaunch {
   items: StudyQuestion[]
@@ -113,6 +113,25 @@ export function App() {
     })
   }
 
+  function startLessonQuickTest(code: string, lesson: Lesson, preset: DrillPreset) {
+    const subject = app.data[code]
+    if (!subject || !preset.questions?.length) return
+    const quickLesson: Lesson = {
+      id: preset.id,
+      label: preset.label,
+      questions: preset.questions,
+    }
+    launch([...preset.questions], {
+      code,
+      scope: '__LESSON_QUICK_TEST__',
+      mode: 'test',
+      color: subject.color,
+      subject: subjectShortName(subject.name),
+      label: `فحص سريع · ${lesson.label}`,
+      lesson: quickLesson,
+    })
+  }
+
   function completeSession(summary: SessionSummary) {
     const currentSession = session
     if (currentSession?.meta.mode === 'test' && currentSession.meta.code && currentSession.meta.lesson) {
@@ -186,7 +205,7 @@ export function App() {
   return (
     <div className="app-shell">
       <Activity mode={screen === 'home' ? 'visible' : 'hidden'}>
-        <HomeScreen data={app.data} order={app.order} schedule={app.schedule} store={app.store} settings={app.settings} daily={app.daily} onOpenScreen={next => transitionTo(next)} onStart={start} onStartStarred={startStarred} onStartDue={startDue} onStartLessonTest={startLessonTest} onOpenNotes={openNotes} onToggleExtra={() => app.updateSettings(current => ({ includeExtra: !current.includeExtra }))} onChangeDuration={sessionMins => app.updateSettings({ sessionMins })} />
+        <HomeScreen data={app.data} order={app.order} schedule={app.schedule} store={app.store} settings={app.settings} daily={app.daily} quickPresets={app.drills.presets.filter(preset => preset.quick)} onOpenScreen={next => transitionTo(next)} onStart={start} onStartStarred={startStarred} onStartDue={startDue} onStartLessonTest={startLessonTest} onStartLessonQuickTest={startLessonQuickTest} onOpenNotes={openNotes} onToggleExtra={() => app.updateSettings(current => ({ includeExtra: !current.includeExtra }))} onChangeDuration={sessionMins => app.updateSettings({ sessionMins })} />
       </Activity>
 
       {session ? (
@@ -196,7 +215,7 @@ export function App() {
             meta={session.meta}
             progress={app.store.q}
             starred={app.store.star}
-            sessionMinutes={app.settings.sessionMins}
+            sessionMinutes={session.meta.scope === '__LESSON_QUICK_TEST__' ? 5 : app.settings.sessionMins}
             sound={app.settings.sound}
             fullscreen={app.settings.fullscreen}
             onProgressChange={app.updateQuestionProgress}

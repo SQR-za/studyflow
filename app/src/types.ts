@@ -117,6 +117,8 @@ export interface DrillPreset {
   parts?: DrillPresetPart[]
   lessonIds?: string[]
   timed?: boolean
+  quick?: boolean
+  questions?: ChoiceQuestion[]
 }
 
 export interface DrillChapter {

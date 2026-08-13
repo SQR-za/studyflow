@@ -115,12 +115,13 @@ export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onRe
 
   function startPreset(preset: DrillPreset) {
     let pool: ChoiceQuestion[] = []
-    if (preset.parts) for (const part of preset.parts) {
+    if (preset.questions?.length) pool = [...preset.questions]
+    if (!preset.questions?.length && preset.parts) for (const part of preset.parts) {
       const chapter = subject?.chapters.find(item => item.id === part.chapterId)
       if (chapter) pool.push(...shuffle(chapter.questions.filter(isChoiceQuestion)).slice(0, part.count))
     }
-    if (preset.lessonIds) pool = shuffle(lessons.filter(lesson => preset.lessonIds?.includes(lesson.id)).flatMap(lesson => lesson.questions).filter(isChoiceQuestion)).slice(0, preset.count ?? 20)
-    startWithPool(shuffle(pool), preset.label, preset.lessonIds ?? [], preset.id, preset.timed !== false)
+    if (!preset.questions?.length && preset.lessonIds) pool = shuffle(lessons.filter(lesson => preset.lessonIds?.includes(lesson.id)).flatMap(lesson => lesson.questions).filter(isChoiceQuestion)).slice(0, preset.count ?? 20)
+    startWithPool(shuffle(pool), preset.label, preset.quick ? [preset.id] : (preset.lessonIds ?? []), preset.id, preset.timed !== false)
   }
 
   if (stage === 'setup') return (
@@ -130,7 +131,8 @@ export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onRe
         <h2>اختر المادة</h2>
         <div className="subject-toggles" role="group" aria-label="اختيار المادة">{visible.map(item => <button type="button" className={item === code ? 'selected' : ''} aria-pressed={item === code} key={item} onClick={() => { setCode(item); setLessonIds(new Set()) }}>{data[item].name}</button>)}</div>
       </section>
-      {!!presets.length && <section className="mock-panel"><h2>اختبارات جاهزة</h2><div className="preset-grid">{presets.map(preset => <button type="button" key={preset.id} onClick={() => startPreset(preset)}><strong>{preset.label}</strong><span>{preset.count ?? preset.parts?.reduce((sum, part) => sum + part.count, 0) ?? '—'} سؤال {preset.timed === false ? '· بلا وقت' : '· بوقت'}</span></button>)}</div></section>}
+      {!!presets.filter(preset => !preset.quick).length && <section className="mock-panel"><h2>اختبارات جاهزة</h2><div className="preset-grid">{presets.filter(preset => !preset.quick).map(preset => <button type="button" key={preset.id} onClick={() => startPreset(preset)}><strong>{preset.label}</strong><span>{preset.count ?? preset.parts?.reduce((sum, part) => sum + part.count, 0) ?? '—'} سؤال {preset.timed === false ? '· بلا وقت' : '· بوقت'}</span></button>)}</div></section>}
+      {!!presets.filter(preset => preset.quick).length && <section className="mock-panel"><h2>⚡ فحص سريع لكل قسم</h2><p>أربع أسئلة مركّزة تقيس أهم قاعدة أو حساب أو فخ في القسم.</p><div className="preset-grid">{presets.filter(preset => preset.quick).map(preset => <button type="button" key={preset.id} onClick={() => startPreset(preset)}><strong>{preset.label}</strong><span>{preset.count ?? preset.questions?.length ?? '—'} أسئلة · نحو 4 دقائق</span></button>)}</div></section>}
       {!!lessons.length && <section className="mock-panel"><h2>الأقسام</h2><div className="lesson-picker">{subject.chapters.filter(chapter => chapter.lessons?.length).map(chapter => <div key={chapter.id}><h3>{chapter.label}</h3><div role="group" aria-label={chapter.label}>{chapter.lessons?.map(lesson => <button type="button" className={lessonIds.has(lesson.id) ? 'selected' : ''} aria-pressed={lessonIds.has(lesson.id)} key={lesson.id} onClick={() => setLessonIds(current => { const next = new Set(current); next.has(lesson.id) ? next.delete(lesson.id) : next.add(lesson.id); return next })}>{lesson.label}</button>)}</div></div>)}</div></section>}
       <section className="mock-panel mock-options"><div><label htmlFor="mock-count">عدد الأسئلة</label><select id="mock-count" value={count} onChange={event => setCount(Number(event.target.value))}>{[10, 20, 30, 40].map(value => <option key={value} value={value}>{value}</option>)}</select></div><label className="check-label"><input type="checkbox" checked={timed} onChange={event => setTimed(event.target.checked)} /> مؤقت</label><Button onClick={startCustom}>ابدأ الاختبار</Button></section>
     </main>

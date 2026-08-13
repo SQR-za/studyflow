@@ -2,7 +2,7 @@ import { useId, useMemo, useState } from 'react'
 import { ProgressRing } from '../../components/Ui'
 import { APP_BUILD, MASTERY_BOX } from '../../lib/constants'
 import { daysBetween, subjectShortName, todayString } from '../../lib/utils'
-import type { AppSettings, Chapter, DailyStore, Lesson, NotesBlock, ProgressStore, StudySchedule, Subject } from '../../types'
+import type { AppSettings, Chapter, DailyStore, DrillPreset, Lesson, NotesBlock, ProgressStore, StudySchedule, Subject } from '../../types'
 
 export interface StartRequest {
   code: string
@@ -23,6 +23,8 @@ interface HomeScreenProps {
   onStartStarred: () => void
   onStartDue: () => void
   onStartLessonTest: (code: string, lesson: Lesson) => void
+  onStartLessonQuickTest: (code: string, lesson: Lesson, preset: DrillPreset) => void
+  quickPresets: DrillPreset[]
   onOpenNotes: (notes: NotesBlock | undefined | null, title: string) => void
   onToggleExtra: () => void
   onChangeDuration: (minutes: number) => void
@@ -47,12 +49,14 @@ function statsFor(items: Array<{ id: string }>, store: ProgressStore) {
   return { mastered, seen, weak, total: items.length }
 }
 
-function SubjectCard({ subject, store, settings, onStart, onStartLessonTest, onOpenNotes }: {
+function SubjectCard({ subject, store, settings, quickPresets, onStart, onStartLessonTest, onStartLessonQuickTest, onOpenNotes }: {
   subject: Subject
   store: ProgressStore
   settings: AppSettings
+  quickPresets: DrillPreset[]
   onStart: HomeScreenProps['onStart']
   onStartLessonTest: HomeScreenProps['onStartLessonTest']
+  onStartLessonQuickTest: HomeScreenProps['onStartLessonQuickTest']
   onOpenNotes: HomeScreenProps['onOpenNotes']
 }) {
   const [open, setOpen] = useState(subject.code === 'CCCS422-FINAL')
@@ -100,6 +104,8 @@ function SubjectCard({ subject, store, settings, onStart, onStartLessonTest, onO
                       const lessonQuestions = settings.includeExtra ? lesson.questions : lesson.questions.filter(question => question.src !== 'extra')
                       const lessonStats = statsFor(lessonQuestions, store)
                       const lastTest = store.tests[lesson.id]
+                      const quickPreset = quickPresets.find(preset => preset.quick && preset.lessonIds?.includes(lesson.id))
+                      const lastQuickTest = quickPreset ? store.tests[quickPreset.id] : undefined
                       return (
                         <div className="lesson-row" key={lesson.id}>
                           <span className="lesson-row__dot" />
@@ -107,10 +113,12 @@ function SubjectCard({ subject, store, settings, onStart, onStartLessonTest, onO
                             <strong dir="auto">{lesson.label}</strong>
                             <small>{lessonQuestions.length} سؤال · أتقنت {lessonStats.mastered}{lessonStats.weak ? ` · ⚠ ${lessonStats.weak}` : ''}</small>
                             {lastTest && <span className={`score-chip ${lastTest.pct >= 90 ? 'good' : lastTest.pct >= 70 ? 'warn' : 'bad'}`}>آخر اختبار {lastTest.pct}%</span>}
+                            {lastQuickTest && <span className={`score-chip ${lastQuickTest.pct >= 90 ? 'good' : lastQuickTest.pct >= 70 ? 'warn' : 'bad'}`}>سريع {lastQuickTest.pct}%</span>}
                           </button>
                           <div className="lesson-row__actions">
                             <button type="button" onClick={() => onStart({ code: subject.code, scope: '__LESSONS__', mode: 'learn', lessonIds: new Set([lesson.id]) })}>🧠 <span>حفظ</span></button>
-                            <button type="button" onClick={() => onStartLessonTest(subject.code, lesson)}>⚡ <span>اختبار</span></button>
+                            {quickPreset && <button type="button" onClick={() => onStartLessonQuickTest(subject.code, lesson, quickPreset)} title="فحص سريع من 4 أسئلة">⚡ <span>سريع</span></button>}
+                            <button type="button" onClick={() => onStartLessonTest(subject.code, lesson)} title="اختبار كل أسئلة القسم">📋 <span>شامل</span></button>
                             {lesson.notes && <button type="button" onClick={() => onOpenNotes(lesson.notes, `${subjectShortName(subject.name)} · ${lesson.label}`)}>📝</button>}
                           </div>
                         </div>
@@ -200,7 +208,7 @@ export function HomeScreen(props: HomeScreenProps) {
 
       <div className="subject-stack">
         {effectiveOrder.map(code => props.data[code] && (
-          <SubjectCard key={code} subject={props.data[code]} store={props.store} settings={props.settings} onStart={props.onStart} onStartLessonTest={props.onStartLessonTest} onOpenNotes={props.onOpenNotes} />
+          <SubjectCard key={code} subject={props.data[code]} store={props.store} settings={props.settings} quickPresets={props.quickPresets} onStart={props.onStart} onStartLessonTest={props.onStartLessonTest} onStartLessonQuickTest={props.onStartLessonQuickTest} onOpenNotes={props.onOpenNotes} />
         ))}
       </div>
 

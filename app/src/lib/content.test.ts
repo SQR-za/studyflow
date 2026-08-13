@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { loadCachedPreparedContent, prepareContent } from './content'
+import { loadCachedPreparedContent, prepareContent, validatePdcDrills } from './content'
 import type { ContentBundle, DrillsBundle } from '../types'
 
 const builtin: ContentBundle = {
@@ -38,5 +38,25 @@ describe('prepareContent', () => {
     const cached = loadCachedPreparedContent({ customContent: builtin, storage: localStorage })
     expect(cached.order).toEqual(['TEST'])
     expect(cached.data.TEST.chapters[0].questions[0].id).toBe('q1')
+  })
+
+  it('validates self-contained rapid section presets without merging them into mastery questions', () => {
+    const rapid: DrillsBundle = {
+      ...drills,
+      presets: [{
+        id: 'rapid-s1-4',
+        label: 'Rapid S1',
+        count: 2,
+        quick: true,
+        timed: true,
+        lessonIds: ['s1'],
+        questions: [
+          { id: 'rapid-q1', q: 'First?', choices: ['A', 'B'], answer: 0 },
+          { id: 'rapid-q2', q: 'Second?', choices: ['A', 'B'], answer: 1 },
+        ],
+      }],
+    }
+    expect(validatePdcDrills({ ...rapid, subject: 'CCCS422-FINAL' }).presets[0].questions).toHaveLength(2)
+    expect(prepareContent(builtin, { version: 1, subjects: {}, schedule: { plan: [], exams: [] } }, rapid).data.TEST.chapters[0].questions.map(question => question.id)).toEqual(['q1', 'q2'])
   })
 })

@@ -151,23 +151,42 @@ export function validatePdcDrills(raw: unknown): DrillsBundle {
   }
 
   const ids = new Set<string>()
+  const validateDrillQuestion = (questionValue: unknown, context: string) => {
+    if (!isRecord(questionValue)) validationError(`سؤال PDC غير صالح في ${context}: بدون id`)
+    const choices = questionValue.choices
+    const answer = questionValue.answer
+    const id = questionValue.id
+    if (typeof id !== 'string' || !id || typeof questionValue.q !== 'string' || !questionValue.q || ids.has(id) || !Array.isArray(choices) || choices.length < 2 || !Number.isInteger(answer) || (answer as number) < 0 || (answer as number) >= choices.length) {
+      validationError(`سؤال PDC غير صالح في ${context}: ${typeof id === 'string' && id ? id : 'بدون id'}`)
+    }
+    ids.add(id)
+  }
+
   for (const [chapterId, packValue] of Object.entries(raw.chapters)) {
     if (!isRecord(packValue) || !Array.isArray(packValue.sections) || !Array.isArray(packValue.questions)) {
       validationError(`حزمة ${chapterId} ناقصة`)
     }
     for (const questionValue of packValue.questions) {
-      if (!isRecord(questionValue)) validationError('سؤال PDC غير صالح: بدون id')
-      const choices = questionValue.choices
-      const answer = questionValue.answer
-      const id = questionValue.id
-      if (typeof id !== 'string' || !id || typeof questionValue.q !== 'string' || !questionValue.q || ids.has(id) || !Array.isArray(choices) || choices.length < 2 || !Number.isInteger(answer) || (answer as number) < 0 || (answer as number) >= choices.length) {
-        validationError(`سؤال PDC غير صالح: ${typeof id === 'string' && id ? id : 'بدون id'}`)
-      }
-      ids.add(id)
+      validateDrillQuestion(questionValue, chapterId)
     }
     for (const sectionValue of packValue.sections) {
       if (!isRecord(sectionValue) || typeof sectionValue.id !== 'string' || !sectionValue.id || typeof sectionValue.label !== 'string' || !sectionValue.label || !Array.isArray(sectionValue.questionIds) || !sectionValue.questionIds.length) {
         validationError(`قسم PDC غير صالح في ${chapterId}`)
+      }
+    }
+  }
+
+  for (const presetValue of raw.presets) {
+    if (!isRecord(presetValue) || typeof presetValue.id !== 'string' || !presetValue.id || typeof presetValue.label !== 'string' || !presetValue.label) {
+      validationError('Preset PDC غير صالح')
+    }
+    if (presetValue.questions !== undefined) {
+      if (!presetValue.quick || !Array.isArray(presetValue.questions) || presetValue.questions.length < 2 || !Array.isArray(presetValue.lessonIds) || presetValue.lessonIds.length !== 1) {
+        validationError(`الفحص السريع ${presetValue.id} غير صالح`)
+      }
+      for (const questionValue of presetValue.questions) validateDrillQuestion(questionValue, presetValue.id)
+      if (presetValue.count !== undefined && presetValue.count !== presetValue.questions.length) {
+        validationError(`عدد أسئلة الفحص السريع ${presetValue.id} غير متطابق`)
       }
     }
   }

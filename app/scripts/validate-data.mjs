@@ -50,7 +50,23 @@ for (const [chapterId, pack] of Object.entries(drills.chapters)) {
 
 invariant(drillCount === 67, `expected 67 drill questions, got ${drillCount}`)
 invariant(sectionCount === 13, `expected 13 sections, got ${sectionCount}`)
-invariant(drills.presets.length === 5, `expected 5 presets, got ${drills.presets.length}`)
+const sectionIds = new Set(Object.values(drills.chapters).flatMap(pack => pack.sections.map(section => section.id)))
+const rapidIds = new Set()
+const rapidPresets = drills.presets.filter(preset => preset.quick)
+for (const preset of rapidPresets) {
+  invariant(preset.lessonIds?.length === 1 && sectionIds.has(preset.lessonIds[0]), `invalid rapid section ${preset.id}`)
+  invariant(preset.count === 4 && preset.questions?.length === 4, `rapid preset must contain four questions: ${preset.id}`)
+  for (const question of preset.questions) {
+    invariant(question.id && !baseIds.has(question.id) && !drillIds.has(question.id) && !rapidIds.has(question.id), `duplicate rapid id ${question.id}`)
+    invariant(question.section === preset.lessonIds[0], `rapid section mismatch ${question.id}`)
+    invariant(Number.isInteger(question.answer) && question.answer >= 0 && question.answer < question.choices.length, `invalid rapid answer ${question.id}`)
+    invariant(question.q_ar && question.hint_ar && question.explanation && question.explanation_ar && question.source, `incomplete rapid question ${question.id}`)
+    rapidIds.add(question.id)
+  }
+}
+invariant(drills.presets.length === 18, `expected 18 presets, got ${drills.presets.length}`)
+invariant(rapidPresets.length === 13, `expected 13 rapid presets, got ${rapidPresets.length}`)
+invariant(rapidIds.size === 52, `expected 52 rapid questions, got ${rapidIds.size}`)
+invariant(new Set(rapidPresets.map(preset => preset.lessonIds[0])).size === 13, 'rapid presets must cover every section once')
 
-console.log(JSON.stringify({ baseQuestions: baseIds.size, drillQuestions: drillCount, sections: sectionCount, presets: drills.presets.length }, null, 2))
-
+console.log(JSON.stringify({ baseQuestions: baseIds.size, drillQuestions: drillCount, rapidQuestions: rapidIds.size, sections: sectionCount, presets: drills.presets.length }, null, 2))
