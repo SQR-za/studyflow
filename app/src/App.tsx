@@ -175,6 +175,22 @@ export function App() {
     app.setDaily(current => incrementDaily(current))
   }
 
+  function startComprehensiveMock(questions: StudyQuestion[], code: string, label: string, lessonIds: string[]) {
+    const subject = app.data[code]
+    if (!subject) return
+    const selectionKey = lessonIds.length ? [...lessonIds].sort().join('+') : 'all-sections'
+    const lesson: Lesson = { id: `mock-full:${code}:${selectionKey}`, label, questions }
+    launch(questions, {
+      code,
+      scope: '__MOCK_FULL_TEST__',
+      mode: 'test',
+      color: subject.color,
+      subject: subjectShortName(subject.name),
+      label,
+      lesson,
+    })
+  }
+
   function downloadCalendar(time: string) {
     const [hours, minutes] = time.split(':')
     const pad = (value: number) => String(value).padStart(2, '0')
@@ -234,7 +250,7 @@ export function App() {
         </Activity>
       ) : null}
 
-      {screen === 'mock' && <MockScreen data={app.data} order={app.order} hidden={app.settings.hidden} drills={app.drills} onBack={() => transitionTo('home')} onRecord={recordMock} onReviewWrong={(questions, code, label) => launch(questions, { code, scope: '__MOCKREV__', mode: 'review', color: app.data[code]?.color ?? '#2dd4bf', subject: app.data[code] ? subjectShortName(app.data[code].name) : code, label })} />}
+      {screen === 'mock' && <MockScreen data={app.data} order={app.order} hidden={app.settings.hidden} drills={app.drills} onBack={() => transitionTo('home')} onRecord={recordMock} onStartComprehensive={startComprehensiveMock} onReviewWrong={(questions, code, label) => launch(questions, { code, scope: '__MOCKREV__', mode: 'review', color: app.data[code]?.color ?? '#2dd4bf', subject: app.data[code] ? subjectShortName(app.data[code].name) : code, label })} />}
 
       {screen === 'notes' && <NotesScreen title={notes.title} notes={notes.notes} onBack={() => transitionTo(notes.returnTo)} />}
       {screen === 'plan' && <PlanScreen data={app.data} schedule={app.schedule} planDone={app.planDone} onToggle={key => app.setPlanDone(current => { const next = { ...current }; if (next[key]) delete next[key]; else next[key] = true; return next })} onStart={(code, chapterId, review) => start({ code, scope: chapterId, mode: review ? 'review' : 'all' })} onBack={() => transitionTo('home')} />}

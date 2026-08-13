@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { StudyText } from '../../components/StudyText'
 import { Button, ScreenHeader } from '../../components/Ui'
 import { readiness, shuffle, subjectShortName } from '../../lib/utils'
-import type { ChoiceQuestion, DrillPreset, DrillsBundle, Lesson, Subject } from '../../types'
+import type { ChoiceQuestion, DrillPreset, DrillsBundle, Lesson, StudyQuestion, Subject } from '../../types'
 import './mock.css'
 
 interface MockItem {
@@ -47,7 +47,7 @@ export interface MockResultPayload {
   correct: number
 }
 
-export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onReviewWrong }: {
+export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onReviewWrong, onStartComprehensive }: {
   data: Record<string, Subject>
   order: string[]
   hidden: string[]
@@ -55,12 +55,13 @@ export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onRe
   onBack: () => void
   onRecord: (result: MockResultPayload) => void
   onReviewWrong: (questions: ChoiceQuestion[], code: string, label: string) => void
+  onStartComprehensive: (questions: StudyQuestion[], code: string, label: string, lessonIds: string[]) => void
 }) {
   const visible = order.filter(code => !hidden.includes(code))
   const [stage, setStage] = useState<'setup' | 'run' | 'result'>('setup')
   const [code, setCode] = useState(visible[0] ?? order[0] ?? '')
   const [lessonIds, setLessonIds] = useState<Set<string>>(() => new Set())
-  const [count, setCount] = useState(20)
+  const [count, setCount] = useState<number | 'all'>(20)
   const [timed, setTimed] = useState(true)
   const [items, setItems] = useState<MockItem[]>([])
   const [index, setIndex] = useState(0)
@@ -73,6 +74,12 @@ export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onRe
   const subject = data[code]
   const lessons = useMemo(() => subject?.chapters.flatMap(chapter => chapter.lessons ?? []) ?? [], [subject])
   const presets = code === drills.subject ? drills.presets : []
+  const comprehensivePool = useMemo(() => {
+    if (!subject) return []
+    if (lessonIds.size) return lessons.filter(lesson => lessonIds.has(lesson.id)).flatMap(lesson => lesson.questions)
+    if (lessons.length) return lessons.flatMap(lesson => lesson.questions)
+    return subject.chapters.flatMap(chapter => chapter.questions)
+  }, [lessonIds, lessons, subject])
 
   const finish = useCallback(() => {
     if (!items.length || stage === 'result') return
@@ -107,6 +114,16 @@ export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onRe
 
   function startCustom() {
     if (!subject) return
+    if (count === 'all') {
+      const selectedLessons = lessons.filter(lesson => lessonIds.has(lesson.id))
+      const nextLabel = selectedLessons.length === 1
+        ? `قسم كامل · ${selectedLessons[0].label}`
+        : selectedLessons.length > 1
+          ? `${selectedLessons.length} أقسام كاملة`
+          : `كل أقسام ${subjectShortName(subject.name)}`
+      onStartComprehensive(comprehensivePool, code, nextLabel, [...lessonIds])
+      return
+    }
     const pool = lessonIds.size
       ? lessons.filter(lesson => lessonIds.has(lesson.id)).flatMap(lesson => lesson.questions).filter(isChoiceQuestion)
       : subject.chapters.flatMap(chapter => chapter.questions).filter(isChoiceQuestion)
@@ -134,7 +151,7 @@ export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onRe
       {!!presets.filter(preset => !preset.quick).length && <section className="mock-panel"><h2>اختبارات جاهزة</h2><div className="preset-grid">{presets.filter(preset => !preset.quick).map(preset => <button type="button" key={preset.id} onClick={() => startPreset(preset)}><strong>{preset.label}</strong><span>{preset.count ?? preset.parts?.reduce((sum, part) => sum + part.count, 0) ?? '—'} سؤال {preset.timed === false ? '· بلا وقت' : '· بوقت'}</span></button>)}</div></section>}
       {!!presets.filter(preset => preset.quick).length && <section className="mock-panel"><h2>⚡ فحص سريع لكل قسم</h2><p>أربع أسئلة مركّزة تقيس أهم قاعدة أو حساب أو فخ في القسم.</p><div className="preset-grid">{presets.filter(preset => preset.quick).map(preset => <button type="button" key={preset.id} onClick={() => startPreset(preset)}><strong>{preset.label}</strong><span>{preset.count ?? preset.questions?.length ?? '—'} أسئلة · نحو 4 دقائق</span></button>)}</div></section>}
       {!!lessons.length && <section className="mock-panel"><h2>الأقسام</h2><div className="lesson-picker">{subject.chapters.filter(chapter => chapter.lessons?.length).map(chapter => <div key={chapter.id}><h3>{chapter.label}</h3><div role="group" aria-label={chapter.label}>{chapter.lessons?.map(lesson => <button type="button" className={lessonIds.has(lesson.id) ? 'selected' : ''} aria-pressed={lessonIds.has(lesson.id)} key={lesson.id} onClick={() => setLessonIds(current => { const next = new Set(current); next.has(lesson.id) ? next.delete(lesson.id) : next.add(lesson.id); return next })}>{lesson.label}</button>)}</div></div>)}</div></section>}
-      <section className="mock-panel mock-options"><div><label htmlFor="mock-count">عدد الأسئلة</label><select id="mock-count" value={count} onChange={event => setCount(Number(event.target.value))}>{[10, 20, 30, 40].map(value => <option key={value} value={value}>{value}</option>)}</select></div><label className="check-label"><input type="checkbox" checked={timed} onChange={event => setTimed(event.target.checked)} /> مؤقت</label><Button onClick={startCustom}>ابدأ الاختبار</Button></section>
+      <section className="mock-panel mock-options"><div><label htmlFor="mock-count">عدد الأسئلة</label><select id="mock-count" value={count} onChange={event => setCount(event.target.value === 'all' ? 'all' : Number(event.target.value))}>{[10, 20, 30, 40].map(value => <option key={value} value={value}>{value}</option>)}<option value="all">كل الأسئلة ({comprehensivePool.length})</option></select></div><label className="check-label"><input type="checkbox" checked={timed} onChange={event => setTimed(event.target.checked)} /> مؤقت</label><Button onClick={startCustom}>ابدأ الاختبار</Button></section>
     </main>
   )
 
