@@ -36,7 +36,7 @@ describe('MockScreen comprehensive selection', () => {
       data={{ [subject.code]: subject }}
       order={[subject.code]}
       hidden={[]}
-      drills={{ version: 2, subject: subject.code, chapters: {}, presets: [] }}
+      drillBundles={{ [subject.code]: { version: 2, subject: subject.code, chapters: {}, presets: [] } }}
       onBack={vi.fn()}
       onRecord={onRecord}
       onReviewWrong={vi.fn()}
@@ -50,5 +50,57 @@ describe('MockScreen comprehensive selection', () => {
     fireEvent.click(screen.getByRole('button', { name: 'ابدأ الاختبار' }))
     expect(onStartComprehensive).toHaveBeenCalledWith(questions, subject.code, 'قسم كامل · MPI full section', ['mpi-full'])
     expect(onRecord).not.toHaveBeenCalled()
+  })
+
+  it('launches a full lesson preset through the comprehensive runner, including matching questions', () => {
+    const onStartComprehensive = vi.fn()
+    const comprehensivePreset = {
+      id: 'web-css-comprehensive',
+      label: 'CSS Comprehensive',
+      count: questions.length,
+      timed: true,
+      lessonIds: ['mpi-full'],
+    }
+    render(<MockScreen
+      data={{ [subject.code]: subject }}
+      order={[subject.code]}
+      hidden={[]}
+      drillBundles={{ [subject.code]: { version: 2, subject: subject.code, chapters: {}, presets: [comprehensivePreset] } }}
+      onBack={vi.fn()}
+      onRecord={vi.fn()}
+      onReviewWrong={vi.fn()}
+      onStartComprehensive={onStartComprehensive}
+    />)
+
+    fireEvent.click(screen.getByRole('button', { name: /CSS Comprehensive/ }))
+
+    expect(onStartComprehensive).toHaveBeenCalledWith(questions, subject.code, 'CSS Comprehensive', ['mpi-full'])
+    expect(onStartComprehensive.mock.calls[0][0]).toContain(matchQuestion)
+  })
+
+  it('keeps the legacy weighted mock runner choice-only', () => {
+    const onStartComprehensive = vi.fn()
+    const weightedPreset = {
+      id: 'weighted-mock',
+      label: 'Weighted Mock',
+      timed: true,
+      parts: [{ chapterId: 'topic-6', count: questions.length }],
+    }
+    render(<MockScreen
+      data={{ [subject.code]: subject }}
+      order={[subject.code]}
+      hidden={[]}
+      drillBundles={{ [subject.code]: { version: 2, subject: subject.code, chapters: {}, presets: [weightedPreset] } }}
+      onBack={vi.fn()}
+      onRecord={vi.fn()}
+      onReviewWrong={vi.fn()}
+      onStartComprehensive={onStartComprehensive}
+    />)
+
+    fireEvent.click(screen.getByRole('button', { name: /Weighted Mock/ }))
+
+    expect(onStartComprehensive).not.toHaveBeenCalled()
+    expect(screen.getByText(`1/${choiceQuestions.length}`)).toBeInTheDocument()
+    expect(screen.queryByText(matchQuestion.q)).not.toBeInTheDocument()
   })
 })

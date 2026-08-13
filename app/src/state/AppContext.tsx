@@ -13,6 +13,7 @@ import type {
   ContentBundle,
   DailyStore,
   DrillsBundle,
+  DrillsCatalog,
   PlanDoneStore,
   ProgressBackup,
   ProgressStore,
@@ -57,6 +58,7 @@ export interface AppContextValue {
   schedule: StudySchedule
   order: string[]
   drills: DrillsBundle
+  drillBundles: DrillsCatalog
   store: ProgressStore
   settings: AppSettings
   planDone: PlanDoneStore
@@ -114,7 +116,7 @@ function errorMessage(error: unknown): string {
 export function AppProvider({ children }: { children: ReactNode }) {
   const [customContent, setCustomContent] = useState<ContentBundle>(initialCustomContent)
   const [initialContent] = useState(() => loadCachedPreparedContent({ customContent }))
-  const [prepared, setPrepared] = useState(() => prepareContent(initialContent.builtinContent, customContent, initialContent.drills))
+  const [prepared, setPrepared] = useState(() => prepareContent(initialContent.builtinContent, customContent, initialContent.drills, initialContent.webDrills))
   const [store, setStore] = useState(() => normalizeProgressStore(loadJson<unknown>(STORAGE_KEYS.progress, createProgressStore())))
   const [settings, setSettings] = useState<AppSettings>(initialSettings)
   const [planDone, setPlanDoneState] = useState(() => normalizePlanDone(loadJson<unknown>(STORAGE_KEYS.plan, {})))
@@ -130,7 +132,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const planRef = useRef(planDone)
   const dailyRef = useRef(daily)
   const syncRef = useRef(sync)
-  const bundlesRef = useRef({ builtin: initialContent.builtinContent, drills: initialContent.drills })
+  const bundlesRef = useRef({ builtin: initialContent.builtinContent, drills: initialContent.drills, webDrills: initialContent.webDrills })
   const pushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pushSyncRef = useRef<() => Promise<boolean>>(async () => false)
   const initialPullRef = useRef(false)
@@ -194,7 +196,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     customRef.current = next
     setCustomContent(next)
     saveJson(STORAGE_KEYS.content, next)
-    const composed = prepareContent(bundlesRef.current.builtin, next, bundlesRef.current.drills)
+    const composed = prepareContent(bundlesRef.current.builtin, next, bundlesRef.current.drills, bundlesRef.current.webDrills)
     setPrepared(composed)
     updateSettings({ hidden: [] })
     return next
@@ -205,7 +207,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     customRef.current = next
     setCustomContent(next)
     saveJson(STORAGE_KEYS.content, next)
-    setPrepared(prepareContent(bundlesRef.current.builtin, next, bundlesRef.current.drills))
+    setPrepared(prepareContent(bundlesRef.current.builtin, next, bundlesRef.current.drills, bundlesRef.current.webDrills))
   }, [])
 
   const pushSync = useCallback(async (): Promise<boolean> => {
@@ -290,8 +292,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     void loadPreparedContent({ customContent: customRef.current })
       .then((loaded) => {
         if (cancelled) return
-        bundlesRef.current = { builtin: loaded.builtinContent, drills: loaded.drills }
-        setPrepared(prepareContent(loaded.builtinContent, customRef.current, loaded.drills))
+        bundlesRef.current = { builtin: loaded.builtinContent, drills: loaded.drills, webDrills: loaded.webDrills }
+        setPrepared(prepareContent(loaded.builtinContent, customRef.current, loaded.drills, loaded.webDrills))
         setReady(true)
         setError(null)
       })
@@ -339,6 +341,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     schedule: prepared.schedule,
     order: prepared.order,
     drills: prepared.drills,
+    drillBundles: prepared.drillBundles,
     store,
     settings,
     planDone,

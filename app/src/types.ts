@@ -118,12 +118,12 @@ export interface DrillPreset {
   lessonIds?: string[]
   timed?: boolean
   quick?: boolean
-  questions?: ChoiceQuestion[]
+  questions?: StudyQuestion[]
 }
 
 export interface DrillChapter {
   sections: LessonSection[]
-  questions: ChoiceQuestion[]
+  questions: StudyQuestion[]
 }
 
 export interface DrillsBundle {
@@ -134,11 +134,14 @@ export interface DrillsBundle {
   presets: DrillPreset[]
 }
 
+export type DrillsCatalog = Record<string, DrillsBundle>
+
 export interface PreparedContent {
   data: Record<string, Subject>
   schedule: StudySchedule
   order: string[]
   drills: DrillsBundle
+  drillBundles: DrillsCatalog
 }
 
 export interface QuestionProgress {

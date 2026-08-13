@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { loadCachedPreparedContent, prepareContent, validatePdcDrills } from './content'
+import { createEmptyDrills, loadCachedPreparedContent, prepareContent, validatePdcDrills, validateWebDrills } from './content'
 import type { ContentBundle, DrillsBundle } from '../types'
 
 const builtin: ContentBundle = {
@@ -58,5 +58,70 @@ describe('prepareContent', () => {
     }
     expect(validatePdcDrills({ ...rapid, subject: 'CCCS422-FINAL' }).presets[0].questions).toHaveLength(2)
     expect(prepareContent(builtin, { version: 1, subjects: {}, schedule: { plan: [], exams: [] } }, rapid).data.TEST.chapters[0].questions.map(question => question.id)).toEqual(['q1', 'q2'])
+  })
+
+  it('merges independent drill bundles into their matching subjects', () => {
+    const twoSubjects: ContentBundle = {
+      version: 1,
+      subjects: {
+        PDC: { name: 'PDC', code: 'PDC', color: '#fff', chapters: [{ id: 'pdc-c1', label: 'PDC Chapter', questions: [{ id: 'pdc-q1', q: 'Base PDC?', choices: ['A', 'B'], answer: 0 }] }] },
+        WEB: { name: 'Web', code: 'WEB', color: '#fff', chapters: [{ id: 'web-c1', label: 'Web Chapter', questions: [{ id: 'web-q1', q: 'Base Web?', choices: ['A', 'B'], answer: 0 }] }] },
+      },
+      schedule: { plan: [], exams: [] },
+    }
+    const pdc: DrillsBundle = { version: 2, subject: 'PDC', chapters: { 'pdc-c1': { questions: [{ id: 'pdc-q2', q: 'PDC drill?', choices: ['A', 'B'], answer: 1 }], sections: [{ id: 'pdc-s1', label: 'PDC section', questionIds: ['pdc-q1', 'pdc-q2'] }] } }, presets: [] }
+    const web: DrillsBundle = { version: 2, subject: 'WEB', chapters: { 'web-c1': { questions: [{ id: 'web-q2', q: 'Web drill?', choices: ['A', 'B'], answer: 1 }], sections: [{ id: 'web-s1', label: 'Web section', questionIds: ['web-q1', 'web-q2'] }] } }, presets: [] }
+    const prepared = prepareContent(twoSubjects, { version: 1, subjects: {}, schedule: { plan: [], exams: [] } }, pdc, web)
+
+    expect(prepared.data.PDC.chapters[0].questions.map(question => question.id)).toEqual(['pdc-q1', 'pdc-q2'])
+    expect(prepared.data.WEB.chapters[0].questions.map(question => question.id)).toEqual(['web-q1', 'web-q2'])
+    expect(Object.keys(prepared.drillBundles)).toEqual(['PDC', 'WEB'])
+    expect(validateWebDrills({ ...web, subject: 'WEB-EXAM2' }).subject).toBe('WEB-EXAM2')
+  })
+
+  it('supports metadata-only quick presets that sample from a lesson at launch', () => {
+    const web: DrillsBundle = {
+      version: 2,
+      subject: 'WEB-EXAM2',
+      chapters: {},
+      presets: [{ id: 'web-quick', label: 'Web quick', count: 4, quick: true, timed: true, lessonIds: ['web-css-boxes'] }],
+    }
+    expect(validateWebDrills(web).presets[0].questions).toBeUndefined()
+  })
+
+  it('keeps a same-code custom subject as a complete override without built-in drills or presets', () => {
+    const builtinWeb: ContentBundle = {
+      version: 1,
+      subjects: {
+        WEB: { name: 'Built-in Web', code: 'WEB', color: '#fff', chapters: [{ id: 'web-c1', label: 'Built-in chapter', questions: [{ id: 'builtin-q', q: 'Built in?', choices: ['A', 'B'], answer: 0 }] }] },
+      },
+      schedule: { plan: [], exams: [] },
+    }
+    const customWeb: ContentBundle = {
+      version: 1,
+      subjects: {
+        WEB: { name: 'My Web', code: 'WEB', color: '#123456', chapters: [{ id: 'web-c1', label: 'My chapter', questions: [{ id: 'custom-q', q: 'Custom?', choices: ['A', 'B'], answer: 1 }] }] },
+      },
+      schedule: { plan: [], exams: [] },
+    }
+    const webDrills: DrillsBundle = {
+      version: 2,
+      subject: 'WEB',
+      chapters: {
+        'web-c1': {
+          questions: [{ id: 'drill-q', q: 'Drill?', choices: ['A', 'B'], answer: 0 }],
+          sections: [{ id: 'web-section', label: 'Built-in section', questionIds: ['custom-q', 'drill-q'] }],
+        },
+      },
+      presets: [{ id: 'web-preset', label: 'Built-in preset', count: 2, lessonIds: ['web-section'] }],
+    }
+
+    const prepared = prepareContent(builtinWeb, customWeb, createEmptyDrills('PDC'), webDrills)
+
+    expect(prepared.data.WEB.name).toBe('My Web')
+    expect(prepared.data.WEB.chapters[0].questions.map(question => question.id)).toEqual(['custom-q'])
+    expect(prepared.data.WEB.chapters[0].sections).toBeUndefined()
+    expect(prepared.data.WEB.chapters[0].lessons).toBeUndefined()
+    expect(prepared.drillBundles.WEB).toBeUndefined()
   })
 })

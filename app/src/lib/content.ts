@@ -1,6 +1,5 @@
 import type {
   Chapter,
-  ChoiceQuestion,
   ContentBundle,
   DrillsBundle,
   Lesson,
@@ -19,6 +18,8 @@ import {
   PDC_DRILLS_ASSET,
   PDC_SUBJECT_CODE,
   STORAGE_KEYS,
+  WEB_DRILLS_ASSET,
+  WEB_SUBJECT_CODE,
 } from './constants'
 import { loadJson, saveJson } from './storage'
 
@@ -27,6 +28,7 @@ type UnknownRecord = Record<string, unknown>
 export interface LoadedPreparedContent extends PreparedContent {
   builtinContent: ContentBundle
   customContent: ContentBundle
+  webDrills: DrillsBundle
 }
 
 export interface LoadPreparedContentOptions {
@@ -40,8 +42,12 @@ export function createEmptyContent(): ContentBundle {
   return { version: 1, subjects: {}, schedule: { plan: [], exams: [] } }
 }
 
-export function createEmptyDrills(): DrillsBundle {
-  return { version: 2, subject: PDC_SUBJECT_CODE, chapters: {}, presets: [] }
+export function createEmptyDrills(subject = PDC_SUBJECT_CODE): DrillsBundle {
+  return { version: 2, subject, chapters: {}, presets: [] }
+}
+
+export function createEmptyWebDrills(): DrillsBundle {
+  return createEmptyDrills(WEB_SUBJECT_CODE)
 }
 
 // Exported for consumers that only need a read-only fallback. Use the factory
@@ -144,41 +150,45 @@ export function validateBuiltinFinals(raw: unknown): ContentBundle {
   return content
 }
 
-/** Validate the additive CCCS-422 drill/lesson package (v2). */
-export function validatePdcDrills(raw: unknown): DrillsBundle {
-  if (!isRecord(raw) || raw.version !== 2 || raw.subject !== PDC_SUBJECT_CODE || !isRecord(raw.chapters) || !Array.isArray(raw.presets)) {
-    validationError('حزمة تدريبات PDC غير صالحة')
+/** Validate an additive drill/lesson package without rewriting question IDs. */
+export function validateDrills(raw: unknown, expectedSubject: string, label = expectedSubject): DrillsBundle {
+  if (!isRecord(raw) || raw.version !== 2 || raw.subject !== expectedSubject || !isRecord(raw.chapters) || !Array.isArray(raw.presets)) {
+    validationError(`حزمة تدريبات ${label} غير صالحة`)
   }
 
   const ids = new Set<string>()
   const validateDrillQuestion = (questionValue: unknown, context: string) => {
-    if (!isRecord(questionValue)) validationError(`سؤال PDC غير صالح في ${context}: بدون id`)
-    const choices = questionValue.choices
-    const answer = questionValue.answer
+    if (!isRecord(questionValue)) validationError(`سؤال ${label} غير صالح في ${context}: بدون id`)
     const id = questionValue.id
-    if (typeof id !== 'string' || !id || typeof questionValue.q !== 'string' || !questionValue.q || ids.has(id) || !Array.isArray(choices) || choices.length < 2 || !Number.isInteger(answer) || (answer as number) < 0 || (answer as number) >= choices.length) {
-      validationError(`سؤال PDC غير صالح في ${context}: ${typeof id === 'string' && id ? id : 'بدون id'}`)
+    const validBase = typeof id === 'string' && id.length > 0 && typeof questionValue.q === 'string' && questionValue.q.length > 0 && !ids.has(id)
+    const validQuestion = questionValue.type === 'match'
+      ? Array.isArray(questionValue.pairs) && questionValue.pairs.length >= 2
+      : Array.isArray(questionValue.choices)
+        && questionValue.choices.length >= 2
+        && Number.isInteger(questionValue.answer)
+        && (questionValue.answer as number) >= 0
+        && (questionValue.answer as number) < questionValue.choices.length
+    if (!validBase || !validQuestion) {
+      validationError(`سؤال ${label} غير صالح في ${context}: ${typeof id === 'string' && id ? id : 'بدون id'}`)
     }
-    ids.add(id)
+    ids.add(id as string)
   }
 
   for (const [chapterId, packValue] of Object.entries(raw.chapters)) {
     if (!isRecord(packValue) || !Array.isArray(packValue.sections) || !Array.isArray(packValue.questions)) {
       validationError(`حزمة ${chapterId} ناقصة`)
     }
-    for (const questionValue of packValue.questions) {
-      validateDrillQuestion(questionValue, chapterId)
-    }
+    for (const questionValue of packValue.questions) validateDrillQuestion(questionValue, chapterId)
     for (const sectionValue of packValue.sections) {
       if (!isRecord(sectionValue) || typeof sectionValue.id !== 'string' || !sectionValue.id || typeof sectionValue.label !== 'string' || !sectionValue.label || !Array.isArray(sectionValue.questionIds) || !sectionValue.questionIds.length) {
-        validationError(`قسم PDC غير صالح في ${chapterId}`)
+        validationError(`قسم ${label} غير صالح في ${chapterId}`)
       }
     }
   }
 
   for (const presetValue of raw.presets) {
     if (!isRecord(presetValue) || typeof presetValue.id !== 'string' || !presetValue.id || typeof presetValue.label !== 'string' || !presetValue.label) {
-      validationError('Preset PDC غير صالح')
+      validationError(`Preset ${label} غير صالح`)
     }
     if (presetValue.questions !== undefined) {
       if (!presetValue.quick || !Array.isArray(presetValue.questions) || presetValue.questions.length < 2 || !Array.isArray(presetValue.lessonIds) || presetValue.lessonIds.length !== 1) {
@@ -188,10 +198,22 @@ export function validatePdcDrills(raw: unknown): DrillsBundle {
       if (presetValue.count !== undefined && presetValue.count !== presetValue.questions.length) {
         validationError(`عدد أسئلة الفحص السريع ${presetValue.id} غير متطابق`)
       }
+    } else if (presetValue.quick && (!Array.isArray(presetValue.lessonIds) || presetValue.lessonIds.length !== 1 || !Number.isInteger(presetValue.count) || (presetValue.count as number) < 2)) {
+      validationError(`الفحص السريع ${presetValue.id} يحتاج قسمًا واحدًا وعدد أسئلة صالحًا`)
     }
   }
 
   return raw as unknown as DrillsBundle
+}
+
+/** Validate the additive CCCS-422 drill/lesson package (v2). */
+export function validatePdcDrills(raw: unknown): DrillsBundle {
+  return validateDrills(raw, PDC_SUBJECT_CODE, 'PDC')
+}
+
+/** Validate the additive CCSW-321 drill/lesson package (v2). */
+export function validateWebDrills(raw: unknown): DrillsBundle {
+  return validateDrills(raw, WEB_SUBJECT_CODE, 'Web')
 }
 
 export function mergeSchedules(builtin: StudySchedule | undefined, custom: StudySchedule | undefined): StudySchedule {
@@ -238,25 +260,36 @@ export function prepareContent(
   builtinContent: ContentBundle = createEmptyContent(),
   customContent: ContentBundle = createEmptyContent(),
   drillsBundle: DrillsBundle = createEmptyDrills(),
+  webDrillsBundle: DrillsBundle = createEmptyWebDrills(),
 ): PreparedContent {
   const data = cloneJson({ ...builtinContent.subjects, ...customContent.subjects })
   const schedule = mergeSchedules(builtinContent.schedule, customContent.schedule)
   const order = Object.keys(data)
   const drills = cloneJson(drillsBundle)
+  const webDrills = cloneJson(webDrillsBundle)
+  const customSubjectCodes = new Set(Object.keys(customContent.subjects ?? {}))
+  const drillBundles = [drills, webDrills].reduce<Record<string, DrillsBundle>>((catalog, bundle) => {
+    // A user-imported subject is a complete override. Built-in additive drills
+    // and presets must not leak back into a subject with the same code.
+    if (!customSubjectCodes.has(bundle.subject)) catalog[bundle.subject] = bundle
+    return catalog
+  }, {})
 
-  const drillSubject = data[drills.subject]
-  if (drillSubject && drills.chapters) {
-    for (const chapter of Array.isArray(drillSubject.chapters) ? drillSubject.chapters : []) {
-      const pack = drills.chapters[chapter.id]
-      if (!pack) continue
-      chapter.questions = Array.isArray(chapter.questions) ? chapter.questions : []
-      const seen = new Set(chapter.questions.map((question) => question.id))
-      for (const question of pack.questions ?? []) {
-        if (seen.has(question.id)) continue
-        chapter.questions.push(cloneJson(question) as ChoiceQuestion)
-        seen.add(question.id)
+  for (const bundle of Object.values(drillBundles)) {
+    const drillSubject = data[bundle.subject]
+    if (drillSubject && bundle.chapters) {
+      for (const chapter of Array.isArray(drillSubject.chapters) ? drillSubject.chapters : []) {
+        const pack = bundle.chapters[chapter.id]
+        if (!pack) continue
+        chapter.questions = Array.isArray(chapter.questions) ? chapter.questions : []
+        const seen = new Set(chapter.questions.map((question) => question.id))
+        for (const question of pack.questions ?? []) {
+          if (seen.has(question.id)) continue
+          chapter.questions.push(cloneJson(question) as StudyQuestion)
+          seen.add(question.id)
+        }
+        chapter.sections = cloneJson(pack.sections ?? [])
       }
-      chapter.sections = cloneJson(pack.sections ?? [])
     }
   }
 
@@ -286,7 +319,7 @@ export function prepareContent(
     }
   }
 
-  return { data, schedule, order, drills }
+  return { data, schedule, order, drills, drillBundles }
 }
 
 function joinAssetUrl(baseUrl: string, asset: string): string {
@@ -337,11 +370,17 @@ export function loadCachedPreparedContent(options: LoadPreparedContentOptions = 
     validatePdcDrills,
     createEmptyDrills,
   )
+  const webDrills = validatedOrFallback(
+    loadJson<unknown>(STORAGE_KEYS.webDrills, createEmptyWebDrills(), storage),
+    validateWebDrills,
+    createEmptyWebDrills,
+  )
 
   return {
-    ...prepareContent(builtinContent, customContent, drills),
+    ...prepareContent(builtinContent, customContent, drills, webDrills),
     builtinContent,
     customContent,
+    webDrills,
   }
 }
 
@@ -354,11 +393,12 @@ export async function loadPreparedContent(options: LoadPreparedContentOptions = 
   const storage = options.storage
   let builtinContent = cached.builtinContent
   let drills = cached.drills
+  let webDrills = cached.webDrills
   const customContent = cached.customContent
 
   const fetcher = options.fetcher ?? (typeof globalThis.fetch === 'function' ? globalThis.fetch.bind(globalThis) : undefined)
   const baseUrl = options.baseUrl ?? APP_BASE_PATH
-  ;[builtinContent, drills] = await Promise.all([
+  ;[builtinContent, drills, webDrills] = await Promise.all([
     refreshBundle(
       joinAssetUrl(baseUrl, BUILTIN_CONTENT_ASSET),
       builtinContent,
@@ -375,11 +415,20 @@ export async function loadPreparedContent(options: LoadPreparedContentOptions = 
       fetcher,
       storage,
     ),
+    refreshBundle(
+      joinAssetUrl(baseUrl, WEB_DRILLS_ASSET),
+      webDrills,
+      validateWebDrills,
+      STORAGE_KEYS.webDrills,
+      fetcher,
+      storage,
+    ),
   ])
 
   return {
-    ...prepareContent(builtinContent, customContent, drills),
+    ...prepareContent(builtinContent, customContent, drills, webDrills),
     builtinContent,
     customContent,
+    webDrills,
   }
 }

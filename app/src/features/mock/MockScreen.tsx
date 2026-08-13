@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { StudyText } from '../../components/StudyText'
 import { Button, ScreenHeader } from '../../components/Ui'
 import { readiness, shuffle, subjectShortName } from '../../lib/utils'
-import type { ChoiceQuestion, DrillPreset, DrillsBundle, Lesson, StudyQuestion, Subject } from '../../types'
+import type { ChoiceQuestion, DrillPreset, DrillsCatalog, StudyQuestion, Subject } from '../../types'
 import './mock.css'
 
 interface MockItem {
@@ -47,11 +47,11 @@ export interface MockResultPayload {
   correct: number
 }
 
-export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onReviewWrong, onStartComprehensive }: {
+export function MockScreen({ data, order, hidden, drillBundles, onBack, onRecord, onReviewWrong, onStartComprehensive }: {
   data: Record<string, Subject>
   order: string[]
   hidden: string[]
-  drills: DrillsBundle
+  drillBundles: DrillsCatalog
   onBack: () => void
   onRecord: (result: MockResultPayload) => void
   onReviewWrong: (questions: ChoiceQuestion[], code: string, label: string) => void
@@ -73,7 +73,7 @@ export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onRe
 
   const subject = data[code]
   const lessons = useMemo(() => subject?.chapters.flatMap(chapter => chapter.lessons ?? []) ?? [], [subject])
-  const presets = code === drills.subject ? drills.presets : []
+  const presets = drillBundles[code]?.presets ?? []
   const comprehensivePool = useMemo(() => {
     if (!subject) return []
     if (lessonIds.size) return lessons.filter(lesson => lessonIds.has(lesson.id)).flatMap(lesson => lesson.questions)
@@ -97,7 +97,7 @@ export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onRe
     })
   }
 
-  function startWithPool(pool: ChoiceQuestion[], nextLabel: string, nextLessons: string[], nextPreset?: string, forceTimed = timed) {
+  function startWithPool(pool: ChoiceQuestion[], nextLabel: string, nextLessons: string[], nextPreset?: string, forceTimed = timed, exactMinutes?: number) {
     if (!pool.length) return
     const next = makeItems(pool)
     setItems(next)
@@ -106,7 +106,7 @@ export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onRe
     setPresetId(nextPreset)
     setLessonIds(new Set(nextLessons))
     setTimed(forceTimed)
-    setTimerEndAt(Date.now() + Math.max(5, next.length) * 60_000)
+    setTimerEndAt(Date.now() + (exactMinutes ?? Math.max(5, next.length)) * 60_000)
     setTranslationOpen(false)
     setHintOpen(false)
     setStage('run')
@@ -131,14 +131,28 @@ export function MockScreen({ data, order, hidden, drills, onBack, onRecord, onRe
   }
 
   function startPreset(preset: DrillPreset) {
+    const presetLessons = preset.lessonIds?.length
+      ? lessons.filter(lesson => preset.lessonIds?.includes(lesson.id))
+      : []
+    const presetStudyPool = presetLessons.flatMap(lesson => lesson.questions)
+    const isFullLessonPreset = !preset.quick
+      && !preset.parts?.length
+      && presetStudyPool.length > 0
+      && preset.count === presetStudyPool.length
+
+    if (isFullLessonPreset) {
+      onStartComprehensive(presetStudyPool, code, preset.label, preset.lessonIds ?? [])
+      return
+    }
+
     let pool: ChoiceQuestion[] = []
-    if (preset.questions?.length) pool = [...preset.questions]
+    if (preset.questions?.length) pool = preset.questions.filter(isChoiceQuestion)
     if (!preset.questions?.length && preset.parts) for (const part of preset.parts) {
       const chapter = subject?.chapters.find(item => item.id === part.chapterId)
       if (chapter) pool.push(...shuffle(chapter.questions.filter(isChoiceQuestion)).slice(0, part.count))
     }
-    if (!preset.questions?.length && preset.lessonIds) pool = shuffle(lessons.filter(lesson => preset.lessonIds?.includes(lesson.id)).flatMap(lesson => lesson.questions).filter(isChoiceQuestion)).slice(0, preset.count ?? 20)
-    startWithPool(shuffle(pool), preset.label, preset.quick ? [preset.id] : (preset.lessonIds ?? []), preset.id, preset.timed !== false)
+    if (!preset.questions?.length && preset.lessonIds) pool = shuffle(presetStudyPool.filter(isChoiceQuestion)).slice(0, preset.count ?? 20)
+    startWithPool(shuffle(pool), preset.label, preset.quick ? [preset.id] : (preset.lessonIds ?? []), preset.id, preset.timed !== false, preset.quick ? 5 : undefined)
   }
 
   if (stage === 'setup') return (

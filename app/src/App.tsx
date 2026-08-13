@@ -14,7 +14,7 @@ import { createDailyStore, createProgressStore, incrementDaily, recordAnswer, se
 import { chapterById, dueQuestions, isWeak, starredQuestions, visibleLessonQuestions, visibleQuestions } from './lib/stats'
 import { APP_BUILD, STORAGE_KEYS } from './lib/constants'
 import { downloadJson } from './lib/storage'
-import { isChoice, subjectShortName } from './lib/utils'
+import { isChoice, shuffle, subjectShortName } from './lib/utils'
 import { useApp } from './state/AppContext'
 import type { ChoiceQuestion, DrillPreset, Lesson, NotesBlock, Screen, SessionMeta, StudyQuestion } from './types'
 
@@ -115,13 +115,16 @@ export function App() {
 
   function startLessonQuickTest(code: string, lesson: Lesson, preset: DrillPreset) {
     const subject = app.data[code]
-    if (!subject || !preset.questions?.length) return
+    const quickQuestions = preset.questions?.length
+      ? [...preset.questions]
+      : shuffle(lesson.questions).slice(0, Math.min(preset.count ?? 4, lesson.questions.length))
+    if (!subject || !quickQuestions.length) return
     const quickLesson: Lesson = {
       id: preset.id,
       label: preset.label,
-      questions: preset.questions,
+      questions: quickQuestions,
     }
-    launch([...preset.questions], {
+    launch(quickQuestions, {
       code,
       scope: '__LESSON_QUICK_TEST__',
       mode: 'test',
@@ -221,7 +224,7 @@ export function App() {
   return (
     <div className="app-shell">
       <Activity mode={screen === 'home' ? 'visible' : 'hidden'}>
-        <HomeScreen data={app.data} order={app.order} schedule={app.schedule} store={app.store} settings={app.settings} daily={app.daily} quickPresets={app.drills.presets.filter(preset => preset.quick)} onOpenScreen={next => transitionTo(next)} onStart={start} onStartStarred={startStarred} onStartDue={startDue} onStartLessonTest={startLessonTest} onStartLessonQuickTest={startLessonQuickTest} onOpenNotes={openNotes} onToggleExtra={() => app.updateSettings(current => ({ includeExtra: !current.includeExtra }))} onChangeDuration={sessionMins => app.updateSettings({ sessionMins })} />
+        <HomeScreen data={app.data} order={app.order} schedule={app.schedule} store={app.store} settings={app.settings} daily={app.daily} quickPresets={Object.values(app.drillBundles).flatMap(bundle => bundle.presets.filter(preset => preset.quick))} onOpenScreen={next => transitionTo(next)} onStart={start} onStartStarred={startStarred} onStartDue={startDue} onStartLessonTest={startLessonTest} onStartLessonQuickTest={startLessonQuickTest} onOpenNotes={openNotes} onToggleExtra={() => app.updateSettings(current => ({ includeExtra: !current.includeExtra }))} onChangeDuration={sessionMins => app.updateSettings({ sessionMins })} />
       </Activity>
 
       {session ? (
@@ -250,7 +253,7 @@ export function App() {
         </Activity>
       ) : null}
 
-      {screen === 'mock' && <MockScreen data={app.data} order={app.order} hidden={app.settings.hidden} drills={app.drills} onBack={() => transitionTo('home')} onRecord={recordMock} onStartComprehensive={startComprehensiveMock} onReviewWrong={(questions, code, label) => launch(questions, { code, scope: '__MOCKREV__', mode: 'review', color: app.data[code]?.color ?? '#2dd4bf', subject: app.data[code] ? subjectShortName(app.data[code].name) : code, label })} />}
+      {screen === 'mock' && <MockScreen data={app.data} order={app.order} hidden={app.settings.hidden} drillBundles={app.drillBundles} onBack={() => transitionTo('home')} onRecord={recordMock} onStartComprehensive={startComprehensiveMock} onReviewWrong={(questions, code, label) => launch(questions, { code, scope: '__MOCKREV__', mode: 'review', color: app.data[code]?.color ?? '#2dd4bf', subject: app.data[code] ? subjectShortName(app.data[code].name) : code, label })} />}
 
       {screen === 'notes' && <NotesScreen title={notes.title} notes={notes.notes} onBack={() => transitionTo(notes.returnTo)} />}
       {screen === 'plan' && <PlanScreen data={app.data} schedule={app.schedule} planDone={app.planDone} onToggle={key => app.setPlanDone(current => { const next = { ...current }; if (next[key]) delete next[key]; else next[key] = true; return next })} onStart={(code, chapterId, review) => start({ code, scope: chapterId, mode: review ? 'review' : 'all' })} onBack={() => transitionTo('home')} />}

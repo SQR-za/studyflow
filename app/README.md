@@ -38,6 +38,7 @@ The preview deliberately preserves the original browser storage keys and payload
 - `studyflow-content-v1`
 - `studyflow-builtin-finals-2026-t3-v1`
 - `studyflow-pdc-422-drills-v2`
+- `studyflow-web-321-drills-v1`
 
 Because stable and preview are served from the same origin, existing progress is available to both versions. The legacy encrypted Gist filename, PBKDF2/AES-GCM parameters, and merge format are also retained.
 
