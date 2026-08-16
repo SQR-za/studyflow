@@ -119,7 +119,7 @@ for (const preset of webRapidPresets) {
     webRapidIds.add(question.id)
   }
 }
-invariant(webDrillCount === 84, `expected 84 web drill questions, got ${webDrillCount}`)
+invariant(webDrillCount === 148, `expected 148 web drill questions, got ${webDrillCount}`)
 invariant(webSectionCount === 18, `expected 18 web sections, got ${webSectionCount}`)
 invariant(webRapidPresets.length === 18, `expected 18 web rapid presets, got ${webRapidPresets.length}`)
 invariant(webRapidIds.size === 72, `expected 72 web rapid questions, got ${webRapidIds.size}`)

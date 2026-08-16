@@ -2404,15 +2404,15 @@
               "id": "web-exam2-t6-q02"
             },
             {
-              "q": "Being an interpreted language executed in the browser, what does JavaScript lack that compiled languages have?",
+              "q": "Which statement matches the JavaScript execution model described in the lecture?",
               "choices": [
-                "Variables",
-                "A main method and a developer compilation step",
-                "Functions",
-                "Loops"
+                "Developers must compile it and call a required main method",
+                "The browser executes it top to bottom using JIT, with no required main method or separate developer compilation command",
+                "It runs only after Java compiles it",
+                "It cannot execute functions"
               ],
               "answer": 1,
-              "explanation": "JS runs top to bottom via JIT with no main method and no developer-run compilation.",
+              "explanation": "The lecture describes top-to-bottom browser execution with JIT, no required main entry point, and no separate compiler command run by the developer.",
               "src": "exam",
               "id": "web-exam2-t6-q03"
             },
@@ -2594,7 +2594,7 @@
                 "It is deleted immediately"
               ],
               "answer": 1,
-              "explanation": "var does not go out of scope at the end of a block, so it survives past the if.",
+              "explanation": "var ignores block boundaries and belongs to the nearest enclosing function scope, or global scope when no function encloses it.",
               "src": "exam",
               "id": "web-exam2-t6-q17"
             },
@@ -2716,7 +2716,7 @@
               "id": "web-exam2-t6-q26"
             },
             {
-              "q": "Inside an object method, what does the this keyword refer to?",
+              "q": "Inside a regular method called as object.method(), what does this normally refer to?",
               "choices": [
                 "The global window always",
                 "The current object the method is called on",
@@ -2724,7 +2724,7 @@
                 "The last created object"
               ],
               "answer": 1,
-              "explanation": "this refers to the current object on which the method is invoked.",
+              "explanation": "For a regular method call, this refers to the receiving object. Arrow functions do not create their own this.",
               "src": "exam",
               "id": "web-exam2-t6-q27"
             },
@@ -2835,10 +2835,10 @@
                 ],
                 [
                   "no keyword",
-                  "Becomes global"
+                  "Creates a global only in non-strict (sloppy) mode"
                 ]
               ],
-              "explanation": "var is function-scoped; let and const are block-scoped; omitting a keyword makes a global.",
+              "explanation": "var is function-scoped; let and const are block-scoped; assigning to an undeclared identifier creates a global only in non-strict mode and throws in strict mode.",
               "src": "exam",
               "id": "web-exam2-t6-q33"
             },

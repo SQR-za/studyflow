@@ -2510,8 +2510,8 @@
               "src": "exam",
               "id": "web-exam2-t5-q35",
               "q_ar": "طابق كل مفهوم تخطيط مع وصفه.",
-              "hint_ar": "Grid ثنائي وFlex أحادي وfr حصة وflex اختصار.",
-              "explanation_ar": "Grid للصفوف والأعمدة؛ Flex لمحور واحد؛ fr حصة مساحة؛ flex يجمع grow/shrink/basis.",
+              "hint_ar": "Grid ثنائي وFlex أحادي وfr حصة وspan يمدد العنصر عبر tracks.",
+              "explanation_ar": "Grid للصفوف والأعمدة؛ Flex لمحور واحد؛ fr حصة من المساحة؛ وgrid-column: 1 / span 2 يمدد العنصر عبر عمودين.",
               "source": "CCSW321-Material-05 - CSS (2).pdf, slides 34-50",
               "section": "css-layout-selection"
             }
@@ -2589,20 +2589,20 @@
               "section": "js-role-runtime-inclusion"
             },
             {
-              "q": "Being an interpreted language executed in the browser, what does JavaScript lack that compiled languages have?",
+              "q": "Which statement matches the JavaScript execution model described in the lecture?",
               "choices": [
-                "Variables",
-                "A main method and a developer compilation step",
-                "Functions",
-                "Loops"
+                "Developers must compile it and call a required main method",
+                "The browser executes it top to bottom using JIT, with no required main method or separate developer compilation command",
+                "It runs only after Java compiles it",
+                "It cannot execute functions"
               ],
               "answer": 1,
-              "explanation": "JS runs top to bottom via JIT with no main method and no developer-run compilation.",
+              "explanation": "The lecture describes top-to-bottom browser execution with JIT, no required main entry point, and no separate compiler command run by the developer.",
               "src": "exam",
               "id": "web-exam2-t6-q03",
-              "q_ar": "كون JavaScript لغة مفسرة في المتصفح، ما الذي لا تحتاجه مثل اللغات المترجمة؟",
-              "hint_ar": "فكر في نقطة البدء وخطوة الترجمة لدى المطور.",
-              "explanation_ar": "لا توجد main ولا خطوة compilation يقوم بها المطور.",
+              "q_ar": "أي عبارة تطابق نموذج تنفيذ JavaScript المذكور في المحاضرة؟",
+              "hint_ar": "فكّر في ترتيب التنفيذ وJIT ووجود main.",
+              "explanation_ar": "ينفّذ المتصفح الكود من الأعلى للأسفل باستخدام JIT، من دون main إلزامية أو أمر compilation منفصل يشغله المطور.",
               "source": "CCSW321-Material-06 - JavaScript.pdf, slide 5",
               "section": "js-role-runtime-inclusion"
             },
@@ -2849,12 +2849,12 @@
                 "It is deleted immediately"
               ],
               "answer": 1,
-              "explanation": "var does not go out of scope at the end of a block, so it survives past the if.",
+              "explanation": "var ignores block boundaries and belongs to the nearest enclosing function scope, or global scope when no function encloses it.",
               "src": "exam",
               "id": "web-exam2-t6-q17",
               "q_ar": "ماذا يحدث لـ var معلن داخل if عند الوصول إليه بعد الكتلة؟",
               "hint_ar": "var لا ينتهي عند }.",
-              "explanation_ar": "يبقى قابلًا للوصول لأنه ذو نطاق دالة.",
+              "explanation_ar": "يبقى قابلًا للوصول لأن var يتبع أقرب function scope، أو global scope إذا لم توجد دالة حاوية.",
               "source": "CCSW321-Material-06 - JavaScript.pdf, slide 26",
               "section": "js-values-scope"
             },
@@ -3021,7 +3021,7 @@
               "section": "js-functions-objects"
             },
             {
-              "q": "Inside an object method, what does the this keyword refer to?",
+              "q": "Inside a regular method called as object.method(), what does this normally refer to?",
               "choices": [
                 "The global window always",
                 "The current object the method is called on",
@@ -3029,12 +3029,12 @@
                 "The last created object"
               ],
               "answer": 1,
-              "explanation": "this refers to the current object on which the method is invoked.",
+              "explanation": "For a regular method call, this refers to the receiving object. Arrow functions do not create their own this.",
               "src": "exam",
               "id": "web-exam2-t6-q27",
-              "q_ar": "إلى ماذا تشير this داخل method لكائن؟",
+              "q_ar": "داخل regular method مستدعاة بصيغة object.method()، إلى ماذا تشير this عادةً؟",
               "hint_ar": "الكائن الذي استُدعيت عليه الدالة.",
-              "explanation_ar": "تشير إلى الكائن الحالي.",
+              "explanation_ar": "تشير إلى الكائن الذي استقبل الاستدعاء؛ أما arrow function فلا تنشئ this خاصة بها.",
               "source": "CCSW321-Material-06 - JavaScript.pdf, slides 44-45",
               "section": "js-functions-objects"
             },
@@ -3170,15 +3170,15 @@
                 ],
                 [
                   "no keyword",
-                  "Becomes global"
+                  "Creates a global only in non-strict (sloppy) mode"
                 ]
               ],
-              "explanation": "var is function-scoped; let and const are block-scoped; omitting a keyword makes a global.",
+              "explanation": "var is function-scoped; let and const are block-scoped; assigning to an undeclared identifier creates a global only in non-strict mode and throws in strict mode.",
               "src": "exam",
               "id": "web-exam2-t6-q33",
               "q_ar": "طابق كل كلمة تعريف مع نطاقها أو أثرها.",
-              "hint_ar": "var دالة وlet/const كتلة وعدم الكلمة global.",
-              "explanation_ar": "var function-scoped؛ let/const block-scoped؛ والإسناد بلا كلمة ينشئ global.",
+              "hint_ar": "var دالة وlet/const كتلة، وعدم الكلمة يعتمد على strict mode.",
+              "explanation_ar": "var ذات function scope وlet/const ذات block scope؛ الإسناد لمعرّف غير معلن ينشئ global في non-strict فقط ويعطي خطأ في strict mode.",
               "source": "CCSW321-Material-06 - JavaScript.pdf, slides 22-26",
               "section": "js-values-scope"
             },
@@ -3936,8 +3936,8 @@
               "src": "exam",
               "id": "web-exam2-t7-q34",
               "q_ar": "طابق كل فحص validation مع معناه.",
-              "hint_ar": "Presence وtype وformat وrange وlength وwhitelist.",
-              "explanation_ar": "كل فحص يتحقق على الترتيب من الوجود والنوع والصيغة والمجال والطول والقيم المسموحة.",
+              "hint_ar": "ركّز على الفحوص الأربعة المعروضة: Presence وFormat وRange وWhitelist.",
+              "explanation_ar": "الأزواج الأربعة تتحقق من الوجود، ومطابقة الصيغة، والوقوع داخل المجال، والانتماء إلى القيم المسموحة.",
               "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 42",
               "section": "dom-events-validation"
             },

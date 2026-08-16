@@ -351,7 +351,7 @@
 "use strict";
 const SKEY="studyflow-v1",SET="studyflow-set-v1",PKEY="studyflow-plan-v1",PASS="studyflow-pass-v1",DKEY="studyflow-daily-v1",SYNCKEY="studyflow-sync-v1",CONTENTKEY="studyflow-content-v1",BUILTINKEY="studyflow-builtin-finals-2026-t3-v1",PDC_DRILLS_KEY="studyflow-pdc-422-drills-v2";
 const GAPS={1:2,2:4,3:7,4:12,5:20},MB=4,DAYMS=86400000,SESSION_CAP=5;
-const EMPTY_CONTENT={version:1,subjects:{},schedule:{plan:[],exams:[]}},EMPTY_DRILLS={version:2,subject:"CCCS422-FINAL",chapters:{},presets:[]},BUILTIN_CONTENT_URL="finals-2026-t3.json?v=20260812-4",PDC_DRILLS_URL="pdc-422-drills-v2.json?v=20260811-3",BUILTIN_CODES=["CCCS422-FINAL","WEB-EXAM2"];
+const EMPTY_CONTENT={version:1,subjects:{},schedule:{plan:[],exams:[]}},EMPTY_DRILLS={version:2,subject:"CCCS422-FINAL",chapters:{},presets:[]},BUILTIN_CONTENT_URL="finals-2026-t3.json?v=20260816-1",PDC_DRILLS_URL="pdc-422-drills-v2.json?v=20260811-3",BUILTIN_CODES=["CCCS422-FINAL","WEB-EXAM2"];
 function lj(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}} function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 let CONTENT=lj(CONTENTKEY,EMPTY_CONTENT),BUILTIN_CONTENT=lj(BUILTINKEY,EMPTY_CONTENT),PDC_DRILLS=lj(PDC_DRILLS_KEY,EMPTY_DRILLS);
 let DATA={},SCHED={plan:[],exams:[]},ORDER=[];
@@ -789,7 +789,7 @@ async function clearLegacyStudyFlowCache(){
 async function boot(){await clearLegacyStudyFlowCache();await loadBuiltinFinals();const p=localStorage.getItem(PASS);if(p){const lk=$("#lock");lk.classList.add("show");const tryU=()=>{if($("#lockInput").value===p){lk.classList.remove("show");startApp()}else $("#lockErr").style.display=""};$("#lockBtn").onclick=tryU;$("#lockInput").addEventListener("keydown",e=>{if(e.key==="Enter")tryU()});$("#lockInput").focus()}else startApp()}
 document.addEventListener("visibilitychange",()=>{if(!SYNC.enabled)return;if(document.hidden){syncPush();}else{syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});}});
 window.addEventListener("online",()=>{if(SYNC.enabled)syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});});
-const VER="v0812-match-board-v4";try{var _vb=document.createElement("div");_vb.id="sfver";_vb.textContent=VER;_vb.title="StudyFlow build";_vb.style.cssText="position:fixed;bottom:6px;left:8px;font:600 10px/1 ui-monospace,monospace;color:var(--muted2);opacity:.45;z-index:60;pointer-events:none;letter-spacing:.5px";document.body.appendChild(_vb);}catch(e){}
+const VER="v0816-web-base-fix";try{var _vb=document.createElement("div");_vb.id="sfver";_vb.textContent=VER;_vb.title="StudyFlow build";_vb.style.cssText="position:fixed;bottom:6px;left:8px;font:600 10px/1 ui-monospace,monospace;color:var(--muted2);opacity:.45;z-index:60;pointer-events:none;letter-spacing:.5px";document.body.appendChild(_vb);}catch(e){}
 boot();
 </script>
 </body>
