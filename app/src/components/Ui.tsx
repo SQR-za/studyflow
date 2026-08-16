@@ -1,17 +1,18 @@
 import { useEffect, useRef } from 'react'
-import type { ButtonHTMLAttributes, KeyboardEvent, ReactNode } from 'react'
+import type { ButtonHTMLAttributes, KeyboardEvent, ReactNode, Ref } from 'react'
 
-export function ScreenHeader({ title, subtitle, onBack, actions }: {
+export function ScreenHeader({ title, subtitle, onBack, actions, titleRef }: {
   title: string
   subtitle?: string
   onBack: () => void
   actions?: ReactNode
+  titleRef?: Ref<HTMLHeadingElement>
 }) {
   return (
     <header className="screen-header">
       <button className="icon-button" type="button" onClick={onBack} aria-label="رجوع">→</button>
       <div className="screen-title">
-        <h1>{title}</h1>
+        <h1 ref={titleRef} tabIndex={titleRef ? -1 : undefined}>{title}</h1>
         {subtitle && <p>{subtitle}</p>}
       </div>
       <div className="screen-actions">{actions}</div>

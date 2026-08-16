@@ -3,6 +3,7 @@ import { flushSync } from 'react-dom'
 import { Button } from './components/Ui'
 import { Toast } from './components/Toast'
 import { HomeScreen, type StartRequest } from './features/home/HomeScreen'
+import { LessonScreen } from './features/lesson/LessonScreen'
 import { MockScreen, type MockResultPayload } from './features/mock/MockScreen'
 import { NotesScreen } from './features/notes/NotesScreen'
 import { PlanScreen } from './features/plan/PlanScreen'
@@ -21,6 +22,13 @@ import type { ChoiceQuestion, DrillPreset, Lesson, NotesBlock, Screen, SessionMe
 interface SessionLaunch {
   items: StudyQuestion[]
   meta: SessionMeta
+  returnTo: Screen
+}
+
+interface SelectedLessonIds {
+  code: string
+  chapterId: string
+  lessonId: string
 }
 
 export function App() {
@@ -28,6 +36,7 @@ export function App() {
   const [screen, setScreen] = useState<Screen>('home')
   const [notes, setNotes] = useState<{ notes?: NotesBlock | null; title: string; returnTo: Screen }>({ title: '', returnTo: 'home' })
   const [session, setSession] = useState<SessionLaunch | null>(null)
+  const [selectedLessonIds, setSelectedLessonIds] = useState<SelectedLessonIds | null>(null)
   const [toast, setToast] = useState<{ id: number; message: string } | null>(null)
   const toastIdRef = useRef(0)
   const [passwordVersion, setPasswordVersion] = useState(0)
@@ -62,12 +71,18 @@ export function App() {
     transitionTo('notes', () => setNotes({ notes: nextNotes, title, returnTo: screen === 'session' ? 'session' : 'home' }))
   }
 
-  function launch(items: StudyQuestion[], meta: SessionMeta) {
-    if (!items.length) { notify(meta.mode === 'review' ? 'لا توجد أخطاء في هذا القسم 👏' : 'لا توجد أسئلة في هذا الاختيار'); return }
-    transitionTo('session', () => setSession({ items, meta }))
+  function openLesson(code: string, chapterId: string, lessonId: string) {
+    const lesson = app.data[code]?.chapters.find(chapter => chapter.id === chapterId)?.lessons?.find(item => item.id === lessonId)
+    if (!lesson?.content) return
+    transitionTo('lesson', () => setSelectedLessonIds({ code, chapterId, lessonId }))
   }
 
-  function start(request: StartRequest) {
+  function launch(items: StudyQuestion[], meta: SessionMeta, returnTo: Screen = 'home') {
+    if (!items.length) { notify(meta.mode === 'review' ? 'لا توجد أخطاء في هذا القسم 👏' : 'لا توجد أسئلة في هذا الاختيار'); return }
+    transitionTo('session', () => setSession({ items, meta, returnTo }))
+  }
+
+  function start(request: StartRequest, returnTo: Screen = 'home') {
     const subject = app.data[request.code]
     if (!subject) return
     let items: StudyQuestion[] = []
@@ -88,7 +103,7 @@ export function App() {
       items = request.mode === 'practice' ? [...(chapter.practice ?? [])] : [...visibleQuestions(chapter, app.settings.includeExtra), ...(chapter.practice ?? [])]
     }
     if (request.mode === 'review') items = items.filter(item => isWeak(app.store, item.id))
-    launch(items, { code: request.code, scope: request.scope, mode: request.mode, color: subject.color, subject: subjectShortName(subject.name), label, lesson })
+    launch(items, { code: request.code, scope: request.scope, mode: request.mode, color: subject.color, subject: subjectShortName(subject.name), label, lesson }, returnTo)
   }
 
   function startStarred() {
@@ -99,7 +114,7 @@ export function App() {
     launch(dueQuestions(app.data, app.order, app.store, app.settings.includeExtra), { code: null, scope: '__DUE__', mode: 'due', color: '#a78bfa', subject: 'مراجعة اليوم 🔁', label: '' })
   }
 
-  function startLessonTest(code: string, lesson: Lesson) {
+  function startLessonTest(code: string, lesson: Lesson, returnTo: Screen = 'home') {
     const subject = app.data[code]
     if (!subject) return
     launch([...lesson.questions], {
@@ -110,10 +125,10 @@ export function App() {
       subject: subjectShortName(subject.name),
       label: `اختبار القسم · ${lesson.label}`,
       lesson,
-    })
+    }, returnTo)
   }
 
-  function startLessonQuickTest(code: string, lesson: Lesson, preset: DrillPreset) {
+  function startLessonQuickTest(code: string, lesson: Lesson, preset: DrillPreset, returnTo: Screen = 'home') {
     const subject = app.data[code]
     const quickQuestions = preset.questions?.length
       ? [...preset.questions]
@@ -132,7 +147,7 @@ export function App() {
       subject: subjectShortName(subject.name),
       label: `فحص سريع · ${lesson.label}`,
       lesson: quickLesson,
-    })
+    }, returnTo)
   }
 
   function completeSession(summary: SessionSummary) {
@@ -221,11 +236,40 @@ export function App() {
 
   if (!unlocked && passwordEnabled) return <LockScreen onUnlock={value => { if (value === localStorage.getItem(STORAGE_KEYS.password)) setUnlocked(true); else notify('الرمز غير صحيح') }} />
 
+  const selectedSubject = selectedLessonIds ? app.data[selectedLessonIds.code] : undefined
+  const selectedChapter = selectedSubject?.chapters.find(chapter => chapter.id === selectedLessonIds?.chapterId)
+  const selectedLesson = selectedChapter?.lessons?.find(lesson => lesson.id === selectedLessonIds?.lessonId)
+  const readableLessons = selectedChapter?.lessons?.filter(lesson => Boolean(lesson.content)) ?? []
+  const selectedLessonIndex = selectedLesson ? readableLessons.findIndex(lesson => lesson.id === selectedLesson.id) : -1
+  const previousLesson = selectedLessonIndex > 0 ? readableLessons[selectedLessonIndex - 1] : null
+  const nextLesson = selectedLessonIndex >= 0 && selectedLessonIndex < readableLessons.length - 1 ? readableLessons[selectedLessonIndex + 1] : null
+  const selectedQuickPreset = selectedLessonIds && selectedLesson
+    ? app.drillBundles[selectedLessonIds.code]?.presets.find(preset => preset.quick && preset.lessonIds?.includes(selectedLesson.id))
+    : undefined
+
   return (
     <div className="app-shell">
       <Activity mode={screen === 'home' ? 'visible' : 'hidden'}>
-        <HomeScreen data={app.data} order={app.order} schedule={app.schedule} store={app.store} settings={app.settings} daily={app.daily} quickPresets={Object.values(app.drillBundles).flatMap(bundle => bundle.presets.filter(preset => preset.quick))} onOpenScreen={next => transitionTo(next)} onStart={start} onStartStarred={startStarred} onStartDue={startDue} onStartLessonTest={startLessonTest} onStartLessonQuickTest={startLessonQuickTest} onOpenNotes={openNotes} onToggleExtra={() => app.updateSettings(current => ({ includeExtra: !current.includeExtra }))} onChangeDuration={sessionMins => app.updateSettings({ sessionMins })} />
+        <HomeScreen data={app.data} order={app.order} schedule={app.schedule} store={app.store} settings={app.settings} daily={app.daily} quickPresets={Object.values(app.drillBundles).flatMap(bundle => bundle.presets.filter(preset => preset.quick))} onOpenScreen={next => transitionTo(next)} onStart={start} onStartStarred={startStarred} onStartDue={startDue} onStartLessonTest={startLessonTest} onStartLessonQuickTest={startLessonQuickTest} onOpenLesson={openLesson} onOpenNotes={openNotes} onToggleExtra={() => app.updateSettings(current => ({ includeExtra: !current.includeExtra }))} onChangeDuration={sessionMins => app.updateSettings({ sessionMins })} />
       </Activity>
+
+      {screen === 'lesson' && selectedSubject && selectedChapter && selectedLesson ? (
+        <LessonScreen
+          subject={selectedSubject.name}
+          chapter={selectedChapter.label}
+          color={selectedSubject.color}
+          lesson={selectedLesson}
+          previousLesson={previousLesson}
+          nextLesson={nextLesson}
+          lessonPosition={selectedLessonIndex + 1}
+          lessonCount={readableLessons.length}
+          onBack={() => transitionTo('home', () => setSelectedLessonIds(null))}
+          onOpenLesson={lessonId => openLesson(selectedSubject.code, selectedChapter.id, lessonId)}
+          onStartLearn={() => start({ code: selectedSubject.code, scope: '__LESSONS__', mode: 'learn', lessonIds: new Set([selectedLesson.id]) }, 'lesson')}
+          onStartQuickTest={selectedQuickPreset ? () => startLessonQuickTest(selectedSubject.code, selectedLesson, selectedQuickPreset, 'lesson') : undefined}
+          onStartFullTest={() => startLessonTest(selectedSubject.code, selectedLesson, 'lesson')}
+        />
+      ) : null}
 
       {session ? (
         <Activity mode={screen === 'session' ? 'visible' : 'hidden'}>
@@ -241,7 +285,7 @@ export function App() {
             onStarChange={(id, active) => app.updateStore(current => setStarred(current, id, active))}
             onDailyAnswer={() => app.setDaily(current => incrementDaily(current))}
             onComplete={completeSession}
-            onExit={() => transitionTo('home', () => setSession(null))}
+            onExit={() => transitionTo(session.returnTo, () => setSession(null))}
             onOpenNotes={() => {
               if (session.meta.lesson?.notes) openNotes(session.meta.lesson.notes, `${session.meta.subject} · ${session.meta.lesson.label}`)
               else if (session.meta.code && !session.meta.scope.startsWith('__')) {

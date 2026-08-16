@@ -3,6 +3,7 @@ import type {
   ContentBundle,
   DrillsBundle,
   Lesson,
+  LessonContent,
   LessonSection,
   PlanDay,
   PreparedContent,
@@ -10,6 +11,7 @@ import type {
   StudySchedule,
   Subject,
 } from '../types'
+import { publicAssetUrl } from './assets'
 import {
   APP_BASE_PATH,
   BUILTIN_CODES,
@@ -65,6 +67,82 @@ function cloneJson<T>(value: T): T {
 
 function validationError(message: string): never {
   throw new Error(message)
+}
+
+function validateStringList(value: unknown, context: string, allowEmpty = true): void {
+  if (!Array.isArray(value) || (!allowEmpty && value.length === 0) || value.some(item => typeof item !== 'string' || !item.trim())) {
+    validationError(`${context} غير صالح`)
+  }
+}
+
+function validateOptionalHeading(value: unknown, context: string): void {
+  if (value !== undefined && (typeof value !== 'string' || !value.trim())) {
+    validationError(`${context}: العنوان غير صالح`)
+  }
+}
+
+function validateLessonFigure(value: unknown, context: string): void {
+  if (!isRecord(value)
+    || typeof value.src !== 'string' || !value.src.trim()
+    || typeof value.alt !== 'string' || !value.alt.trim()
+    || typeof value.caption !== 'string' || !value.caption.trim()
+    || typeof value.source !== 'string' || !value.source.trim()
+    || !Number.isInteger(value.width) || (value.width as number) <= 0
+    || !Number.isInteger(value.height) || (value.height as number) <= 0) {
+    validationError(`${context}: الصورة غير صالحة`)
+  }
+
+  try {
+    publicAssetUrl(value.src as string, '/')
+  } catch {
+    validationError(`${context}: مسار الصورة غير صالح`)
+  }
+}
+
+function validateLessonContent(value: unknown, context: string): asserts value is LessonContent {
+  if (!isRecord(value) || typeof value.summary !== 'string' || !value.summary.trim()) {
+    validationError(`${context}: محتوى الدرس غير صالح`)
+  }
+  validateStringList(value.objectives, `${context}: أهداف الدرس`)
+  validateStringList(value.recap, `${context}: ملخص الدرس`)
+  if (!Array.isArray(value.blocks) || value.blocks.length === 0) {
+    validationError(`${context}: فقرات الدرس غير صالحة`)
+  }
+
+  for (const [index, blockValue] of value.blocks.entries()) {
+    const blockContext = `${context}: فقرة ${index + 1}`
+    if (!isRecord(blockValue) || typeof blockValue.type !== 'string') {
+      validationError(`${blockContext} غير صالحة`)
+    }
+    validateOptionalHeading(blockValue.heading, blockContext)
+
+    switch (blockValue.type) {
+      case 'text':
+        validateStringList(blockValue.paragraphs, `${blockContext}: النص`, false)
+        break
+      case 'list':
+        validateStringList(blockValue.items, `${blockContext}: القائمة`, false)
+        break
+      case 'code':
+        if (!['html', 'css', 'javascript'].includes(String(blockValue.language))
+          || typeof blockValue.code !== 'string' || !blockValue.code.trim()
+          || (blockValue.explanation !== undefined && (typeof blockValue.explanation !== 'string' || !blockValue.explanation.trim()))) {
+          validationError(`${blockContext}: الكود غير صالح`)
+        }
+        if (blockValue.result !== undefined) validateLessonFigure(blockValue.result, `${blockContext}: النتيجة`)
+        break
+      case 'figure':
+        validateLessonFigure(blockValue.figure, blockContext)
+        break
+      case 'callout':
+        if (!['key', 'exam', 'warning'].includes(String(blockValue.tone)) || typeof blockValue.text !== 'string' || !blockValue.text.trim()) {
+          validationError(`${blockContext}: التنبيه غير صالح`)
+        }
+        break
+      default:
+        validationError(`${blockContext}: نوع الفقرة غير معروف`)
+    }
+  }
 }
 
 /** Validate the public/custom v1 content contract without rewriting any IDs. */
@@ -183,6 +261,9 @@ export function validateDrills(raw: unknown, expectedSubject: string, label = ex
       if (!isRecord(sectionValue) || typeof sectionValue.id !== 'string' || !sectionValue.id || typeof sectionValue.label !== 'string' || !sectionValue.label || !Array.isArray(sectionValue.questionIds) || !sectionValue.questionIds.length) {
         validationError(`قسم ${label} غير صالح في ${chapterId}`)
       }
+      if (sectionValue.content !== undefined && sectionValue.content !== null) {
+        validateLessonContent(sectionValue.content, `قسم ${sectionValue.id}`)
+      }
     }
   }
 
@@ -252,6 +333,7 @@ function lessonsFromSections(chapter: Chapter, sections: LessonSection[]): Lesso
     label: section.label,
     questions: section.questionIds.map((id) => byId.get(id)).filter((question): question is StudyQuestion => Boolean(question)),
     notes: section.notes ?? null,
+    content: section.content ?? null,
   }))
 }
 
@@ -312,6 +394,7 @@ export function prepareContent(
           label: objective.label,
           questions: chapter.questions.filter((question) => question.obj === objective.num),
           notes: chapter.objNotes?.[String(objective.num)] ?? null,
+          content: null,
         }))
       } else if (!chapter.questions.length && Array.isArray(chapter.lessons)) {
         chapter.questions = chapter.lessons.flatMap((lesson) => lesson.questions ?? [])
@@ -320,10 +403,6 @@ export function prepareContent(
   }
 
   return { data, schedule, order, drills, drillBundles }
-}
-
-function joinAssetUrl(baseUrl: string, asset: string): string {
-  return `${baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`}${asset.replace(/^\/+/, '')}`
 }
 
 function validatedOrFallback<T>(raw: unknown, validator: (value: unknown) => T, fallback: () => T): T {
@@ -400,7 +479,7 @@ export async function loadPreparedContent(options: LoadPreparedContentOptions = 
   const baseUrl = options.baseUrl ?? APP_BASE_PATH
   ;[builtinContent, drills, webDrills] = await Promise.all([
     refreshBundle(
-      joinAssetUrl(baseUrl, BUILTIN_CONTENT_ASSET),
+      publicAssetUrl(BUILTIN_CONTENT_ASSET, baseUrl),
       builtinContent,
       validateBuiltinFinals,
       STORAGE_KEYS.builtin,
@@ -408,7 +487,7 @@ export async function loadPreparedContent(options: LoadPreparedContentOptions = 
       storage,
     ),
     refreshBundle(
-      joinAssetUrl(baseUrl, PDC_DRILLS_ASSET),
+      publicAssetUrl(PDC_DRILLS_ASSET, baseUrl),
       drills,
       validatePdcDrills,
       STORAGE_KEYS.drills,
@@ -416,7 +495,7 @@ export async function loadPreparedContent(options: LoadPreparedContentOptions = 
       storage,
     ),
     refreshBundle(
-      joinAssetUrl(baseUrl, WEB_DRILLS_ASSET),
+      publicAssetUrl(WEB_DRILLS_ASSET, baseUrl),
       webDrills,
       validateWebDrills,
       STORAGE_KEYS.webDrills,

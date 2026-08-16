@@ -19,14 +19,14 @@ export const WEB_SUBJECT_CODE = 'WEB-EXAM2'
 export const APP_BASE_PATH = import.meta.env.BASE_URL
 export const BUILTIN_CONTENT_ASSET = 'finals-2026-t3.json?v=20260816-1'
 export const PDC_DRILLS_ASSET = 'pdc-422-drills-v2.json?v=20260813-1'
-export const WEB_DRILLS_ASSET = 'web-321-drills-v1.json?v=20260816-1'
+export const WEB_DRILLS_ASSET = 'web-321-drills-v1.json?v=20260816-2'
 
 export const DEFAULT_SUBJECT_COLOR = '#38bdf8'
 export const GAPS: Record<number, number> = { 1: 2, 2: 4, 3: 7, 4: 12, 5: 20 }
 export const MASTERY_BOX = 4
 export const DAY_MS = 86_400_000
 export const SESSION_CAP = 5
-export const APP_BUILD = 'v2.0.0-preview.9'
+export const APP_BUILD = 'v2.0.0-preview.10'
 
 export const GIST_API_URL = 'https://api.github.com/gists'
 export const GIST_FILENAME = 'studyflow-progress.json'

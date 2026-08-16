@@ -1,7 +1,7 @@
 {
   "version": 2,
   "subject": "WEB-EXAM2",
-  "build": "2026-08-16-web-finals-v2",
+  "build": "2026-08-16-web-finals-v3",
   "chapters": {
     "web-exam2-t5": {
       "sections": [
@@ -24,7 +24,99 @@
             "web-exam2-t5-q39",
             "web-exam2-t5-q60",
             "web-exam2-t5-q61"
-          ]
+          ],
+          "content": {
+            "summary": "يشرح هذا الدرس كيف يحوّل CSS عناصر الصفحة إلى صناديق، وكيف يعمل التدفق الطبيعي وخصائص Box Model وdisplay قبل الانتقال إلى أدوات التخطيط المتقدمة.",
+            "objectives": [
+              "Check browser support for CSS features",
+              "Explain normal flow and the four box-model layers",
+              "Distinguish block, inline, inline-block, and none",
+              "Recognize a page as a collection of layout boxes"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "Browser Support",
+                "paragraphs": [
+                  "Definition — Browser support is the set of browsers and versions that correctly implement a web feature.",
+                  "الشرح — قبل استخدام خاصية CSS ابحث عنها في caniuse.com وقارن دعمها في المتصفحات المستهدفة؛ لا تعتمد على أن الخاصية تعمل في متصفحك فقط."
+                ]
+              },
+              {
+                "type": "text",
+                "heading": "Normal Flow and Custom Layout",
+                "paragraphs": [
+                  "Definition — Normal flow places elements in document order using their default block or inline behavior.",
+                  "الشرح — من دون قواعد تخطيط خاصة تظهر العناصر حسب ترتيب HTML. التخطيط المخصص ينظمها في صفوف وأعمدة ومناطق مثل header وnavigation وcontent. الأساس هو Box Model وdisplay وpositioning، ثم تأتي Grid وFlexbox، ويمكن استخدام Bootstrap كإطار جاهز."
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "warning",
+                "heading": "Historical slide wording",
+                "text": "Exam-source note — Slide 5 states that Grid and Flexbox had not reached W3C Recommendation status at the time represented. للاختبار احفظيها كصياغة تاريخية من الشريحة؛ حالة المعيار ودعم المتصفحات مفهومان مختلفان، والدعم العملي يُفحص عبر Can I Use."
+              },
+              {
+                "type": "text",
+                "heading": "The Box Model",
+                "paragraphs": [
+                  "Definition — The CSS box model represents every element as content surrounded by padding, border, and margin.",
+                  "الشرح — Content هو المحتوى الفعلي. Padding مسافة داخلية بينه وبين الحد، وBorder حافة الصندوق، وMargin مسافة خارجية تفصل الصندوق عمّا حوله. يمكن ضبط كل جهة عبر top, right, bottom, and left."
+                ]
+              },
+              {
+                "type": "figure",
+                "heading": "Box-model layers",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t5/slide-06-box-model.webp",
+                  "alt": "CSS box model with content width and height surrounded by padding, border, and margin.",
+                  "caption": "Content → padding → border → margin — ترتيب طبقات الصندوق من الداخل إلى الخارج.",
+                  "source": "CSS (2), slide 6",
+                  "width": 760,
+                  "height": 650
+                }
+              },
+              {
+                "type": "text",
+                "heading": "The display Property",
+                "paragraphs": [
+                  "Definition — The display property controls how an element participates in layout.",
+                  "الشرح — block يبدأ سطرًا جديدًا ويأخذ العرض المتاح ويقبل width/height. inline يأخذ عرض المحتوى ولا تطبق الأبعاد عادةً على العناصر inline العادية. inline-block يبقى داخل السطر لكنه يقبل الأبعاد. none يزيل العنصر من التخطيط بالكامل."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Typed display comparison",
+                "language": "css",
+                "code": ".block { display: block; width: 12rem; }\n.inline { display: inline; width: 12rem; }\n.inlineBox { display: inline-block; width: 12rem; }\n.hidden { display: none; }",
+                "explanation": "في الاختبار راقبي هل العنصر يبدأ سطرًا جديدًا، وهل يقبل width وheight، وهل يبقى له مكان في التخطيط."
+              },
+              {
+                "type": "figure",
+                "heading": "A page as boxes",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t5/slide-09-layout-boxes.webp",
+                  "alt": "Page layout decomposed into navigation, header, four content cards, and a lower region made from CSS boxes.",
+                  "caption": "A historical inline-block layout — الصفحة تُفكك إلى صناديق ثم ترتب، مع أن Grid/Flex أفضل عادةً اليوم.",
+                  "source": "CSS (2), slide 9",
+                  "width": 670,
+                  "height": 450
+                }
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Exam Focus",
+                "text": "احفظي ترتيب Box Model، والفرق الدقيق بين block وinline وinline-block وnone، وأن caniuse.com هو أداة فحص دعم الخصائص."
+              }
+            ],
+            "recap": [
+              "Normal flow follows document order.",
+              "Box model: content, padding, border, margin.",
+              "inline-block stays inline and accepts dimensions.",
+              "display:none removes the box from layout."
+            ]
+          }
         },
         {
           "id": "css-positioning-stacking",
@@ -45,7 +137,92 @@
             "web-exam2-t5-q41",
             "web-exam2-t5-q42",
             "web-exam2-t5-q43"
-          ]
+          ],
+          "content": {
+            "summary": "يغطي الدرس مراجع التموضع الأربعة، استخدام الإزاحات، التموضع النسبي والمطلق، ثم ترتيب الطبقات باستخدام z-index.",
+            "objectives": [
+              "Choose the correct positioning reference frame",
+              "Predict relative and absolute positioning results",
+              "Use top, right, bottom, and left offsets",
+              "Reason about z-index and stacking order"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "Positioning Reference Frames",
+                "paragraphs": [
+                  "Definition — The position property selects the reference frame used to place an element.",
+                  "الشرح — static هو الوضع الافتراضي داخل normal flow. relative يبقي مساحة العنصر الأصلية ثم يزيحه. fixed يعتمد على viewport ويبقى أثناء التمرير. absolute يعتمد على أقرب ancestor قيمة position لديه ليست static، وإلا يعود إلى initial containing block."
+                ]
+              },
+              {
+                "type": "list",
+                "heading": "Offsets and space",
+                "items": [
+                  "top, right, bottom, and left move a positioned element.",
+                  "A relatively positioned element keeps its original flow space.",
+                  "A fixed element is anchored to the viewport.",
+                  "An absolutely positioned element is removed from normal flow."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Relative-positioning example",
+                "language": "css",
+                "code": ".super { position: relative; top: -1ex; }\n.sub { position: relative; bottom: -1ex; }\n.shiftleft { position: relative; left: -1ex; }\n.shiftright { position: relative; right: -1ex; }",
+                "explanation": "الإزاحة تغيّر موضع الرسم، لكن مكان العنصر الأصلي يبقى محجوزًا في التدفق.",
+                "result": {
+                  "src": "lesson-assets/web-exam2/t5/slide-14-relative-result.webp",
+                  "alt": "Four sentences demonstrating superscript, subscript, left-shifted, and right-shifted inline text using relative positioning.",
+                  "caption": "Final relative-positioning result — لاحظي الرفع والخفض والتحريك الأفقي.",
+                  "source": "CSS (2), slide 14",
+                  "width": 1230,
+                  "height": 650
+                }
+              },
+              {
+                "type": "code",
+                "heading": "Absolute positioning and layers",
+                "language": "css",
+                "code": ".background { position: absolute; top: 0; left: 0; z-index: 1; }\n.foreground { position: absolute; top: 25px; left: 100px; z-index: 2; }\n.caption { position: absolute; top: 25px; left: 100px; z-index: 3; }",
+                "explanation": "كل عنصر يشارك الإحداثيات نفسها تقريبًا، لكن z-index الأعلى يرسم فوق القيم الأقل.",
+                "result": {
+                  "src": "lesson-assets/web-exam2/t5/slide-18-absolute-layering-result.webp",
+                  "alt": "Text absolutely positioned over two overlapping image layers.",
+                  "caption": "Final layered result — text appears above both images.",
+                  "source": "CSS (2), slide 18",
+                  "width": 960,
+                  "height": 480
+                }
+              },
+              {
+                "type": "text",
+                "heading": "z-index and Stacking",
+                "paragraphs": [
+                  "Definition — z-index sets the stack level of a positioned element inside its relevant stacking context.",
+                  "الشرح — الرقم الأعلى يظهر فوق الرقم الأقل داخل السياق نفسه. إذا تساوت المستويات تدخل قواعد الرسم وترتيب المصدر. نوع position وحده لا يعطي أسبقية ثابتة."
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "warning",
+                "heading": "Slide correction",
+                "text": "قاعدة fixed > absolute > relative المذكورة في الشريحة ليست قاعدة CSS صحيحة. القرار الحقيقي يعتمد على stacking contexts وstack level ثم paint/source order."
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Bug pattern",
+                "text": "إذا ظهر عنصر absolute أعلى الصفحة بدل داخل البطاقة، فغالبًا البطاقة ليست positioned ancestor؛ اجعليها position:relative."
+              }
+            ],
+            "recap": [
+              "relative keeps its original space.",
+              "fixed is viewport-relative.",
+              "absolute uses the nearest non-static ancestor.",
+              "Higher z-index wins inside the same stacking context."
+            ]
+          }
         },
         {
           "id": "css-responsive-media",
@@ -70,7 +247,142 @@
             "web-exam2-t5-q67",
             "web-exam2-t5-q68",
             "web-exam2-t5-q69"
-          ]
+          ],
+          "content": {
+            "summary": "يبني هذا الدرس مفهوم Responsive Design من mobile-first إلى تركيب media query وأنواع الوسائط والشروط والاختبار، ثم يطبقها على مثال تذكرة الطيران والطباعة.",
+            "objectives": [
+              "Explain responsive and mobile-first design",
+              "Write media queries with types and conditions",
+              "Distinguish screen and print output",
+              "Test and repair a responsive layout"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "Responsive Web Design",
+                "paragraphs": [
+                  "Definition — Responsive web design adapts content and layout to provide a usable, consistent experience across devices and viewport sizes.",
+                  "الشرح — لا يعني تطابق الشكل حرفيًا، بل بقاء المحتوى واضحًا وقابلًا للاستخدام. يحتاج تخطيطًا مسبقًا واختبار عدة أحجام، لأن الوصول من الجوال أصبح أساسيًا."
+                ]
+              },
+              {
+                "type": "text",
+                "heading": "Mobile-first Design",
+                "paragraphs": [
+                  "Definition — Mobile-first design starts with the smallest layout and progressively enhances it for wider screens.",
+                  "الشرح — اكتبي القواعد الأساسية للشاشة الصغيرة أولًا، ثم أضيفي تغييرات باستخدام min-width. تذكر الشرائح Bootstrap وFoundation كخيارات جاهزة."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Media-query anatomy",
+                "language": "css",
+                "code": "h1 { font-size: 24px; }\n\n@media screen and (min-width: 768px) {\n  h1 { font-size: 36px; }\n}",
+                "explanation": "screen هو media type، و(min-width: 768px) هو condition، وما داخل الأقواس المعقوفة يطبق فقط عند تحقق الشرط."
+              },
+              {
+                "type": "list",
+                "heading": "Media Types",
+                "items": [
+                  "all — every supported medium",
+                  "screen — browser screens",
+                  "print — printing and print preview",
+                  "speech — speech synthesizers",
+                  "handheld — a legacy source term, not a modern recommendation"
+                ]
+              },
+              {
+                "type": "list",
+                "heading": "Media Conditions",
+                "items": [
+                  "width, min-width, max-width",
+                  "height, min-height, max-height",
+                  "aspect-ratio, such as 16/9",
+                  "orientation: portrait or landscape"
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Screen versus print",
+                "language": "css",
+                "code": "@media all {\n  body { background: steelblue; }\n  h1 { color: palegreen; }\n  p { color: white; font: 12pt Arial; }\n}\n\n@media print {\n  body { background: white; }\n  h1 { color: seagreen; }\n  p { color: steelblue; font: 14pt Times; }\n}",
+                "explanation": "قواعد print تستبدل المظهر عند الطباعة أو Print Preview بينما يبقى مظهر الشاشة ملونًا.",
+                "result": {
+                  "src": "lesson-assets/web-exam2/t5/slide-28-screen-print-result.webp",
+                  "alt": "The same page with colored screen styling above and simplified white-background print styling below.",
+                  "caption": "Same document, two media outputs — شاشة ملونة مقابل نسخة طباعة بخلفية بيضاء.",
+                  "source": "CSS (2), slide 28",
+                  "width": 1190,
+                  "height": 900
+                }
+              },
+              {
+                "type": "text",
+                "heading": "Responsive Testing",
+                "paragraphs": [
+                  "Definition — Responsive testing verifies layout and usability at representative viewport sizes and media modes.",
+                  "الشرح — افتحي Chrome DevTools ثم Device Toolbar، واختاري جهازًا أو أدخلي أبعاد viewport دقيقة، واختبري أيضًا Print Preview. رابط Google Mobile-Friendly Test القديم في الشرائح لم يعد مرجعًا مضمونًا؛ DevTools هو الأساس هنا."
+                ]
+              },
+              {
+                "type": "figure",
+                "heading": "Airline-ticket target",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t5/slide-30-ticket-target.webp",
+                  "alt": "Airline ticket mockup with blue header, green passenger-and-barcode row, and three bordered information columns.",
+                  "caption": "Target layout — header, passenger/barcode row, and three extra-information columns.",
+                  "source": "CSS (2), slide 30",
+                  "width": 730,
+                  "height": 740
+                }
+              },
+              {
+                "type": "code",
+                "heading": "Ticket HTML structure",
+                "language": "html",
+                "code": "<header class=\"lrgtxt\">Airline</header>\n\n<section id=\"info\">\n  <div>\n    <strong class=\"lrgtxt\">Passenger Name</strong>\n    <p class=\"smltxt\">Flight details</p>\n  </div>\n  <img src=\"barcode.png\" alt=\"Ticket barcode\">\n</section>\n\n<section id=\"extra\">\n  <article>Gate</article>\n  <article>Boarding</article>\n  <article>Seat</article>\n</section>",
+                "explanation": "هذه هي البنية المطلوبة في الشرائح: header، ثم section#info لبيانات المسافر والباركود، ثم section#extra وفيه ثلاثة عناصر article."
+              },
+              {
+                "type": "code",
+                "heading": "Ticket base layout — Steps 0–3",
+                "language": "css",
+                "code": ".lrgtxt { font-size: 4em; }\n.smltxt { font-size: 2em; }\n\nheader {\n  margin: 5px;\n  border: 1px solid;\n  background: steelblue;\n  color: white;\n  text-align: center;\n}\n\n#info { background: palegreen; }\n#info > * {\n  display: inline-block;\n  width: 45%;\n  vertical-align: middle;\n}\n\n#extra article {\n  display: inline-block;\n  width: 30%;\n  border: 1px dashed;\n  text-align: center;\n}",
+                "explanation": "Step 0 يجمع أحجام النص المتكررة في lrgtxt وsmltxt. ثم يبني الرأس، ويضع بيانات المسافر والباركود inline-block بعرض 45% ومحاذاة وسطية، ويقسم extra إلى ثلاثة أعمدة بعرض 30% وحدود dashed."
+              },
+              {
+                "type": "code",
+                "heading": "Ticket responsive and print rules",
+                "language": "css",
+                "code": "@media screen and (max-width: 900px) {\n  .lrgtxt { font-size: 2em; }\n  .smltxt { font-size: 1em; }\n}\n\n@media print {\n  #extra { display: none; }\n}",
+                "explanation": "في النسخة الصغيرة تصغر النصوص، وفي الطباعة تختفي التفاصيل الإضافية ويبقى الشعار وبيانات المسافر والباركود."
+              },
+              {
+                "type": "figure",
+                "heading": "Failure and print target",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t5/slide-31-ticket-responsive-print.webp",
+                  "alt": "A narrow viewport where three columns overlap, beside a print preview retaining only branding, passenger details, and barcode.",
+                  "caption": "Diagnose the narrow-screen overlap, then compare it with the print-only target.",
+                  "source": "CSS (2), slide 31",
+                  "width": 1400,
+                  "height": 610
+                }
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Exam Focus",
+                "text": "توقعي سؤالًا يطلب تحديد media type أو condition أو سبب عدم تطبيق القاعدة. راقبي الأقواس، اتجاه min/max-width، وهل المطلوب screen أم print."
+              }
+            ],
+            "recap": [
+              "Mobile-first starts small and enhances upward.",
+              "A media query combines a media type and condition.",
+              "print rules affect printing and print preview.",
+              "Test exact viewport sizes in DevTools."
+            ]
+          }
         },
         {
           "id": "css-grid",
@@ -87,7 +399,133 @@
             "web-exam2-t5-q71",
             "web-exam2-t5-q72",
             "web-exam2-t5-q73"
-          ]
+          ],
+          "content": {
+            "summary": "يشرح الدرس Grid كنظام ثنائي الأبعاد، خصائص الحاوية والمسارات، وحدة fr، الخطوط والفجوات، والتمدد عبر أكثر من خلية.",
+            "objectives": [
+              "Identify grid containers, items, tracks, gaps, and lines",
+              "Size tracks with fixed values, auto, and fr",
+              "Place and span items with grid-row and grid-column",
+              "Predict how later items flow after a span"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "CSS Grid",
+                "paragraphs": [
+                  "Definition — CSS Grid is a two-dimensional layout system that controls rows and columns together.",
+                  "الشرح — الحاوية التي عليها display:grid تنشئ الشبكة، وأبناؤها المباشرون فقط يصبحون grid items. يناسب تخطيط الصفحات المعقدة والتموضع الدقيق."
+                ]
+              },
+              {
+                "type": "list",
+                "heading": "Core Grid Properties",
+                "items": [
+                  "display: grid",
+                  "grid-template-columns",
+                  "grid-template-rows",
+                  "gap (grid-gap is the older source alias)",
+                  "grid-row and grid-column"
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Basic three-column grid",
+                "language": "css",
+                "code": ".grid {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr;\n  gap: 10px;\n}",
+                "explanation": "كل 1fr يأخذ حصة متساوية من المساحة المتاحة، وتوضع العناصر المباشرة في الخلايا حسب ترتيب المصدر."
+              },
+              {
+                "type": "figure",
+                "heading": "Grid anatomy",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t5/slide-38-grid-anatomy.webp",
+                  "alt": "Three diagrams identifying grid column tracks, row tracks, and horizontal and vertical gaps.",
+                  "caption": "Columns, rows, and gaps — الخطوط تحد الحدود، بينما الخلايا هي المساحات بينها.",
+                  "source": "CSS (2), slide 38",
+                  "width": 1400,
+                  "height": 650
+                }
+              },
+              {
+                "type": "text",
+                "heading": "Fractional Tracks",
+                "paragraphs": [
+                  "Definition — The fr unit represents a fraction of the available space in a grid container.",
+                  "الشرح — 1fr 1fr يقسم المساحة بالتساوي، و2fr 1fr يعطي المسار الأول ضعف حصة الثاني. يمكن مزج fr مع px أو %. fr وحدة Grid وليست Flexbox."
+                ]
+              },
+              {
+                "type": "figure",
+                "heading": "auto-sized tracks",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t5/slide-41-auto-columns.webp",
+                  "alt": "Grid using auto columns where tracks have unequal widths based on their content.",
+                  "caption": "auto tracks follow content and may become unequal.",
+                  "source": "CSS (2), slide 41",
+                  "width": 1280,
+                  "height": 350
+                }
+              },
+              {
+                "type": "figure",
+                "heading": "fractional tracks",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t5/slide-41-fr-columns.webp",
+                  "alt": "Grid using four fractional columns that divide the available width equally.",
+                  "caption": "1fr 1fr 1fr 1fr distributes equal shares despite unequal content.",
+                  "source": "CSS (2), slide 41",
+                  "width": 1280,
+                  "height": 340
+                }
+              },
+              {
+                "type": "figure",
+                "heading": "Numbered grid lines",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t5/slide-39-grid-lines.webp",
+                  "alt": "Three-column, three-row grid annotated with numbered column and row lines.",
+                  "caption": "Start/end values refer to grid lines, not cell numbers.",
+                  "source": "CSS (2), slide 39",
+                  "width": 430,
+                  "height": 390
+                }
+              },
+              {
+                "type": "code",
+                "heading": "Spanning tracks",
+                "language": "css",
+                "code": ".item1 { grid-column: 1 / 3; }\n.item2 { grid-column: 1 / span 2; }\n.item3 { grid-column: 1 / span 3; }",
+                "explanation": "الصيغة start / end تستخدم خطي البداية والنهاية، أما span فتحدد عدد المسارات. بعد تمدد عنصر، تتدفق العناصر اللاحقة إلى الخلايا المتبقية.",
+                "result": {
+                  "src": "lesson-assets/web-exam2/t5/slide-39-grid-span-result.webp",
+                  "alt": "Grid result where the first item spans the first two columns and later items flow into remaining cells.",
+                  "caption": "A spanning item changes the placement of the items that follow.",
+                  "source": "CSS (2), slide 39",
+                  "width": 455,
+                  "height": 250
+                }
+              },
+              {
+                "type": "callout",
+                "tone": "warning",
+                "heading": "Slide corrections",
+                "text": "استخدمي gap بدل grid-gap، والاسم الصحيح grid-template-rows. كذلك fr خاص بـGrid. الشبكة لا تغيّر عدد الأعمدة تلقائيًا لمجرد استخدام fr؛ ذلك يحتاج نمطًا مثل repeat(auto-fit, minmax(...))."
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Output clue",
+                "text": "في أسئلة توقّع الناتج، احسبي عدد المسارات أولًا ثم اقرئي أرقام الخطوط: grid-column: 1 / 3 يشغل عمودين، بينما span 3 يشغل ثلاثة مسارات. بعد ذلك ضعي العناصر التالية في أول خلايا متاحة حسب ترتيب المصدر."
+              }
+            ],
+            "recap": [
+              "Grid controls two dimensions.",
+              "Direct children become grid items.",
+              "fr divides available track space.",
+              "grid-column and grid-row use numbered lines or span."
+            ]
+          }
         },
         {
           "id": "css-flexbox",
@@ -104,7 +542,94 @@
             "web-exam2-t5-q58",
             "web-exam2-t5-q59",
             "web-exam2-t5-q74"
-          ]
+          ],
+          "content": {
+            "summary": "يغطي الدرس Flexbox كنظام أحادي البعد، اتجاه المحور والالتفاف، توزيع ومحاذاة العناصر، ثم grow وshrink وbasis.",
+            "objectives": [
+              "Explain the flex container and main/cross axes",
+              "Predict row, column, wrap, and nowrap behavior",
+              "Interpret the flex shorthand",
+              "Choose alignment and sizing controls"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "Flexbox",
+                "paragraphs": [
+                  "Definition — Flexbox is a one-dimensional layout system that arranges and distributes items along a row or a column.",
+                  "الشرح — الحاوية تحدد اتجاه المحور الأساسي، ثم توزع العناصر وتحاذيها حسب المساحة المتاحة. يمكن للعناصر الالتفاف إلى أسطر جديدة أو البقاء في سطر واحد."
+                ]
+              },
+              {
+                "type": "list",
+                "heading": "Container Controls",
+                "items": [
+                  "display: flex enables the flex formatting context.",
+                  "flex-direction: row or column selects the main axis.",
+                  "flex-wrap: nowrap keeps one line.",
+                  "flex-wrap: wrap allows later lines.",
+                  "justify-content aligns on the main axis.",
+                  "align-items aligns on the cross axis."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Row with wrapping",
+                "language": "css",
+                "code": ".flex-container {\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n}",
+                "explanation": "عند اتساع الحاوية تظهر العناصر الأربعة في صف واحد، ثم 3 + 1، ثم عنصر واحد في كل سطر عند الضيق.",
+                "result": {
+                  "src": "lesson-assets/web-exam2/t5/slide-45-flex-wrap-results.webp",
+                  "alt": "Wrapped row flex items shown four across, then three plus one, then one per line as width decreases.",
+                  "caption": "Final wrap behavior at large, medium, and small widths.",
+                  "source": "CSS (2), slide 45",
+                  "width": 410,
+                  "height": 920
+                }
+              },
+              {
+                "type": "text",
+                "heading": "Flexible Sizing",
+                "paragraphs": [
+                  "Definition — The flex shorthand sets flex-grow, flex-shrink, and flex-basis in that order.",
+                  "الشرح — grow يوزع المساحة الزائدة، shrink يقلص العناصر عند نقص المساحة، وbasis هو الحجم الابتدائي على المحور الأساسي."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "grow, shrink, basis",
+                "language": "css",
+                "code": ".fixed { flex: 0 0 100px; }\n.growOnly { flex: 1 0 100px; }\n.flexible { flex: 1 1 100px; }",
+                "explanation": "الأول لا يكبر ولا يصغر فيترك فراغًا أو يسبب overflow. الثاني يكبر بالتساوي ولا يصغر. الثالث يكبر ويصغر ليلائم الحاوية.",
+                "result": {
+                  "src": "lesson-assets/web-exam2/t5/slide-49-flex-sizing.webp",
+                  "alt": "Fixed, grow-only, and grow-and-shrink flex settings compared through unused-space, overflow, and fitted layouts.",
+                  "caption": "Visual comparison of flex: 0 0 100px, 1 0 100px, and 1 1 100px.",
+                  "source": "CSS (2), slide 49",
+                  "width": 1360,
+                  "height": 930
+                }
+              },
+              {
+                "type": "callout",
+                "tone": "warning",
+                "heading": "Exact CSS values",
+                "text": "القيمة الصحيحة هي nowrap بلا شرطة، وليست no-wrap. ومثال الاتجاه العمودي يجب أن يستخدم flex-direction:column حتى لو ظهر في الشريحة كـrow بالخطأ."
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Output clue",
+                "text": "إذا بقيت العناصر في صف واحد وصغرت فغالبًا nowrap. إذا انتقل العنصر الرابع لسطر جديد فالقيمة wrap. وإذا بقيت عمودية فالاتجاه column."
+              }
+            ],
+            "recap": [
+              "Flexbox is one-dimensional.",
+              "row and column select the main axis.",
+              "wrap creates additional flex lines.",
+              "flex means grow, shrink, basis."
+            ]
+          }
         },
         {
           "id": "css-layout-selection",
@@ -114,7 +639,87 @@
             "web-exam2-t5-q56",
             "web-exam2-t5-q57",
             "web-exam2-t5-q75"
-          ]
+          ],
+          "content": {
+            "summary": "يجمع الدرس قرار الاختيار بين Grid وFlexbox ويعيد بناء مثال الأعمدة من دون حسابات عرض يدوية، ثم يحلل تخطيطًا يتغير بين الشاشات.",
+            "objectives": [
+              "Choose Grid or Flexbox from the layout dimensions",
+              "Refactor manual inline-block columns",
+              "Combine Grid and Flexbox in one page",
+              "Infer a responsive layout from final outputs"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "Grid versus Flexbox",
+                "paragraphs": [
+                  "Definition — Grid coordinates rows and columns together, while Flexbox primarily manages one axis at a time.",
+                  "الشرح — استخدمي Grid عند بناء هيكل صفحة ثنائي الأبعاد أو ضبط الصفوف والأعمدة معًا، وFlexbox لمحاذاة مجموعة عناصر أو توزيع المساحة على محور واحد. الأداتان متكاملتان ويمكن استخدامهما داخل بعضهما."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Refactor the airline columns",
+                "language": "css",
+                "code": "/* Flex version */\n#extra { display: flex; gap: 5px; }\n#extra article { flex: 1 1 0; }\n\n/* Grid version */\n#extra {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr;\n  gap: 5px;\n}",
+                "explanation": "كلتا الطريقتين تستبدلان inline-block مع width:30%. في Flex تجعل flex:1 1 0 الأعمدة تتشارك المساحة، وفي Grid تحدد 1fr ثلاثة مسارات متساوية؛ لذلك لا نحتاج حساب عرض يدوي لكل article."
+              },
+              {
+                "type": "figure",
+                "heading": "Full-screen target",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t5/slide-51-layout-full.webp",
+                  "alt": "Full-width header and footer surrounding a middle row of navigation, main content, and sidebar.",
+                  "caption": "Full screen — header and footer span the page; nav, main, and sidebar share the middle row.",
+                  "source": "CSS (2), slide 51",
+                  "width": 1235,
+                  "height": 430
+                }
+              },
+              {
+                "type": "figure",
+                "heading": "Medium and small targets",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t5/slide-52-layout-medium-small.webp",
+                  "alt": "Medium layout with navigation beside main content and sidebar below, plus a narrow single-column layout.",
+                  "caption": "Medium and small results — المناطق تعيد ترتيب نفسها من صفوف مشتركة إلى عمود واحد.",
+                  "source": "CSS (2), slide 52",
+                  "width": 1360,
+                  "height": 900
+                }
+              },
+              {
+                "type": "list",
+                "heading": "Applied Activity Constraints",
+                "items": [
+                  "Use Grid and/or Flexbox.",
+                  "Do not use media queries.",
+                  "Do not set an explicit width on any element.",
+                  "Full: header; nav/main/sidebar row; footer.",
+                  "Medium: nav beside main; sidebar and footer below.",
+                  "Small: regions stack vertically."
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "key",
+                "heading": "Decision rule",
+                "text": "اسألي أولًا: هل أتحكم في صفوف وأعمدة معًا؟ اختاري Grid. هل أوزع أو أحاذي عناصر على محور واحد؟ اختاري Flexbox. وقد يكون الجواب الصحيح استخدام الاثنين."
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Exam Focus",
+                "text": "في سؤال اكتشاف الخطأ، ابحثي عن width يدوية غير لازمة، أو خلط fr مع Flexbox، أو استخدام Grid/Flex على العنصر الخطأ بدل الحاوية."
+              }
+            ],
+            "recap": [
+              "Grid is two-dimensional.",
+              "Flexbox is one-dimensional.",
+              "Both remove many manual width calculations.",
+              "They can be nested and combined."
+            ]
+          }
         }
       ],
       "questions": [
@@ -511,7 +1116,7 @@
           "explanation": "The comparison slide explicitly says Grid/Flexbox remove the need to calculate and set each element's width.",
           "explanation_ar": "تذكر شريحة المقارنة صراحة أن Grid/Flexbox تلغيان الحاجة إلى حساب وتحديد عرض كل عنصر.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 50",
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 48 and 50",
           "section": "css-layout-selection"
         },
         {
@@ -862,16 +1467,163 @@
             "web-exam2-t6-q36",
             "web-exam2-t6-q37",
             "web-exam2-t6-q38",
-            "web-exam2-t6-q39",
             "web-exam2-t6-q66",
             "web-exam2-t6-q67",
             "web-exam2-t6-q68",
             "web-exam2-t6-q69",
             "web-exam2-t6-q70",
             "web-exam2-t6-q71",
-            "web-exam2-t6-q72",
+            "web-exam2-t6-q76",
             "web-exam2-t6-q93"
-          ]
+          ],
+          "content": {
+            "summary": "يضع هذا الدرس خريطة JavaScript كاملة: دوره في الويب، خصائص التنفيذ، أدوات العمل، المنظومة المحيطة، طرق إدخاله في HTML، وتوقيت تشغيله.",
+            "objectives": [
+              "Explain JavaScript's role in the web stack",
+              "Describe runtime and language characteristics",
+              "Choose inline, embedded, or external inclusion",
+              "Predict script loading and defer behavior"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "JavaScript in the Web Stack",
+                "paragraphs": [
+                  "Definition — JavaScript is a programming language used on the web to add behavior, functionality, and interactivity.",
+                  "الشرح — HTML يبني structure، وCSS يحدد presentation، وJavaScript يضيف behavior. JavaScript ليست Java. الشرائح تقدم الأساسيات فقط، لذلك التطبيق العملي والمشاريع الصغيرة ضرورية لترسيخها."
+                ]
+              },
+              {
+                "type": "figure",
+                "heading": "HTML, CSS, JavaScript",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t6/slide-04-web-stack.webp",
+                  "alt": "Web stack with HTML as structure, CSS as presentation, and JavaScript as behavior, plus a Java is not JavaScript warning.",
+                  "caption": "Structure + presentation + behavior — الطبقات الثلاث الأساسية للويب.",
+                  "source": "JavaScript, slide 4",
+                  "width": 1180,
+                  "height": 470
+                }
+              },
+              {
+                "type": "text",
+                "heading": "Runtime Characteristics",
+                "paragraphs": [
+                  "Definition — JavaScript is dynamically typed, case-sensitive, and normally executed by a browser engine using interpretation plus JIT compilation.",
+                  "الشرح — تصف الشرائح JavaScript بأنها object-oriented: المصفوفات والدوال objects، لكن primitive values ليست objects رغم إمكان تغليفها مؤقتًا. لا توجد main؛ التنفيذ المعتاد من الأعلى للأسفل. تعريفات function declarations تُرفع، لكن class declarations تبقى في temporal dead zone ولا يمكن استخدامها قبل تهيئتها. حمّلي dependencies قبل كود التطبيق. الفاصلة المنقوطة غالبًا اختيارية لكنها مستحسنة للوضوح."
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "warning",
+                "heading": "Precise wording",
+                "text": "القيم primitive ليست objects، بينما functions هي objects وقد تغلف القيم البدائية مؤقتًا. كذلك class ليست قابلة للاستخدام قبل تعريفها رغم أن binding ينشأ مبكرًا."
+              },
+              {
+                "type": "code",
+                "heading": "Connect JavaScript to HTML",
+                "language": "html",
+                "code": "<script src='script.js' defer></script>",
+                "explanation": "الملف الخارجي يفصل behavior عن HTML ويسمح بإعادة الاستخدام والصيانة من مكان واحد. defer هو Boolean attribute؛ وجوده وحده يفعّله ولا يحتاج defer='true'. console.log يطبع في DevTools Console."
+              },
+              {
+                "type": "list",
+                "heading": "Lecture Setup",
+                "items": [
+                  "Visual Studio Code — write and save the HTML and JavaScript files.",
+                  "Google Chrome — open the page and run its browser JavaScript engine.",
+                  "Chrome DevTools Console — execute expressions, inspect values, and read errors."
+                ]
+              },
+              {
+                "type": "figure",
+                "heading": "Developer Console",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t6/slide-08-devtools-console.webp",
+                  "alt": "Chrome DevTools Console showing direct JavaScript input, a stored value, and a ReferenceError.",
+                  "caption": "Use the console to run expressions, inspect page state, and read errors.",
+                  "source": "JavaScript, slide 8",
+                  "width": 1410,
+                  "height": 435
+                }
+              },
+              {
+                "type": "list",
+                "heading": "JavaScript Ecosystem",
+                "items": [
+                  "Vanilla JavaScript — the language without an added library.",
+                  "ECMAScript — the language specification.",
+                  "React — a UI library; Vue and Angular — UI technologies/frameworks.",
+                  "NPM — package management.",
+                  "Webpack and Gulp — build/task tooling.",
+                  "Node.js — a JavaScript runtime outside the browser."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Three Inclusion Modes",
+                "language": "html",
+                "code": "<button onclick='save()'>Inline</button>\n\n<script>\n  console.log('Embedded');\n</script>\n\n<script src='app.js'></script>",
+                "explanation": "Inline يضع السلوك داخل attribute، وembedded داخل script في الصفحة، وexternal داخل ملف مستقل. الأفضل غالبًا external بسبب الفصل وإعادة الاستخدام."
+              },
+              {
+                "type": "text",
+                "heading": "Placement and Parsing",
+                "paragraphs": [
+                  "Definition — Script placement determines whether execution happens before or after later HTML has been parsed.",
+                  "الشرح — script عادي في head قد يوقف parsing وينفذ قبل وجود عناصر body، فتكون نتيجة selector هي null. وضعه قرب نهاية body يؤخر التنفيذ، بينما defer يسمح بتنزيل ملف خارجي أثناء parsing وتشغيله بعد اكتمال parsing وقبل DOMContentLoaded."
+                ]
+              },
+              {
+                "type": "figure",
+                "heading": "Early DOM access error",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t6/slide-11-dom-null-error.webp",
+                  "alt": "Browser console TypeError caused by reading innerText from null before the target element exists.",
+                  "caption": "The selector returned null because the document had not reached the element yet.",
+                  "source": "JavaScript, slide 11",
+                  "width": 1030,
+                  "height": 165
+                }
+              },
+              {
+                "type": "figure",
+                "heading": "Normal versus deferred execution",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t6/slide-13-defer-timeline.webp",
+                  "alt": "Normal scripts pause HTML parsing, while deferred scripts fetch during parsing and execute afterward.",
+                  "caption": "defer is non-blocking during parsing and works with external src scripts.",
+                  "source": "JavaScript, slide 13",
+                  "width": 1200,
+                  "height": 300
+                }
+              },
+              {
+                "type": "list",
+                "heading": "Syntax Bridge",
+                "items": [
+                  "let declarations, if/else, and the ternary operator",
+                  "single-line and block comments",
+                  "for and while loops",
+                  "function declarations and arrow functions",
+                  "array literals and indexed access",
+                  "object literals and property access"
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Exam Focus",
+                "text": "توقعي تحديد سبب null، الفرق بين embedded وexternal، وما الذي يفعله defer. defer لا يعني انتظار كل الصور والموارد؛ يعني التنفيذ بعد HTML parsing."
+              }
+            ],
+            "recap": [
+              "HTML is structure, CSS presentation, JavaScript behavior.",
+              "JavaScript is dynamic and case-sensitive.",
+              "External scripts improve separation and reuse.",
+              "defer fetches without blocking parsing and executes after parsing."
+            ]
+          }
         },
         {
           "id": "js-values-scope",
@@ -893,7 +1645,90 @@
             "web-exam2-t6-q63",
             "web-exam2-t6-q73",
             "web-exam2-t6-q74"
-          ]
+          ],
+          "content": {
+            "summary": "يشرح الدرس أنواع القيم المعروضة في المقرر، typeof، الفروق بين let وconst وvar، ثم global/function/block/lexical scope ونتائج الأكواد المرتبطة بها.",
+            "objectives": [
+              "Classify JavaScript values and typeof results",
+              "Choose let, const, or legacy var",
+              "Distinguish global, function, block, and lexical scope",
+              "Predict ReferenceError and persistent global state"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "JavaScript Values",
+                "paragraphs": [
+                  "Definition — A JavaScript value has a runtime type that determines the operations available to it.",
+                  "الشرح — تصنيف الشرائح: Number وString وBoolean وNull وUndefined وObject. الأعداد الصحيحة والكسور كلاهما Number مزدوج الدقة. للتدقيق: Object ليس primitive، وBigInt وSymbol غير مشمولين في تصنيف المقرر."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "typeof outcomes",
+                "language": "javascript",
+                "code": "typeof 10          // 'number'\ntypeof 10.5        // 'number'\ntypeof 'Moayad'    // 'string'\ntypeof true        // 'boolean'\ntypeof undefined   // 'undefined'\ntypeof null        // 'object'\ntypeof [20, 'k']   // 'object'\ntypeof { age: 35 } // 'object'\n'' === null        // false",
+                "explanation": "typeof null يعيد object بسبب سلوك تاريخي في JavaScript. المصفوفات أيضًا objects، والسلسلة الفارغة ليست null.",
+                "result": {
+                  "src": "lesson-assets/web-exam2/t6/slide-21-typeof-output.webp",
+                  "alt": "DevTools output showing number, string, boolean, undefined, null, array, and object type results.",
+                  "caption": "Runtime type results in the browser console.",
+                  "source": "JavaScript, slide 21",
+                  "width": 780,
+                  "height": 470
+                }
+              },
+              {
+                "type": "text",
+                "heading": "let, const, and var",
+                "paragraphs": [
+                  "Definition — let declares a reassignable block-scoped binding, const a non-reassignable block-scoped binding, and var a function-scoped legacy binding.",
+                  "الشرح — let من دون قيمة يبدأ undefined. const يجب تهيئته ولا يمكن إعادة إسناد binding نفسه، لكن محتوى object أو array داخله قد يتغير. تجنبي var لأن نطاقه الأقل وضوحًا قد يسبب أخطاء."
+                ]
+              },
+              {
+                "type": "text",
+                "heading": "Scope",
+                "paragraphs": [
+                  "Definition — Scope is the region in which a binding can be accessed or modified.",
+                  "الشرح — declaration خارج الدوال يكون global. داخل function يوجد function scope، وداخل الأقواس مع let/const يوجد block scope. lexical scope يعني أن الكود الداخلي يستطيع الوصول إلى bindings من النطاق الخارجي الذي كُتب بداخله."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Global, function, and block outcomes",
+                "language": "javascript",
+                "code": "function implicit() {\n  score = 10; // implicit global in sloppy mode\n}\nimplicit();\nconsole.log(score); // 10\n\nfunction local() {\n  var name = 'Ali';\n}\nconsole.log(name); // ReferenceError\n\nif (true) {\n  let level = 3;\n}\nconsole.log(level); // ReferenceError",
+                "explanation": "نسيان let/const/var قد ينشئ global ضمنيًا في non-strict code. أما المتغير المحلي أو block-scoped فلا يمكن الوصول إليه بعد انتهاء نطاقه."
+              },
+              {
+                "type": "code",
+                "heading": "var versus block scope",
+                "language": "javascript",
+                "code": "function demo() {\n  if (true) {\n    var a = 1;\n    let b = 2;\n    const c = 3;\n  }\n  console.log(a); // 1\n  console.log(b); // ReferenceError\n  console.log(c); // ReferenceError\n}",
+                "explanation": "var يتجاوز block حتى نهاية function، بينما let وconst ينتهيان عند القوس المغلق."
+              },
+              {
+                "type": "code",
+                "heading": "Local reset versus global persistence",
+                "language": "javascript",
+                "code": "function localCount() {\n  let start = 5;\n  start++;\n  return start;\n}\n\nlet start = 5;\nfunction globalCount() {\n  start++;\n  return start;\n}\n\nlocalCount();  // 6\nlocalCount();  // 6\nglobalCount(); // 6\nglobalCount(); // 7",
+                "explanation": "المتغير المحلي يُنشأ من جديد عند كل استدعاء، بينما global يستمر ويتغير بين الاستدعاءات. أي start محلي لا يغير global يحمل الاسم نفسه."
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Output strategy",
+                "text": "ارسمي حدود كل function وكل block، وحددي نوع declaration، ثم تتبعي هل القيمة تعاد تهيئتها أم تبقى global. بهذه الطريقة تتوقعين ReferenceError والنتائج بدقة."
+              }
+            ],
+            "recap": [
+              "typeof null is 'object'.",
+              "let and const are block-scoped; var is function-scoped.",
+              "Undeclared assignment may create an implicit global.",
+              "Local state resets per call; global state persists."
+            ]
+          }
         },
         {
           "id": "js-operators-coercion",
@@ -911,7 +1746,6 @@
             "web-exam2-t6-q64",
             "web-exam2-t6-q65",
             "web-exam2-t6-q75",
-            "web-exam2-t6-q76",
             "web-exam2-t6-q77",
             "web-exam2-t6-q78",
             "web-exam2-t6-q79",
@@ -921,7 +1755,128 @@
             "web-exam2-t6-q83",
             "web-exam2-t6-q84",
             "web-exam2-t6-q85"
-          ]
+          ],
+          "content": {
+            "summary": "يجمع الدرس Strings وNumbers وBooleans، truthiness، التحويل الضمني، loose/strict equality، null/undefined، ترتيب العمليات، الإسناد المركب، والزيادة قبل/بعد المتغير.",
+            "objectives": [
+              "Work with strings, escapes, numbers, and Math",
+              "Classify truthy and falsy values",
+              "Predict loose and strict equality",
+              "Apply precedence, assignments, and increment semantics"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "Strings",
+                "paragraphs": [
+                  "Definition — A string is a sequence of characters enclosed in single or double quotes.",
+                  "الشرح — + يربط السلاسل، بينما console.log يمكنه استقبال قيم مفصولة بفواصل. length خاصية وليست دالة، لذلك نكتب text.length دون أقواس."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Concatenation and escapes",
+                "language": "javascript",
+                "code": "let first = 'Web';\nlet second = \"Final\";\nconsole.log(first + ' ' + second); // Web Final\nconsole.log('A\\nB\\tC');\nconsole.log('\\\\  \\\"  \\'');\nconsole.log(first.length); // 3",
+                "explanation": "\\n سطر جديد، \\t tab، \\\\ شرطة مائلة عكسية، ويمكن escape لعلامات الاقتباس."
+              },
+              {
+                "type": "text",
+                "heading": "Numbers and Math",
+                "paragraphs": [
+                  "Definition — Number is JavaScript's ordinary numeric type and includes special values NaN, Infinity, and -Infinity.",
+                  "الشرح — ثوابت الشرائح تشمل Math.E وMath.PI وMath.SQRT2 وMath.LOG10E، والدوال Math.max/min/random/round/sqrt/pow. NaN تعني أن الناتج ليس رقمًا صالحًا، وليست مساوية لنفسها."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Math examples",
+                "language": "javascript",
+                "code": "Math.max(4, 9, 2); // 9\nMath.min(4, 9, 2); // 2\nMath.round(4.6);    // 5\nMath.sqrt(25);      // 5\nMath.pow(2, 3);     // 8\nMath.random();      // 0 <= value < 1",
+                "explanation": "Math.random يعيد قيمة من 0 شاملًا إلى أقل من 1، لذلك لا تتوقعي رقمًا ثابتًا."
+              },
+              {
+                "type": "text",
+                "heading": "Booleans and Truthiness",
+                "paragraphs": [
+                  "Definition — Truthiness is the conversion of a value to true or false in a Boolean context.",
+                  "الشرح — القيم falsy في محتوى الشرائح: null وundefined و0 وNaN و'' و\"\". بقية القيم المعروضة تعد truthy. المعاملات المنطقية هي && و|| و!."
+                ]
+              },
+              {
+                "type": "text",
+                "heading": "Loose and Strict Equality",
+                "paragraphs": [
+                  "Definition — Loose equality (==) may convert operands before comparing them; strict equality (===) compares type and value without coercion.",
+                  "الشرح — استخدمي === و!== لتجنب نتائج التحويل المفاجئة. تذكري أن NaN لا يساوي نفسه حتى مع ===."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Coercion outcomes",
+                "language": "javascript",
+                "code": "'' == '0'          // false\n'' == 0            // true\n0 == '0'           // true\n0 === '0'          // false\nNaN == NaN         // false\nNaN === NaN        // false\n[''] == ''         // true\nfalse == undefined // false\nfalse == null      // false\nnull == undefined  // true\nnull === undefined // false",
+                "explanation": "هذه مصفوفة النتائج الأساسية في الشرائح 32–33. في loose equality قد تتحول السلسلة أو المصفوفة قبل المقارنة، لكن false لا تساوي null أو undefined. strict equality يمنع تحويل النوع، وNaN لا تساوي نفسها بأي من العاملين."
+              },
+              {
+                "type": "text",
+                "heading": "null versus undefined",
+                "paragraphs": [
+                  "Definition — null usually represents an intentional absence, while undefined usually means no value has been assigned.",
+                  "الشرح — كلاهما غياب للقيمة لكن السبب مختلف. loose equality يعدهما متساويين، strict equality يميزهما."
+                ]
+              },
+              {
+                "type": "list",
+                "heading": "Precedence: highest to lowest",
+                "items": [
+                  "Unary operators",
+                  "Multiplicative: *, /, %",
+                  "Additive: +, -",
+                  "Relational: >, <, >=, <=",
+                  "Equality: ==, !=, ===, !==",
+                  "Logical AND: &&",
+                  "Logical OR: ||",
+                  "Ternary: condition ? a : b",
+                  "Assignment: =, +=, -=, *=, /=, %="
+                ]
+              },
+              {
+                "type": "text",
+                "heading": "Associativity",
+                "paragraphs": [
+                  "Definition — Associativity determines the grouping direction when operators have the same precedence.",
+                  "الشرح — حسب جدول الشريحة 36 تتجمع unary operators مثل ++ و-- و!، والـternary، وassignment من اليمين إلى اليسار. أما العمليات الثنائية الحسابية الشائعة مثل الطرح والقسمة فتتجمع من اليسار إلى اليمين."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Compound assignment",
+                "language": "javascript",
+                "code": "let n = 10;\nn += 5; // 15\nn -= 3; // 12\nn *= 2; // 24\nn /= 4; // 6\nn %= 4; // 2",
+                "explanation": "كل عامل مركب يقرأ القيمة القديمة ويطبق العملية ثم يخزن الناتج في المتغير نفسه."
+              },
+              {
+                "type": "code",
+                "heading": "Postfix versus prefix increment and decrement",
+                "language": "javascript",
+                "code": "let x = 5;\nconsole.log(x, x++, x); // 5 5 6\n\nlet y = 5;\nconsole.log(y, ++y, y); // 5 6 6\n\nlet b = 5;\nlet before = --b; // b = 4, before = 4\nlet after = b--;  // after = 4, then b = 3\nconsole.log(b, before, after); // 3 4 4",
+                "explanation": "العامل postfix يعيد القيمة القديمة ثم يغيرها، بينما prefix يغيرها أولًا ثم يعيد الجديدة. القاعدة نفسها تنطبق على ++ و--. ضعي العامل ملاصقًا للمتغير لتجنب الغموض."
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Output checklist",
+                "text": "حلّي الأقواس ثم precedence، وبعدها راقبي coercion ونوع equality، وأخيرًا حددي هل ++ قبل المتغير أم بعده."
+              }
+            ],
+            "recap": [
+              "length is a property.",
+              "Falsy: null, undefined, 0, NaN, and empty strings.",
+              "=== avoids implicit type conversion.",
+              "Postfix returns the old value; prefix returns the changed value."
+            ]
+          }
         },
         {
           "id": "js-functions-objects",
@@ -939,7 +1894,80 @@
             "web-exam2-t6-q87",
             "web-exam2-t6-q95",
             "web-exam2-t6-q96"
-          ]
+          ],
+          "content": {
+            "summary": "يشرح الدرس صيغ الدوال الثلاث، parameters وreturn، ثم object literals وconstructors وnew والوصول للخصائص والـmethods ومعنى this.",
+            "objectives": [
+              "Write declarations, expressions, and arrow functions",
+              "Explain parameters, return values, and callbacks",
+              "Create objects with literals and constructors",
+              "Use properties, methods, and this"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "Functions",
+                "paragraphs": [
+                  "Definition — A function is a reusable block of code that can accept parameters and return a value.",
+                  "الشرح — الدوال تقلل التكرار وتنظم الكود إلى وحدات. invocation يعني استدعاء الدالة، وreturn ينهيها ويرسل القيمة إلى مكان الاستدعاء."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Three function forms",
+                "language": "javascript",
+                "code": "function add(a, b) {\n  return a + b;\n}\n\nconst multiply = function (a, b) {\n  return a * b;\n};\n\nconst square = n => n * n;\n\nadd(2, 3);      // 5\nmultiply(2, 3); // 6\nsquare(4);      // 16",
+                "explanation": "الأولى function declaration، والثانية function expression مخزنة في متغير ويمكن تمريرها كـargument، والثالثة arrow function مختصرة من ES6."
+              },
+              {
+                "type": "callout",
+                "tone": "key",
+                "heading": "Arrow-function this",
+                "text": "Arrow functions do not create their own this; they capture this lexically from the surrounding scope. لذلك لا تستبدلي بها method يحتاج this خاصًا بالكائن دون فهم السياق."
+              },
+              {
+                "type": "text",
+                "heading": "Objects",
+                "paragraphs": [
+                  "Definition — An object is a collection of property-value pairs used to represent related data and behavior.",
+                  "الشرح — property تخزن قيمة، وmethod هي property قيمتها function. يمكن إنشاء object literal مباشرة أو استخدام constructor function مع new لإنشاء عدة instances."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Object literal",
+                "language": "javascript",
+                "code": "const person = {\n  name: 'Moayad',\n  age: 30,\n  occupation: 'Student',\n  greet() {\n    return 'Hello ' + this.name;\n  }\n};\n\nperson.name;      // dot notation\nperson['age'];    // bracket notation\nperson.greet();   // Hello Moayad",
+                "explanation": "dot notation مناسبة للاسم الثابت، وbracket notation تقبل اسم property كسلسلة أو متغير. داخل method تشير this إلى الكائن المستدعي."
+              },
+              {
+                "type": "code",
+                "heading": "Constructor and instances",
+                "language": "javascript",
+                "code": "function Person(name, age) {\n  this.name = name;\n  this.age = age;\n}\n\nconst first = new Person('Ali', 20);\nconst second = new Person('Osama', 22);",
+                "explanation": "new ينشئ كائنًا جديدًا ويربط this به، ثم ينفذ constructor. كل instance يحصل على قيمه الخاصة."
+              },
+              {
+                "type": "code",
+                "heading": "Methods, getter, and setter",
+                "language": "javascript",
+                "code": "const user = {\n  age: 30,\n  getAge() { return this.age; },\n  setAge(value) { this.age = value; }\n};\n\nuser.getAge(); // 30\nuser.setAge(35);\nuser.getAge(); // 35",
+                "explanation": "method تُستدعى عبر الكائن. this داخلها تشير إلى user، ولذلك setter يغير age من 30 إلى 35."
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Common errors",
+                "text": "تأكدي من الأقواس عند الاستدعاء، واستخدام new مع constructor، وفرق person.name عن person['name']، ومن الكائن الموجود يسار النقطة عند تقييم this."
+              }
+            ],
+            "recap": [
+              "Functions accept parameters and may return values.",
+              "A function expression can be passed as an argument.",
+              "Objects contain properties and methods.",
+              "this refers to the current receiver in an ordinary method call."
+            ]
+          }
         },
         {
           "id": "js-arrays-methods",
@@ -958,7 +1986,92 @@
             "web-exam2-t6-q90",
             "web-exam2-t6-q91",
             "web-exam2-t6-q94"
-          ]
+          ],
+          "content": {
+            "summary": "يغطي الدرس المصفوفات والفهرسة والطول والتكرار، ثم أثر أهم methods، وينهي بتطبيق Students/GPA ونتيجته النهائية.",
+            "objectives": [
+              "Create and index arrays",
+              "Iterate with for and forEach",
+              "Predict mutating and non-mutating method results",
+              "Trace the student GPA example"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "Arrays",
+                "paragraphs": [
+                  "Definition — An array is an object that stores an ordered list of values using zero-based indexes.",
+                  "الشرح — أول عنصر index 0، وlength خاصية. يمكن أن تكون المصفوفة فارغة أو تضم أنواعًا مختلفة، وتُنشأ بالـliteral [] أو Array constructor باستخدام new Array(...)."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Create and access",
+                "language": "javascript",
+                "code": "const empty = [];\nconst mixed = ['HTML', 321, true];\nconst sameIdea = new Array('HTML', 321, true);\n\nmixed[0];      // 'HTML'\nmixed[2];      // true\nmixed.length;  // 3",
+                "explanation": "كل من array literal وnew Array ينشئ مصفوفة. الفهرسة تبدأ من صفر، لذلك آخر index صالح عادةً length - 1."
+              },
+              {
+                "type": "code",
+                "heading": "for and forEach",
+                "language": "javascript",
+                "code": "const topics = ['CSS', 'JS', 'DOM'];\n\nfor (let i = 0; i < topics.length; i++) {\n  console.log(topics[i]);\n}\n\ntopics.forEach(function (topic) {\n  console.log(topic);\n});",
+                "explanation": "for يعطيك index صراحةً، بينما forEach يشغّل callback مرة لكل عنصر."
+              },
+              {
+                "type": "list",
+                "heading": "Array and String Methods",
+                "items": [
+                  "sort() — reorders the original array.",
+                  "join(separator) — returns one string.",
+                  "push(value) — appends and returns the new length.",
+                  "pop() — removes and returns the last item.",
+                  "concat(other) — returns a merged array.",
+                  "indexOf(value) — returns the index or -1.",
+                  "slice(start, end) — returns a selected copy; it also works on strings.",
+                  "splice(start, deleteCount, ...items) — edits the original array."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Method outcomes",
+                "language": "javascript",
+                "code": "let groceries = ['milk', 'bread', 'eggs'];\n\ngroceries.indexOf('milk'); // 0\ngroceries.slice(0, 2);     // ['milk', 'bread']\ngroceries.push('rice');    // array now has four items\ngroceries.pop();           // returns 'rice'\ngroceries.splice(1, 1);    // removes 'bread'\ngroceries.join(', ');      // 'milk, eggs'",
+                "explanation": "انتبهِي لما يعدل الأصل: push وpop وsort وsplice تعدل المصفوفة؛ concat وslice وjoin تعيد قيمة جديدة. في مثال الشرائح الصحيح indexOf('milk') يساوي 0 لا 1."
+              },
+              {
+                "type": "code",
+                "heading": "Student GPA logic",
+                "language": "javascript",
+                "code": "function Student(name, grades, dob) {\n  this.name = name;\n  this.grades = grades;\n  this.dob = dob;\n}\n\nfunction calculateGPA(student) {\n  let total = 0;\n  for (let i = 0; i < student.grades.length; i++) {\n    total += student.grades[i];\n  }\n  return total / student.grades.length;\n}\n\nconst students = [\n  new Student('Moayad', [85, 90, 75], '2001-05-20'),\n  new Student('Ali', [70, 80, 90], '2002-03-15'),\n  new Student('Osama', [80, 75, 85], '2000-11-10')\n];\n\nfor (const student of students) {\n  console.log(student.name, student.dob, student.grades, calculateGPA(student));\n}",
+                "explanation": "كل Student يخزن الاسم والدرجات وتاريخ الميلاد. ننشئ مصفوفة الطلاب ثم تمر الحلقة عليهم وتطبع الحقول والـGPA: Moayad يساوي 83.333...، وAli وOsama يساويان 80."
+              },
+              {
+                "type": "figure",
+                "heading": "Final GPA output",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t6/slide-53-student-gpa-output.webp",
+                  "alt": "Console output for three students showing names, birth dates, grades, and calculated GPAs.",
+                  "caption": "Moayad = 83.333..., Ali = 80, Osama = 80.",
+                  "source": "JavaScript, slide 53",
+                  "width": 390,
+                  "height": 600
+                }
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Method checklist",
+                "text": "في توقع الناتج اكتبي المصفوفة بعد كل method، وحددي هل method يعدل الأصل أم يعيد نسخة أو string، وتذكري zero-based indexing."
+              }
+            ],
+            "recap": [
+              "Arrays use zero-based indexing.",
+              "length is a property.",
+              "push/pop/splice/sort mutate the array.",
+              "slice/concat/join return new values."
+            ]
+          }
         },
         {
           "id": "js-exceptions-builtins",
@@ -972,8 +2085,110 @@
             "web-exam2-t6-q61",
             "web-exam2-t6-q48",
             "web-exam2-t6-q92",
-            "web-exam2-t6-q97"
-          ]
+            "web-exam2-t6-q97",
+            "web-exam2-t6-q39",
+            "web-exam2-t6-q72"
+          ],
+          "content": {
+            "summary": "يجمع الدرس إدخال المستخدم وإظهار الرسائل، built-in functions والتوقيت، ثم try/catch/throw وكيفية التعامل السليم مع الأخطاء.",
+            "objectives": [
+              "Use prompt, write, writeln, alert, and confirm",
+              "Convert and validate numeric input",
+              "Distinguish setTimeout and setInterval",
+              "Handle and throw exceptions"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "Browser Input and Output",
+                "paragraphs": [
+                  "Definition — Browser dialog and document methods allow a script to request input or display output.",
+                  "الشرح — prompt يطلب قيمة من المستخدم. document.write وwriteln يضيفان HTML أثناء بناء المستند، وalert يعرض نافذة لجذب الانتباه. هذه طرق تعليمية في الشرائح وليست دائمًا الخيار الأفضل لتطبيق حديث."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Count-controlled average",
+                "language": "javascript",
+                "code": "let total = 0;\nfor (let count = 1; count <= 10; count++) {\n  const input = prompt('Enter integer grade:');\n  total += parseInt(input, 10);\n}\nconst average = total / 10;\ndocument.write('<h1>Class average is ' + average + '</h1>');",
+                "explanation": "تكرر prompt عشر مرات، تحول كل string إلى integer، تجمع القيم ثم تقسم على 10. نتيجة بيانات الشريحة هي 79.4.",
+                "result": {
+                  "src": "lesson-assets/web-exam2/t6/slide-18-average-result.webp",
+                  "alt": "Grade prompt followed by a browser page displaying a class average of 79.4.",
+                  "caption": "Prompt input followed by the final Class average is 79.4 result.",
+                  "source": "JavaScript, slide 18",
+                  "width": 1230,
+                  "height": 580
+                }
+              },
+              {
+                "type": "code",
+                "heading": "Alert with a newline",
+                "language": "javascript",
+                "code": "alert('Welcome to\\nJavaScript Programming!');",
+                "explanation": "alert يستقبل string، و\\n يعرض سطرًا جديدًا داخل الرسالة."
+              },
+              {
+                "type": "figure",
+                "heading": "Alert dialog anatomy",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t6/slide-19-alert-anatomy.webp",
+                  "alt": "JavaScript alert dialog with title bar, multiline message, OK button, and mouse cursor.",
+                  "caption": "The alert blocks interaction until the user dismisses it.",
+                  "source": "JavaScript, slide 19",
+                  "width": 690,
+                  "height": 390
+                }
+              },
+              {
+                "type": "list",
+                "heading": "Built-in Functions",
+                "items": [
+                  "alert(message) — shows a message dialog.",
+                  "confirm(message) — returns true or false.",
+                  "parseInt(text, radix) — parses an integer.",
+                  "parseFloat(text) — parses a decimal number.",
+                  "isNaN(value) — checks whether numeric conversion is NaN.",
+                  "setTimeout(callback, ms) — runs once after a delay.",
+                  "setInterval(callback, ms) — repeats on an interval."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Timing",
+                "language": "javascript",
+                "code": "setTimeout(() => console.log('once'), 1000);\n\nconst id = setInterval(() => console.log('repeat'), 1000);\nclearInterval(id);",
+                "explanation": "setTimeout مرة واحدة بعد التأخير؛ setInterval يتكرر حتى إلغائه. لا تتوقعي أن callback يعمل فورًا."
+              },
+              {
+                "type": "text",
+                "heading": "Exception Handling",
+                "paragraphs": [
+                  "Definition — Exception handling detects runtime problems and transfers control to recovery code.",
+                  "الشرح — try يحتوي الكود المراقب. عند throw يتوقف باقي try وينتقل التنفيذ مباشرةً إلى catch(error)، حيث يمكن عرض أو تسجيل المشكلة بدل انهيار المسار بالكامل."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "try, catch, and throw",
+                "language": "javascript",
+                "code": "function divide(a, b) {\n  if (b === 0) {\n    throw new Error('Division by zero');\n  }\n  return a / b;\n}\n\ntry {\n  console.log(divide(10, 0));\n} catch (error) {\n  console.error(error.message);\n}",
+                "explanation": "throw new Error ينشئ exception. catch يستقبل error object. JavaScript تستخدم catch واحدًا ثم تفحص نوع الخطأ عند الحاجة، وليست multiple typed catch blocks."
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Control-flow clue",
+                "text": "بعد throw لا ينفذ السطر التالي داخل try. انتقلي مباشرةً إلى catch، ثم تابعي التنفيذ بعد catch إذا لم يوجد throw جديد."
+              }
+            ],
+            "recap": [
+              "prompt returns user input; parse it before arithmetic.",
+              "alert displays a blocking message.",
+              "setTimeout runs once; setInterval repeats.",
+              "throw transfers control from try to catch."
+            ]
+          }
         }
       ],
       "questions": [
@@ -1047,7 +2262,7 @@
           "explanation_ar": "تعرض prompt() مربع إدخال وتعيد القيمة التي كتبها المستخدم.",
           "src": "slides",
           "source": "CCSW321-Material-06 - JavaScript.pdf, slides 17-19",
-          "section": "js-role-runtime-inclusion"
+          "section": "js-exceptions-builtins"
         },
         {
           "id": "web-exam2-t6-q40",
@@ -1523,14 +2738,14 @@
           "q_ar": "أي عبارة تطابق الخاصية الكائنية المذكورة في المحاضرة؟",
           "hint_ar": "تصف الشريحة القيم والدوال بلغة الكائنات.",
           "choices": [
-            "JavaScript treats values and functions as objects or object-like values in its model",
+            "The lecture describes JavaScript as object-oriented: functions and arrays are objects, while primitive values are not objects",
             "Only class instances can ever be objects",
             "Functions cannot be stored in properties",
-            "Arrays are compiled Java classes"
+            "Every primitive value is permanently an object"
           ],
           "answer": 0,
-          "explanation": "The lecture emphasizes JavaScript's object-oriented nature and describes values and functions through its object model.",
-          "explanation_ar": "تؤكد المحاضرة الطبيعة الكائنية لـJavaScript وتعرض القيم والدوال من خلال نموذج الكائنات.",
+          "explanation": "The lecture calls JavaScript object-oriented. Functions and arrays are objects, but primitive values are not objects, although temporary boxing can occur.",
+          "explanation_ar": "تصف المحاضرة JavaScript بأنها object-oriented؛ الدوال والمصفوفات objects، أما primitive values فليست objects رغم إمكان تغليفها مؤقتًا.",
           "src": "slides",
           "source": "CCSW321-Material-06 - JavaScript.pdf, slides 3-5",
           "section": "js-role-runtime-inclusion"
@@ -1641,7 +2856,7 @@
           "explanation_ar": "تكتب document.write وwriteln في المستند، بينما تعرض alert رسالة منبثقة بزر OK.",
           "src": "slides",
           "source": "CCSW321-Material-06 - JavaScript.pdf, slides 17-19",
-          "section": "js-role-runtime-inclusion"
+          "section": "js-exceptions-builtins"
         },
         {
           "id": "web-exam2-t6-q73",
@@ -1713,7 +2928,7 @@
           "explanation_ar": "تستخدم JavaScript الصيغة /* ... */ لتعليق الكتلة وwhile (condition) { ... } لحلقة تختبر الشرط قبل التكرار.",
           "src": "slides",
           "source": "CCSW321-Material-06 - JavaScript.pdf, slides 14-16 and 35-36",
-          "section": "js-operators-coercion"
+          "section": "js-role-runtime-inclusion"
         },
         {
           "id": "web-exam2-t6-q77",
@@ -1845,16 +3060,16 @@
           "id": "web-exam2-t6-q84",
           "q": "Which operators associate from right to left in the lecture's precedence table?",
           "q_ar": "أي operators تتجمع من اليمين إلى اليسار في جدول precedence بالمحاضرة؟",
-          "hint_ar": "فكّر في assignment وconditional operator.",
+          "hint_ar": "يشمل الجدول unary وconditional وassignment.",
           "choices": [
-            "Assignment and the conditional ternary operator",
+            "Unary operators, the conditional ternary operator, and assignment",
             "Subtraction and division",
             "All relational comparisons",
             "Array indexing and function calls"
           ],
           "answer": 0,
-          "explanation": "Assignment and ?: associate right-to-left, unlike common subtraction and division, which associate left-to-right.",
-          "explanation_ar": "يتجمع assignment و?: من اليمين لليسار، بخلاف الطرح والقسمة المعتادين من اليسار لليمين.",
+          "explanation": "The lecture table marks unary operators, ?:, and assignment as right-to-left; common binary subtraction and division associate left-to-right.",
+          "explanation_ar": "يضع جدول المحاضرة unary operators و?: وassignment من اليمين لليسار، بخلاف الطرح والقسمة الثنائية المعتادة من اليسار لليمين.",
           "src": "slides",
           "source": "CCSW321-Material-06 - JavaScript.pdf, slide 36",
           "section": "js-operators-coercion"
@@ -2109,7 +3324,93 @@
             "web-exam2-t7-q37",
             "web-exam2-t7-q38",
             "web-exam2-t7-q39"
-          ]
+          ],
+          "content": {
+            "summary": "يعرّف الدرس DOM كواجهة كائنية ينشئها المتصفح من HTML، ثم يشرح الشجرة والعقد والعلاقات ودور document كجسر بين JavaScript والصفحة.",
+            "objectives": [
+              "Define the DOM and its purpose",
+              "Translate nested HTML into a node tree",
+              "Identify document, root, element, attribute, and text nodes",
+              "Explain the document object as the JavaScript bridge"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "Document Object Model (DOM)",
+                "paragraphs": [
+                  "Definition — The DOM is a browser-created programming interface that represents a document as objects so programs can access and update its content, structure, and style.",
+                  "الشرح — المتصفح يحول HTML إلى تمثيل كائني. من خلال JavaScript نستطيع إضافة أو تغيير أو حذف elements وattributes، تعديل CSS، الاستجابة للأحداث، وإنشاء أحداث جديدة."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "HTML becomes a tree",
+                "language": "html",
+                "code": "<body>\n  <h1>Hello</h1>\n  <p>\n    Check out my <a href='/page'>Page!</a>\n    It's the best page out there\n  </p>\n  <p>Come back soon!</p>\n</body>",
+                "explanation": "التداخل في HTML يتحول إلى parent/child relationships، والنصوص نفسها تصبح text nodes."
+              },
+              {
+                "type": "figure",
+                "heading": "DOM tree for the sample",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t7/slide-04-dom-tree.webp",
+                  "alt": "DOM tree with body containing h1, paragraph, link, text nodes, and another paragraph.",
+                  "caption": "Element nodes and text nodes preserve the nested HTML structure.",
+                  "source": "JavaScript for Web, slide 4",
+                  "width": 490,
+                  "height": 705
+                }
+              },
+              {
+                "type": "text",
+                "heading": "Node Hierarchy",
+                "paragraphs": [
+                  "Definition — A DOM node is an object occupying one position in the document tree.",
+                  "الشرح — Document في الأعلى، ثم root element وهو html. كل node لها صفر أو parent واحد، ويمكن أن يكون لها صفر أو أكثر من children وsiblings. element وattribute وtext كلها أجزاء ممثلة في DOM."
+                ]
+              },
+              {
+                "type": "figure",
+                "heading": "Complete hierarchy",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t7/slide-06-dom-hierarchy.webp",
+                  "alt": "DOM hierarchy from document and html through head, body, elements, attributes, and text nodes.",
+                  "caption": "document → html → head/body → elements, attributes, and text.",
+                  "source": "JavaScript for Web, slide 6",
+                  "width": 1400,
+                  "height": 1020
+                }
+              },
+              {
+                "type": "text",
+                "heading": "Nodes, Attributes, and Methods",
+                "paragraphs": [
+                  "Definition — DOM properties expose node state, while DOM methods perform operations on nodes and the document.",
+                  "الشرح — nodes هي JavaScript objects. كثير من HTML attributes تظهر كخصائص على element objects وتؤثر في الشكل أو السلوك. methods تسمح بالتنقل والوصول والتعديل برمجيًا."
+                ]
+              },
+              {
+                "type": "text",
+                "heading": "The document Object",
+                "paragraphs": [
+                  "Definition — document is the central DOM object representing the loaded page.",
+                  "الشرح — هو نقطة الربط الأساسية بين JavaScript والصفحة، ويقدم selectors وطرق إنشاء وربط العقد وتعديل attributes والتعامل مع events."
+                ]
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Tree reasoning",
+                "text": "لتحويل HTML إلى شجرة: ابدئي بـdocument ثم html، وحافظي على التداخل. النص بين الوسوم text node مستقل، وattribute مثل href يرتبط بعنصره."
+              }
+            ],
+            "recap": [
+              "The browser creates the DOM from HTML.",
+              "DOM nodes are JavaScript objects.",
+              "Each node has at most one parent.",
+              "document is the main JavaScript-to-page bridge."
+            ]
+          }
         },
         {
           "id": "dom-selection-collections",
@@ -2127,7 +3428,119 @@
             "web-exam2-t7-q42",
             "web-exam2-t7-q43",
             "web-exam2-t7-q62"
-          ]
+          ],
+          "content": {
+            "summary": "يشرح الدرس جميع selectors الموجودة في الشرائح وما تعيده من element أو HTMLCollection أو NodeList، ثم يوضح أنها array-like وليست Arrays.",
+            "objectives": [
+              "Choose an appropriate DOM selector",
+              "Predict a selector's return type",
+              "Index collections safely",
+              "Convert array-like collections when array methods are required"
+            ],
+            "blocks": [
+              {
+                "type": "list",
+                "heading": "Selector Inventory",
+                "items": [
+                  "getElementsByTagName(tagName)",
+                  "getElementsByName(name)",
+                  "getElementsByClassName(className)",
+                  "getElementById(id)",
+                  "querySelector(cssSelector)",
+                  "querySelectorAll(cssSelector)"
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Shared sample document",
+                "language": "html",
+                "code": "<h1 class='title'>CCSW 321 Students Club</h1>\n<form>\n  <label>Student Name:</label>\n  <input type='text' name='stdname'>\n  <input type='submit'>\n  <p id='msg'></p>\n</form>",
+                "explanation": "كل أمثلة الوصول في الشرائح تعمل على هذه العناصر نفسها، لذلك تتبعي id وclass وname ونوع العنصر."
+              },
+              {
+                "type": "figure",
+                "heading": "Rendered selector sample",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t7/slide-11-selector-form.webp",
+                  "alt": "Rendered student-club form with a name field and Submit button.",
+                  "caption": "The rendered baseline used by the selector examples.",
+                  "source": "JavaScript for Web, slide 11",
+                  "width": 470,
+                  "height": 280
+                }
+              },
+              {
+                "type": "text",
+                "heading": "Plural getElements Methods",
+                "paragraphs": [
+                  "Definition — Plural selector methods return array-like collections of every matching node.",
+                  "الشرح — getElementsByTagName('p') وgetElementsByClassName('title') يعيدان HTMLCollection حتى لو كان هناك عنصر واحد. getElementsByName('stdname') يعيد NodeList. استخدمي [0] للوصول إلى أول نتيجة."
+                ]
+              },
+              {
+                "type": "text",
+                "heading": "getElementById",
+                "paragraphs": [
+                  "Definition — getElementById(id) returns the element whose unique id matches, or null if none exists.",
+                  "الشرح — لأنه يعيد عنصرًا واحدًا لا نستخدم [0]. يجب أن يكون id فريدًا في المستند."
+                ]
+              },
+              {
+                "type": "text",
+                "heading": "querySelector and querySelectorAll",
+                "paragraphs": [
+                  "Definition — querySelector returns the first CSS-selector match; querySelectorAll returns a NodeList of all matches.",
+                  "الشرح — يمكن استخدام أي CSS selector مثل .title أو p أو input[name='stdname']. الأول يعيد element أو null، والثاني يعيد NodeList يمكن فهرستها."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Selector outcomes",
+                "language": "javascript",
+                "code": "document.getElementsByTagName('p')[0];\ndocument.getElementsByName('stdname')[0];\ndocument.getElementsByClassName('title')[0];\ndocument.getElementById('msg');\ndocument.querySelector(\"input[name='stdname']\");\ndocument.querySelectorAll('input'); // NodeList(2)",
+                "explanation": "راقبي المفرد والجمع. تصحيح الشريحة: class الصحيحة في المثال هي title، وليست msg."
+              },
+              {
+                "type": "figure",
+                "heading": "Selectors in DevTools",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t7/slide-17-selector-nodelist.webp",
+                  "alt": "DevTools showing querySelector results and a two-item NodeList from querySelectorAll.",
+                  "caption": "querySelector returns one match; querySelectorAll returns NodeList(2).",
+                  "source": "JavaScript for Web, slide 17",
+                  "width": 770,
+                  "height": 700
+                }
+              },
+              {
+                "type": "text",
+                "heading": "Collections Are Not Arrays",
+                "paragraphs": [
+                  "Definition — HTMLCollection and NodeList are array-like objects, not Array instances.",
+                  "الشرح — لديهما length ويمكن الفهرسة، لكن ليست كل Array methods متاحة. استخدميهما مباشرة عند كفاية ذلك، أو Array.from(collection) إذا احتجت map/filter وغيرها."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Convert when needed",
+                "language": "javascript",
+                "code": "const inputs = document.querySelectorAll('input');\nconst inputArray = Array.from(inputs);\ninputArray.map(input => input.type);",
+                "explanation": "التحويل ينشئ Array فعلية ثم يسمح باستخدام Array methods."
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Fast return-type rule",
+                "text": "getElementById وquerySelector مفردان. getElements... وquerySelectorAll مجموعات. حددي بعدها HTMLCollection أم NodeList ثم هل تحتاجين [0]."
+              }
+            ],
+            "recap": [
+              "getElementById and querySelector return one element.",
+              "getElementsByTagName/ClassName return HTMLCollection.",
+              "getElementsByName and querySelectorAll return NodeList.",
+              "Use Array.from for real array methods."
+            ]
+          }
         },
         {
           "id": "dom-traversal-lifecycle",
@@ -2147,7 +3560,117 @@
             "web-exam2-t7-q63",
             "web-exam2-t7-q66",
             "web-exam2-t7-q67"
-          ]
+          ],
+          "content": {
+            "summary": "يشرح الدرس التنقل عبر parent/child/sibling، ثم دورة حياة العقدة: إنشاؤها وهي detached، ربطها بالمستند، ونقلها أو حذفها.",
+            "objectives": [
+              "Traverse parent, child, and sibling relationships",
+              "Create detached DOM elements",
+              "Insert nodes at the beginning, end, or before a sibling",
+              "Remove nodes through their parent"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "DOM Traversal",
+                "paragraphs": [
+                  "Definition — DOM traversal navigates from a selected node to related parents, children, siblings, ancestors, or descendants.",
+                  "الشرح — يفيد عندما يصعب اختيار العقدة مباشرةً أو عندما نحتاج عنصرًا مرتبطًا بعنصر معروف."
+                ]
+              },
+              {
+                "type": "list",
+                "heading": "Traversal Properties",
+                "items": [
+                  "parentNode",
+                  "childNodes[i]",
+                  "children[i]",
+                  "firstChild",
+                  "lastChild",
+                  "previousSibling",
+                  "nextSibling",
+                  "nodeType and textContent"
+                ]
+              },
+              {
+                "type": "figure",
+                "heading": "Relationship map",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t7/slide-20-traversal-relations.webp",
+                  "alt": "DOM table nodes connected by parent, child, previous-sibling, and next-sibling relationships.",
+                  "caption": "Move vertically through parent/child links and horizontally through sibling links.",
+                  "source": "JavaScript for Web, slide 20",
+                  "width": 690,
+                  "height": 790
+                }
+              },
+              {
+                "type": "code",
+                "heading": "Traversal example",
+                "language": "javascript",
+                "code": "const section = document.querySelector('section');\nsection.parentNode;             // body\nsection.firstChild;             // first child node\nsection.lastChild;              // last child node\nsection.childNodes;             // all nodes: elements + text\nsection.children;               // element nodes only\nsection.firstChild.nextSibling; // the following sibling\n\nconst ul = document.querySelector('ul');\nul.innerHTML = '\\n  <li>A</li>\\n  <li>B</li>\\n';\nconsole.log(ul.firstChild.nodeType);    // 3: Text\nconsole.log(ul.children[0].nodeType);   // 1: Element\nconsole.log(ul.childNodes[1].textContent); // A",
+                "explanation": "ابدئي من section ثم اتبعي العلاقة المطلوبة. whitespace بين tags قد ينشئ text nodes: childNodes يحسب جميع العقد، بينما children يحسب elements فقط. nodeType يساوي 1 للعنصر و3 للنص، وtextContent يعيد محتوى العقدة النصي."
+              },
+              {
+                "type": "figure",
+                "heading": "Final traversal results",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t7/slide-21-traversal-console.webp",
+                  "alt": "DevTools traversal from a section to its parent, first and last children, child NodeList, and sibling.",
+                  "caption": "The console confirms body, first/last child, NodeList(3), and the ul sibling.",
+                  "source": "JavaScript for Web, slide 21",
+                  "width": 710,
+                  "height": 880
+                }
+              },
+              {
+                "type": "text",
+                "heading": "Create a Detached Node",
+                "paragraphs": [
+                  "Definition — document.createElement(tagName) creates a detached element that is not yet visible in the document.",
+                  "الشرح — العقدة موجودة كـobject في الذاكرة لكنها لا تظهر حتى تربطها بعقدة موجودة. يمكن أيضًا تعديل attributes وCSS وإضافة listeners قبل الربط."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Create and link",
+                "language": "javascript",
+                "code": "const item = document.createElement('li');\nitem.innerText = 'Study DOM';\n\nconst list = document.querySelector('ul');\nlist.appendChild(item);                 // at the end\nlist.prepend(item);                     // at the beginning\nlist.insertBefore(item, list.firstChild); // before a child",
+                "explanation": "appendChild يضيف في النهاية، prepend في البداية، وinsertBefore قبل sibling محدد. إذا نقلت العقدة نفسها مرة أخرى فلن تُنسخ؛ تنتقل إلى الموقع الجديد."
+              },
+              {
+                "type": "callout",
+                "tone": "warning",
+                "heading": "Slide correction",
+                "text": "prependChild ليست method قياسية. استخدمي prepend() أو insertBefore(newNode, parent.firstChild)."
+              },
+              {
+                "type": "code",
+                "heading": "Remove a node",
+                "language": "javascript",
+                "code": "const oldNode = document.querySelector('.old');\noldNode.parentNode.removeChild(oldNode);\n\n// Equivalent when parent is already known:\nparent.removeChild(oldNode);",
+                "explanation": "removeChild تُستدعى على parent وتستقبل child المراد حذفه."
+              },
+              {
+                "type": "callout",
+                "tone": "warning",
+                "heading": "Slide 40 loop correction",
+                "text": "الكود المعروض يستخدم i <= count، وهذا off-by-one، كما يحسب children لكنه يحذف firstChild الذي قد يكون text node. الإصلاح الآمن: while (container.firstChild) container.removeChild(container.firstChild);"
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Lifecycle order",
+                "text": "Create → configure → link → later modify/remove. أكثر خطأ شائع هو إنشاء element ثم نسيان ربطه، فيبقى غير ظاهر."
+              }
+            ],
+            "recap": [
+              "Traversal follows tree relationships.",
+              "createElement creates a detached node.",
+              "appendChild/prepend/insertBefore link or move nodes.",
+              "removeChild is called on the parent."
+            ]
+          }
         },
         {
           "id": "dom-content-attributes-style",
@@ -2166,7 +3689,105 @@
             "web-exam2-t7-q60",
             "web-exam2-t7-q61",
             "web-exam2-t7-q78"
-          ]
+          ],
+          "content": {
+            "summary": "يغطي الدرس تعديل محتوى العناصر وقيم النماذج وattributes، ثم CSS عبر style وclassList مع التمييز بين innerHTML وinnerText.",
+            "objectives": [
+              "Choose innerHTML, innerText, or value",
+              "Read and set element attributes",
+              "Modify inline styles using camelCase",
+              "Add and remove CSS classes"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "innerHTML",
+                "paragraphs": [
+                  "Definition — innerHTML gets or sets the HTML markup inside an element.",
+                  "الشرح — إذا وضعت '<strong>Hi</strong>' فسيُنشأ عنصر strong ويظهر النص منسقًا. استخدميها فقط مع محتوى موثوق لتجنب إدخال markup غير آمن."
+                ]
+              },
+              {
+                "type": "text",
+                "heading": "innerText",
+                "paragraphs": [
+                  "Definition — innerText gets or sets rendered textual content without interpreting HTML tags.",
+                  "الشرح — السلسلة '<strong>Hi</strong>' ستظهر كنص حرفي بدل إنشاء element، لذلك تناسب الرسائل النصية."
+                ]
+              },
+              {
+                "type": "text",
+                "heading": "value",
+                "paragraphs": [
+                  "Definition — value represents the current value of a form control.",
+                  "الشرح — لقراءة ما كتبه المستخدم في input استخدمي input.value، وليس innerText أو innerHTML."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Content comparison",
+                "language": "javascript",
+                "code": "const box = document.querySelector('#box');\nbox.innerHTML = '<strong>Hello</strong>';\nbox.innerText = '<strong>Hello</strong>';\n\nconst nameInput = document.querySelector('#name');\nconsole.log(nameInput.value);",
+                "explanation": "السطر الأول يفسر markup، والثاني يعرض العلامات كنص، والثالث يقرأ قيمة form control."
+              },
+              {
+                "type": "text",
+                "heading": "Attributes",
+                "paragraphs": [
+                  "Definition — setAttribute(name, value) creates or updates an HTML attribute on an element.",
+                  "الشرح — يمكن الوصول لبعض attributes مباشرة كخصائص مثل image.src، أو استخدام setAttribute('src', value). في الشرائح addAttribute خطأ؛ الاسم الصحيح setAttribute."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Change an image source",
+                "language": "javascript",
+                "code": "const image = document.querySelector('img');\nimage.src = 'ticket.png';\nimage.setAttribute('alt', 'Airline ticket');",
+                "explanation": "الوصول المباشر مناسب للخصائص الشائعة، وsetAttribute يعمل بالاسم النصي لأي attribute."
+              },
+              {
+                "type": "code",
+                "heading": "Change display and input type",
+                "language": "javascript",
+                "code": "panel.style.display = 'none';\npassword.type = 'text';",
+                "explanation": "السطر الأول يخفي panel عبر inline CSS، والثاني يغير حقل password إلى text فتظهر الأحرف بدل إخفائها."
+              },
+              {
+                "type": "code",
+                "heading": "Sofa Lab 7: Design 3",
+                "language": "javascript",
+                "code": "function changeDesign(number) {\n  designText.value = 'This is Design ' + number;\n  sofaImage.src = 'images/sofa-' + number + '.png';\n}\n\nchangeDesign(3);\n// designText.value === 'This is Design 3'\n// sofaImage.src ends with 'images/sofa-3.png'",
+                "explanation": "حقل النص يستخدم value، بينما الصورة تستخدم src. عند اختيار Design 3 تبني الدالة النص ومسار الصورة من الرقم نفسه."
+              },
+              {
+                "type": "text",
+                "heading": "Inline CSS",
+                "paragraphs": [
+                  "Definition — The style property exposes an element's inline CSS declarations.",
+                  "الشرح — أسماء CSS ذات الشرطة تتحول إلى camelCase في JavaScript: background-color تصبح backgroundColor وfont-weight تصبح fontWeight."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "style and classList",
+                "language": "javascript",
+                "code": "const message = document.querySelector('#msg');\nmessage.style.backgroundColor = 'steelblue';\nmessage.style.fontWeight = 'bold';\n\nmessage.classList.add('error');\nmessage.classList.remove('hidden');",
+                "explanation": "style يغير inline declaration مباشرة. classList أفضل غالبًا عندما تريدين تطبيق مجموعة CSS جاهزة وفصل presentation عن behavior."
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Choose the right property",
+                "text": "Markup داخل عنصر → innerHTML. نص فقط → innerText. قيمة input → value. Attribute → property أو setAttribute. مظهر قابل لإعادة الاستخدام → classList."
+              }
+            ],
+            "recap": [
+              "innerHTML interprets markup.",
+              "innerText handles text.",
+              "Form controls use value.",
+              "CSS names become camelCase through style."
+            ]
+          }
         },
         {
           "id": "dom-events-validation",
@@ -2197,7 +3818,204 @@
             "web-exam2-t7-q75",
             "web-exam2-t7-q76",
             "web-exam2-t7-q77"
-          ]
+          ],
+          "content": {
+            "summary": "يجمع الدرس النموذج event-driven، إضافة وإزالة listeners، مثالي Edit Text وTo-do، ثم طبقة التحقق كاملة: الأنواع والتقنيات والسائق والنتائج والأمان.",
+            "objectives": [
+              "Attach and remove event handlers",
+              "Trace the Edit Text and To-do applications",
+              "Apply six families of validation checks",
+              "Prevent invalid submission and validate whitelist values"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "Event-driven Programming",
+                "paragraphs": [
+                  "Definition — Event-driven code waits for an event and then runs a listening function called an event handler.",
+                  "الشرح — كود المتصفح لا يعمل كله دفعة واحدة؛ ينتظر click أو submit أو keypress أو focus ثم يشغل handler المرتبط. keypress مصطلح مطلوب من الشرائح لكنه deprecated؛ استخدمي keydown في الكود الحديث."
+                ]
+              },
+              {
+                "type": "figure",
+                "heading": "Event flow",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t7/slide-32-event-flow.webp",
+                  "alt": "A button click fires an event that invokes its listening event-handler function.",
+                  "caption": "User action → event → listening handler executes.",
+                  "source": "JavaScript for Web, slide 32",
+                  "width": 1310,
+                  "height": 610
+                }
+              },
+              {
+                "type": "code",
+                "heading": "Add and remove a listener",
+                "language": "javascript",
+                "code": "const button = document.querySelector('button');\n\nfunction editText() {\n  const next = prompt('Type new text');\n  document.querySelector('#text').innerText = next;\n}\n\nbutton.addEventListener('click', editText);\n\n// Later, only when teardown is needed:\n// button.removeEventListener('click', editText);",
+                "explanation": "اسم event من دون on، والدالة تمرر كمرجع من دون أقواس. يظل listener فعالًا لتنتج لقطة Edit Text؛ وعند الإزالة لاحقًا يجب تمرير مرجع الدالة نفسه."
+              },
+              {
+                "type": "figure",
+                "heading": "Edit Text result sequence",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t7/slide-35-edit-text-result.webp",
+                  "alt": "Paragraph before editing, prompt input containing Hello World, and the updated paragraph afterward.",
+                  "caption": "Initial paragraph → prompt → updated innerText.",
+                  "source": "JavaScript for Web, slide 35",
+                  "width": 600,
+                  "height": 830
+                }
+              },
+              {
+                "type": "text",
+                "heading": "To-do Application Flow",
+                "paragraphs": [
+                  "Definition — The To-do example combines DOM creation, event listeners, form input, and node removal in one small application.",
+                  "الشرح — ابدئي بـHTML/CSS ويمكن استخدام Bootstrap. زر الإضافة وEnter يستدعيان addElement، وزر Clear يستدعي emptyList. addElement يقرأ input وينشئ wrapper وcheckbox وlabel ويفرغ input ويربط العقد ويضيف listener للحذف."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "To-do HTML scaffold",
+                "language": "html",
+                "code": "<section id='form'>\n  <input id='todoInput' type='text'>\n  <button id='add' type='button'>Add</button>\n</section>\n\n<section id='mylist'></section>\n\n<section id='clear'>\n  <button id='clearButton' type='button'>Clear List</button>\n</section>",
+                "explanation": "هذه هي البنية المكتوبة المطلوبة لتطبيق الشرائح: input وزر إضافة، حاوية items، وزر Clear List."
+              },
+              {
+                "type": "code",
+                "heading": "Core To-do logic",
+                "language": "javascript",
+                "code": "const input = document.querySelector('#todoInput');\nconst addButton = document.querySelector('#add');\nconst clearButton = document.querySelector('#clearButton');\nconst list = document.querySelector('#mylist');\n\nfunction addElement() {\n  const text = input.value.trim();\n  if (!text) return;\n\n  const row = document.createElement('div');\n  const checkbox = document.createElement('input');\n  const label = document.createElement('label');\n\n  checkbox.type = 'checkbox';\n  label.innerText = text;\n  checkbox.addEventListener('click', () => row.remove());\n  row.addEventListener('dblclick', () => row.remove());\n  row.append(checkbox, label);\n  list.appendChild(row);\n  input.value = '';\n}\n\nfunction emptyList() {\n  while (list.firstChild) list.removeChild(list.firstChild);\n}\n\naddButton.addEventListener('click', addElement);\ninput.addEventListener('keydown', event => {\n  if (event.key === 'Enter') addElement();\n});\nclearButton.addEventListener('click', emptyList);",
+                "explanation": "نمرر addElement كمرجع، ونرفض النص الفارغ، ونربط الإضافة بالزر وEnter والحذف بالcheckbox أو dblclick، ثم نفرغ input. تستخدم الشريحة keypress؛ استخدمنا keydown لأنه البديل الحديث مع بقاء e.key === 'Enter' كما في فكرة الاختبار."
+              },
+              {
+                "type": "figure",
+                "heading": "Completed To-do result",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t7/slide-37-todo-result.webp",
+                  "alt": "To-do application with two checkbox items and a Clear List button.",
+                  "caption": "Final populated state after dynamically adding two tasks.",
+                  "source": "JavaScript for Web, slide 37",
+                  "width": 820,
+                  "height": 350
+                }
+              },
+              {
+                "type": "text",
+                "heading": "Frontend Validation",
+                "paragraphs": [
+                  "Definition — Validation checks that input is present, correct, and consistent with required type, format, range, length, or allowed values.",
+                  "الشرح — التحقق يقلل الأخطاء وعدم الاتساق، يعطي feedback سريعًا، ويساعد ضد المدخلات غير المتوقعة. لكنه لا يغني عن تحقق backend."
+                ]
+              },
+              {
+                "type": "list",
+                "heading": "Six Validation Families",
+                "items": [
+                  "Presence — required data is not empty.",
+                  "Data type — value belongs to the expected type.",
+                  "Format — value follows a pattern such as email.",
+                  "Range — numeric value lies between limits.",
+                  "Length — text or digit count fits limits.",
+                  "Whitelist — value belongs to an approved set."
+                ]
+              },
+              {
+                "type": "list",
+                "heading": "Validation Techniques",
+                "items": [
+                  "Regular expressions",
+                  "isNaN and numeric conversion",
+                  "if conditions and loops",
+                  "Library or framework validation helpers"
+                ]
+              },
+              {
+                "type": "figure",
+                "heading": "Validation-form baseline",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t7/slide-44-validation-form.webp",
+                  "alt": "Registration form with name, email, mobile, source radio buttons, Submit, and Reset.",
+                  "caption": "Fields to check: name, email, nine-digit mobile, and approved radio selection.",
+                  "source": "JavaScript for Web, slide 44",
+                  "width": 1400,
+                  "height": 480
+                }
+              },
+              {
+                "type": "code",
+                "heading": "Form controls and native constraints",
+                "language": "html",
+                "code": "<form id='registrationForm'>\n  <input type='text' name='fname' maxlength='25'\n         pattern='[A-Za-z0-9 ]+'>\n  <input type='email' name='email'>\n\n  <select name='countryCode'>\n    <option value='+966'>+966</option>\n  </select>\n  <input type='tel' name='mobile' minlength='9' maxlength='9'>\n\n  <label><input type='radio' name='aboutus' value='Google'> Google</label>\n  <label><input type='radio' name='aboutus' value='TV'> TV</label>\n  <label><input type='radio' name='aboutus' value='Friend'> Friend</label>\n\n  <button type='submit'>Submit</button>\n  <button type='reset'>Reset</button>\n  <p id='msg' aria-live='polite'></p>\n</form>",
+                "explanation": "هذه attributes الظاهرة في HTML بالشريحة 46: type وname وpattern وminlength وmaxlength، وتشترك radio buttons في name='aboutus' حتى يكون الاختيار واحدًا. يحيط بها form قابل للإرسال، ويستقبل #msg رسائل التحقق داخل الصفحة."
+              },
+              {
+                "type": "text",
+                "heading": "Applied Form Rules",
+                "paragraphs": [
+                  "Definition — A validation rule combines a requirement with a test and user feedback.",
+                  "الشرح — متطلب الشريحة 45 للاسم هو حروف إنجليزية فقط وطول 2–100، ويختبره JavaScript بالنمط `^[A-Za-z]{2,100}$`. لكن HTML في الشريحة 46 يضع `maxlength='25'` و`pattern='[A-Za-z0-9 ]+'` الذي يسمح بأرقام ومسافات؛ هذا تعارض في الشرائح، ولأسئلة الاختبار اتبعي متطلب الشريحة 45 مع معرفة attributes الحرفية في الشريحة 46. البريد مطلوب ثم يُفحص format، والجوال مطلوب ثم يُفحص أنه تسعة أرقام، والاختيار يجب أن يكون Google أو TV أو Friend."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Submit driver",
+                "language": "javascript",
+                "code": "const form = document.querySelector('#registrationForm');\nconst message = document.querySelector('#msg');\n\nform.addEventListener('submit', function (event) {\n  const issues = [];\n  const name = document.getElementsByName('fname')[0].value;\n  const email = document.getElementsByName('email')[0].value;\n  const mobile = document.getElementsByName('mobile')[0].value;\n  const source = document.querySelector(\"input[name='aboutus']:checked\")?.value;\n\n  if (!isFilled(name)) issues.push('First name is missing');\n  else if (!isName(name)) issues.push('Name must be 2-100 English letters');\n\n  if (!isFilled(email)) issues.push('Email is missing');\n  if (!isEmail(email)) issues.push('Email format is wrong');\n\n  if (!isFilled(mobile)) issues.push('Mobile is missing');\n  if (!isMobile(mobile)) issues.push('Mobile must contain 9 digits');\n\n  if (!isWhitelisted(source)) issues.push('Selection is invalid');\n\n  if (issues.length) {\n    event.preventDefault();\n    message.innerText =\n      'Issues found [' + issues.length + ']: ' + issues.join(', ');\n  }\n});",
+                "explanation": "عند النموذج الفارغ تنتج ست issues كما في النتيجة: الاسم مفقود، البريد مفقود وصيغته خاطئة، الجوال مفقود وصيغته/طوله خاطئ، والاختيار غير صالح. فحص صيغة الاسم يعمل عندما يكتب المستخدم قيمة غير فارغة. عند وجود issues نستخدم preventDefault ونعرض العدد والنص داخل body."
+              },
+              {
+                "type": "code",
+                "heading": "Helper intentions",
+                "language": "javascript",
+                "code": "const isFilled = value => value.trim().length > 0;\nconst isName = value => /^[A-Za-z]{2,100}$/.test(value);\nconst isEmail = value => /^[a-z0-9]+@[a-z]+\\.[a-z]{2,4}$/i.test(value);\nconst isMobile = value => /^[0-9]{9}$/.test(value);\nconst isWhitelisted = value => ['Google', 'TV', 'Friend'].includes(value);",
+                "explanation": "تعرض الشريحة نمط البريد `[a-z0-9]+@[a-z]+\\.[a-z]{2,4}` دون anchors؛ أضفنا `^` و`$` حتى تطابق القيمة كلها، و`i` لقبول حالة الأحرف. Regex الاسم تطبق متطلب 2–100 حرف إنجليزي، والجوال تسعة أرقام. شرط الجوال format/length وليس numeric range."
+              },
+              {
+                "type": "figure",
+                "heading": "Empty submission",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t7/slide-52-validation-errors.webp",
+                  "alt": "Empty form submission displaying six inline validation errors.",
+                  "caption": "No input produces six simultaneous issues in the slide example.",
+                  "source": "JavaScript for Web, slide 52",
+                  "width": 1140,
+                  "height": 720
+                }
+              },
+              {
+                "type": "figure",
+                "heading": "Whitelist rejection",
+                "figure": {
+                  "src": "lesson-assets/web-exam2/t7/slide-55-whitelist-rejection.webp",
+                  "alt": "Injected Secret Code radio option rejected with Selection is invalid.",
+                  "caption": "A DevTools-injected value is rejected because it is not in the approved set.",
+                  "source": "JavaScript for Web, slide 55",
+                  "width": 820,
+                  "height": 640
+                }
+              },
+              {
+                "type": "callout",
+                "tone": "warning",
+                "heading": "Security boundary",
+                "text": "Frontend validation يحسن تجربة المستخدم لكنه قابل للتجاوز والتعديل من DevTools. يجب على backend إعادة التحقق من جميع القيم، خصوصًا whitelist."
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Validation diagnosis",
+                "text": "حددي أولًا نوع الفحص: presence/type/format/range/length/whitelist. ثم راقبي name، selector الخاص بالـchecked radio، anchors في regex، ومكان preventDefault."
+              }
+            ],
+            "recap": [
+              "Events invoke registered handlers.",
+              "addEventListener receives an event name and function reference.",
+              "Invalid submit requires preventDefault.",
+              "Frontend and backend must both validate."
+            ]
+          }
         },
         {
           "id": "dom-libraries-practices",
@@ -2212,7 +4030,89 @@
             "web-exam2-t7-q79",
             "web-exam2-t7-q80",
             "web-exam2-t7-q81"
-          ]
+          ],
+          "content": {
+            "summary": "يعرّف الدرس المكتبات والأطر المذكورة في الشرائح، يميز أدوارها، ثم يجمع ممارسات JavaScript الصحيحة من الفصل بين الطبقات إلى ترتيب التحميل والوحدات.",
+            "objectives": [
+              "Explain libraries and frameworks",
+              "Match each named tool to its purpose",
+              "Apply separation and naming practices",
+              "Load modular code in a safe order"
+            ],
+            "blocks": [
+              {
+                "type": "text",
+                "heading": "Libraries and Frameworks",
+                "paragraphs": [
+                  "Definition — Libraries and frameworks provide prewritten functionality that speeds up common development tasks.",
+                  "الشرح — قد تساعد في HTTP requests وDOM manipulation وtemplate rendering. تعرض الشرائح المكتبة كخيار أصغر وأسهل ويمكن إدخاله تدريجيًا، بينما الإطار عادةً يحدد بنية أوسع للتطبيق."
+                ]
+              },
+              {
+                "type": "list",
+                "heading": "Libraries in the Slides",
+                "items": [
+                  "jQuery — DOM traversal/manipulation, events, and AJAX.",
+                  "Moment.js — date and time parsing/formatting.",
+                  "Lodash — utilities for arrays, objects, and strings."
+                ]
+              },
+              {
+                "type": "list",
+                "heading": "UI Technologies in the Slides",
+                "items": [
+                  "Angular — a framework associated with MVC, two-way binding, and dependency injection.",
+                  "React — a component-based, declarative UI library.",
+                  "Vue — a lightweight, reactive component framework."
+                ]
+              },
+              {
+                "type": "text",
+                "heading": "Separation of Concerns",
+                "paragraphs": [
+                  "Definition — Separation of concerns assigns content to HTML, presentation to CSS, and behavior to JavaScript.",
+                  "الشرح — قللي inline JavaScript، اربطي behavior عبر DOM، وضعي الكود في ملفات .js خارجية ليسهل إعادة الاستخدام والصيانة."
+                ]
+              },
+              {
+                "type": "list",
+                "heading": "JavaScript Best Practices",
+                "items": [
+                  "Use consistent, descriptive naming.",
+                  "Avoid unnecessary globals because of collisions and security risks.",
+                  "Load dependencies before the code that uses them.",
+                  "Run DOM-dependent code after the document is parsed.",
+                  "Keep code modular and reusable.",
+                  "Choose a suitable library or framework for complex work."
+                ]
+              },
+              {
+                "type": "code",
+                "heading": "Safe external loading",
+                "language": "html",
+                "code": "<script src='vendor.js' defer></script>\n<script src='app.js' defer></script>",
+                "explanation": "ترتيب HTML محفوظ مع defer: dependency أولًا ثم app. كلاهما يعمل بعد اكتمال parsing، فيبقى HTML وCSS وJavaScript منفصلة."
+              },
+              {
+                "type": "callout",
+                "tone": "exam",
+                "heading": "Match the tool",
+                "text": "jQuery للـDOM/AJAX، Moment للتاريخ والوقت، Lodash للـutilities، Angular framework، React UI library، وVue reactive component framework."
+              },
+              {
+                "type": "callout",
+                "tone": "key",
+                "heading": "Final practice rule",
+                "text": "اختاري الأداة التي تحل المشكلة الفعلية، وحافظي على modular code وترتيب dependencies، ولا تجعلي المكتبة بديلًا عن فهم JavaScript والDOM."
+              }
+            ],
+            "recap": [
+              "Libraries provide reusable functions; frameworks guide broader structure.",
+              "Separate HTML, CSS, and JavaScript.",
+              "Avoid globals and use consistent names.",
+              "Load dependencies before application code."
+            ]
+          }
         }
       ],
       "questions": [
@@ -2714,8 +4614,8 @@
             "`container.removeChild(container);`"
           ],
           "answer": 0,
-          "explanation": "children counts element nodes only, while firstChild may be a text node. Removing while firstChild exists clears every node without relying on mismatched counts.",
-          "explanation_ar": "تحسب children عناصر DOM فقط، بينما قد يكون firstChild عقدة نصية؛ تحذف while جميع العقد بلا عدادات غير متطابقة.",
+          "explanation": "The slide loop also uses i <= count, an off-by-one condition. In addition, children counts only elements while firstChild may be a text node; a while-firstChild loop clears every node safely.",
+          "explanation_ar": "يستخدم loop في الشريحة أيضًا i <= count وهذا off-by-one، كما تحسب children العناصر فقط وقد يكون firstChild عقدة نصية؛ تحذف while جميع العقد بأمان.",
           "src": "slides",
           "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 40 (correction audit)",
           "section": "dom-traversal-lifecycle"
@@ -2740,8 +4640,8 @@
         },
         {
           "id": "web-exam2-t7-q65",
-          "q": "Why should the shown email regex be anchored with ^ and $ when validating the entire field?",
-          "q_ar": "لماذا ينبغي تثبيت regex البريد المعروض بالرمزين ^ و$ عند التحقق من الحقل كاملًا؟",
+          "q": "Why should the shown email regex be anchored with `^` and `$` when validating the entire field?",
+          "q_ar": "لماذا ينبغي تثبيت regex البريد المعروض بالرمزين `^` و`$` عند التحقق من الحقل كاملًا؟",
           "hint_ar": "المطلوب مطابقة القيمة كلها لا جزءًا منها.",
           "choices": [
             "Without anchors, a matching email-shaped substring can allow extra surrounding junk",
@@ -2770,8 +4670,8 @@
           "answer": 0,
           "explanation": "The leading and trailing whitespace become text nodes with nodeType 3; childNodes[1] is the first li containing A.",
           "explanation_ar": "تتحول المسافات في البداية والنهاية إلى text nodes نوعها 3، ويكون childNodes[1] أول li ونصه A.",
-          "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 19-20",
+          "src": "extra",
+          "source": "StudyFlow lesson extension · DOM whitespace text-node tracing",
           "section": "dom-traversal-lifecycle"
         },
         {
@@ -2906,10 +4806,10 @@
           "q_ar": "أي regular expression يتحقق من اسم بحروف إنجليزية وطول 2 إلى 100؟",
           "hint_ar": "استخدم anchors وحروف A-Z/a-z وrange للطول.",
           "choices": [
-            "^[A-Za-z]{2,100}$",
-            "^[0-9]{2,100}$",
-            ".*@.*",
-            "^[A-Za-z]{101,}$"
+            "`^[A-Za-z]{2,100}$`",
+            "`^[0-9]{2,100}$`",
+            "`.*@.*`",
+            "`^[A-Za-z]{101,}$`"
           ],
           "answer": 0,
           "explanation": "The anchors require the whole value to contain only English letters and the quantifier enforces length 2 to 100.",
@@ -3658,14 +5558,14 @@
           "q_ar": "أي عبارة تناسب تنفيذ JavaScript؟",
           "hint_ar": "قارنها باللغات المترجمة.",
           "choices": [
-            "No main method; ordinary code runs top-to-bottom with hoisting",
+            "No main method; ordinary code runs top-to-bottom, function declarations are hoisted, and classes stay unusable before initialization",
             "A main method is mandatory",
             "The developer must compile it before every browser run",
             "Files always load in reverse"
           ],
           "answer": 0,
-          "explanation": "The slides describe no main method, top-to-bottom execution, and hoisting of functions/classes.",
-          "explanation_ar": "تصف الشرائح عدم وجود main والتنفيذ من الأعلى للأسفل مع رفع الدوال والفئات.",
+          "explanation": "There is no required main method and ordinary statements run top-to-bottom. Function declarations are hoisted; class declarations remain unusable in their temporal dead zone until initialization.",
+          "explanation_ar": "لا توجد main مطلوبة، والتنفيذ المعتاد من الأعلى للأسفل. تُرفع function declarations، لكن class declarations لا تُستخدم داخل temporal dead zone قبل تهيئتها.",
           "src": "slides",
           "source": "CCSW321-Material-06 - JavaScript.pdf, slide 5",
           "section": "js-role-runtime-inclusion"

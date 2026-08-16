@@ -7,6 +7,38 @@ export interface NotesBlock {
   watch?: string[]
 }
 
+export interface LessonFigure {
+  src: string
+  alt: string
+  caption: string
+  source: string
+  width: number
+  height: number
+}
+
+export type LessonCodeLanguage = 'html' | 'css' | 'javascript'
+
+export type LessonBlock =
+  | { type: 'text'; heading?: string; paragraphs: string[] }
+  | { type: 'list'; heading?: string; items: string[] }
+  | {
+      type: 'code'
+      heading?: string
+      language: LessonCodeLanguage
+      code: string
+      explanation?: string
+      result?: LessonFigure
+    }
+  | { type: 'figure'; heading?: string; figure: LessonFigure }
+  | { type: 'callout'; tone: 'key' | 'exam' | 'warning'; heading?: string; text: string }
+
+export interface LessonContent {
+  summary: string
+  objectives: string[]
+  blocks: LessonBlock[]
+  recap: string[]
+}
+
 export interface BaseQuestion {
   id: string
   q: string
@@ -44,6 +76,7 @@ export interface LessonSection {
   label: string
   questionIds: string[]
   notes?: NotesBlock | null
+  content?: LessonContent | null
 }
 
 export interface Lesson {
@@ -52,6 +85,7 @@ export interface Lesson {
   num?: string | number
   questions: StudyQuestion[]
   notes?: NotesBlock | null
+  content?: LessonContent | null
 }
 
 export interface Chapter {
@@ -216,7 +250,7 @@ export interface ProgressBackup {
   _app: 'StudyFlow'
 }
 
-export type Screen = 'home' | 'session' | 'mock' | 'notes' | 'plan' | 'weak' | 'search' | 'settings'
+export type Screen = 'home' | 'lesson' | 'session' | 'mock' | 'notes' | 'plan' | 'weak' | 'search' | 'settings'
 
 export interface ChapterStats {
   mastered: number
