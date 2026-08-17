@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { StudyText } from '../../components/StudyText'
 import { Button, ScreenHeader } from '../../components/Ui'
+import { QUESTION_KIND_LABELS } from '../../lib/constants'
 import { readiness, shuffle, subjectShortName } from '../../lib/utils'
 import type { ChoiceQuestion, DrillPreset, DrillsCatalog, StudyQuestion, Subject } from '../../types'
 import './mock.css'
@@ -177,6 +178,7 @@ export function MockScreen({ data, order, hidden, drillBundles, onBack, onRecord
         <ScreenHeader title="🎯 اختبار تجريبي" subtitle={label} onBack={() => window.confirm('الخروج من الاختبار الحالي؟') && onBack()} actions={timed ? <MockTimer key={timerEndAt} endAt={timerEndAt} onElapsed={finish} /> : undefined} />
         <div className="mock-progress"><span>{index + 1}/{items.length}</span><i role="progressbar" aria-label="تقدم الاختبار" aria-valuemin={0} aria-valuemax={items.length} aria-valuenow={index}><b style={{ '--mock-progress': items.length ? index / items.length : 0 } as React.CSSProperties} /></i><span>متبقي {items.length - index - 1}</span></div>
         <section key={item.question.id} className="question-card" style={{ '--subject-color': subject?.color ?? '#2dd4bf' } as React.CSSProperties}>
+          {item.question.kind ? <span className="mock-question-kind">{QUESTION_KIND_LABELS[item.question.kind]}</span> : null}
           <h2 dir="auto"><StudyText text={item.question.q} variant="question" /></h2>
           {(item.question.q_ar || item.question.hint_ar) && (
             <div className="assist-block">
@@ -203,7 +205,27 @@ export function MockScreen({ data, order, hidden, drillBundles, onBack, onRecord
     <main className="screen mock-screen">
       <ScreenHeader title="نتيجة الاختبار" subtitle={label} onBack={onBack} />
       <section className="result-summary"><strong className={percent >= 90 ? 'good' : percent >= 70 ? 'warn' : 'bad'}>{percent}%</strong><p>{correct} من {items.length} صحيحة</p><span className={status.className}>{status.label}</span><div><Button variant="secondary" onClick={() => setStage('setup')}>🔁 اختبار آخر</Button><Button disabled={!wrong.length} onClick={() => onReviewWrong(wrong, code, 'أخطاء الاختبار')}>⚠ راجع الأخطاء</Button></div></section>
-      <div className="result-review">{items.map((item, itemIndex) => { const ok = item.pick === item.correct; return <article className={ok ? 'correct' : 'wrong'} key={item.question.id}><h3 dir="auto">{itemIndex + 1}. {item.question.q}</h3><p>{ok ? '✓ صحيح' : '✗ خطأ'} · إجابتك: <span dir="auto">{item.pick >= 0 ? item.choices[item.pick] : '— متروك'}</span></p>{!ok && <div dir="auto">✓ الصحيح: {item.choices[item.correct]}{item.question.explanation ? ` — ${item.question.explanation}` : ''}</div>}{item.question.explanation_ar && <aside dir="rtl"><b>شرح عربي</b>{item.question.explanation_ar}</aside>}</article> })}</div>
+      <div className="result-review">{items.map((item, itemIndex) => {
+        const ok = item.pick === item.correct
+        return (
+          <article className={ok ? 'correct' : 'wrong'} key={item.question.id}>
+            {item.question.kind ? <span className="mock-question-kind">{QUESTION_KIND_LABELS[item.question.kind]}</span> : null}
+            <h3 dir="auto"><span>{itemIndex + 1}. </span><StudyText text={item.question.q} variant="question" /></h3>
+            <p>
+              {ok ? '✓ صحيح' : '✗ خطأ'} · إجابتك:{' '}
+              <StudyText text={item.pick >= 0 ? item.choices[item.pick] : '— متروك'} variant="choice" />
+            </p>
+            {!ok ? (
+              <div dir="auto">
+                <strong>✓ الصحيح: </strong><StudyText text={item.choices[item.correct]} variant="choice" />
+                {item.question.explanation ? <StudyText text={` — ${item.question.explanation}`} /> : null}
+              </div>
+            ) : null}
+            {item.question.hint_ar ? <aside className="result-review__fast-tip" dir="rtl"><b>طريقة الكشف السريعة</b><StudyText text={item.question.hint_ar} /></aside> : null}
+            {item.question.explanation_ar ? <aside dir="rtl"><b>شرح عربي</b><StudyText text={item.question.explanation_ar} /></aside> : null}
+          </article>
+        )
+      })}</div>
     </main>
   )
 }

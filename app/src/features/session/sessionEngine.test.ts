@@ -10,6 +10,13 @@ const question: ChoiceQuestion = {
   answer: 0,
 }
 
+const cycleQuestions: ChoiceQuestion[] = Array.from({ length: 4 }, (_value, index) => ({
+  id: `cycle-${index + 1}`,
+  q: `Cycle question ${index + 1}`,
+  choices: ['correct', 'wrong'],
+  answer: 0,
+}))
+
 const baseMeta: SessionMeta = {
   code: 'TEST-101',
   scope: 'ch-1',
@@ -91,4 +98,65 @@ it('runs test mode as one attempt per question, including wrong answers', () => 
   expect(wrong!.state.progress[question.id]).toEqual(initialProgress)
   expect(wrong!.progress).toEqual(initialProgress)
   expect(moveToNextCard(wrong!.state, noRandom).status).toBe('complete')
+})
+
+it('does not repeat a wrong card until every other active card appears', () => {
+  let state = moveToNextCard(
+    createSessionEngine(cycleQuestions, { ...baseMeta, mode: 'all' }, {}, 1_000, noRandom),
+    noRandom,
+  )
+
+  for (let cycle = 0; cycle < 2; cycle += 1) {
+    const seen = new Set<string>()
+    for (let index = 0; index < cycleQuestions.length; index += 1) {
+      expect(state.active).not.toBeNull()
+      seen.add(state.active!.cardId)
+      const result = gradeActiveCard(state, false, 2_000 + cycle * 10 + index, noRandom)
+      expect(result).not.toBeNull()
+      state = moveToNextCard(result!.state, noRandom)
+    }
+    expect(seen.size).toBe(cycleQuestions.length)
+  }
+})
+
+it('shows every learn card once before the second-correct review cycle', () => {
+  let state = moveToNextCard(
+    createSessionEngine(cycleQuestions, { ...baseMeta, mode: 'learn' }, {}, 1_000, noRandom),
+    noRandom,
+  )
+
+  for (let cycle = 0; cycle < 2; cycle += 1) {
+    const seen = new Set<string>()
+    for (let index = 0; index < cycleQuestions.length; index += 1) {
+      expect(state.active).not.toBeNull()
+      seen.add(state.active!.cardId)
+      const result = gradeActiveCard(state, true, 3_000 + cycle * 10 + index, noRandom)
+      expect(result).not.toBeNull()
+      state = moveToNextCard(result!.state, noRandom)
+    }
+    expect(seen.size).toBe(cycleQuestions.length)
+  }
+
+  expect(state.status).toBe('complete')
+})
+
+it('does not immediately repeat the last card when due steps tie at a cycle boundary', () => {
+  const twoQuestions = cycleQuestions.slice(0, 2)
+  let state = moveToNextCard(
+    createSessionEngine(twoQuestions, { ...baseMeta, mode: 'all' }, {}, 1_000, noRandom),
+    noRandom,
+  )
+
+  expect(state.active?.cardId).toBe(twoQuestions[1].id)
+  const firstWrong = gradeActiveCard(state, false, 2_000, () => 0.999)
+  expect(firstWrong).not.toBeNull()
+  state = moveToNextCard(firstWrong!.state, noRandom)
+  expect(state.active?.cardId).toBe(twoQuestions[0].id)
+
+  const secondWrong = gradeActiveCard(state, false, 3_000, noRandom)
+  expect(secondWrong).not.toBeNull()
+  expect(secondWrong!.state.cards.map((card) => card.dueStep)).toEqual([4, 4])
+
+  state = moveToNextCard(secondWrong!.state, () => 0.999)
+  expect(state.active?.cardId).toBe(twoQuestions[1].id)
 })

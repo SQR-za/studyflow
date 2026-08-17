@@ -42,6 +42,7 @@ export interface SessionEngineState {
   meta: SessionMeta
   step: number
   previousId: string | null
+  cycleSeenIds: string[]
   active: ActiveCardRuntime | null
   stats: SessionStats
   startedAt: number
@@ -102,6 +103,7 @@ export function createSessionEngine(
     meta,
     step: 0,
     previousId: null,
+    cycleSeenIds: [],
     active: null,
     stats: { good: 0, bad: 0, streak: 0 },
     startedAt,
@@ -109,20 +111,39 @@ export function createSessionEngine(
   }
 }
 
-function pickNextCard(state: SessionEngineState, random: () => number): SessionCardRuntime | null {
+interface NextCardPick {
+  card: SessionCardRuntime
+  cycleSeenIds: string[]
+}
+
+function pickNextCard(state: SessionEngineState, random: () => number): NextCardPick | null {
   const pool = state.cards.filter((card) => !card.done)
   if (!pool.length) return null
 
-  const minimumDueStep = Math.min(...pool.map((card) => card.dueStep))
-  let dueCards = pool.filter((card) => card.dueStep === minimumDueStep)
+  const seenThisCycle = new Set(state.cycleSeenIds)
+  let cycleSeenIds = state.cycleSeenIds
+  let candidates = pool.filter((card) => !seenThisCycle.has(card.question.id))
 
-  if (dueCards.length === 1 && dueCards[0].question.id === state.previousId && pool.length > 1) {
-    const alternatives = pool.filter((card) => card.question.id !== state.previousId)
-    const alternativeDueStep = Math.min(...alternatives.map((card) => card.dueStep))
-    dueCards = alternatives.filter((card) => card.dueStep === alternativeDueStep)
+  // Start a new sweep only after every still-active card has appeared once.
+  // This keeps spaced-repetition due steps inside a fair, no-repeat cycle.
+  if (!candidates.length) {
+    candidates = pool
+    cycleSeenIds = []
   }
 
-  return dueCards[Math.floor(random() * dueCards.length)]
+  // At a sweep boundary, do not show the just-answered card again when any
+  // alternative remains, even when several cards share the same due step.
+  const schedulable = candidates.length > 1
+    ? candidates.filter((card) => card.question.id !== state.previousId)
+    : candidates
+  const minimumDueStep = Math.min(...schedulable.map((card) => card.dueStep))
+  const dueCards = schedulable.filter((card) => card.dueStep === minimumDueStep)
+
+  const card = dueCards[Math.floor(random() * dueCards.length)]
+  return {
+    card,
+    cycleSeenIds: [...cycleSeenIds, card.question.id],
+  }
 }
 
 export function moveToNextCard(
@@ -132,13 +153,15 @@ export function moveToNextCard(
   if (state.status === 'empty') return state
   if (state.active && !state.active.answered) return state
 
-  const card = pickNextCard(state, random)
-  if (!card) return { ...state, active: null, status: 'complete' }
+  const pick = pickNextCard(state, random)
+  if (!pick) return { ...state, active: null, status: 'complete' }
 
+  const card = pick.card
   const question = card.question
   return {
     ...state,
     status: 'active',
+    cycleSeenIds: pick.cycleSeenIds,
     active: {
       cardId: question.id,
       answered: false,

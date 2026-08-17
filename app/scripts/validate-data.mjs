@@ -168,15 +168,27 @@ for (const [chapterId, pack] of Object.entries(webDrills.chapters)) {
 }
 
 const webRapidIds = new Set()
+for (const preset of webDrills.presets) {
+  if (preset.questions !== undefined) {
+    invariant(preset.quick && preset.lessonIds?.length === 1, `embedded web preset questions require one quick section: ${preset.id}`)
+    invariant(preset.count === preset.questions.length, `embedded web preset count mismatch: ${preset.id}`)
+  }
+}
+
 const webRapidPresets = webDrills.presets.filter(preset => preset.quick)
 for (const preset of webRapidPresets) {
   invariant(preset.lessonIds?.length === 1 && webSectionIds.has(preset.lessonIds[0]), `invalid web rapid section ${preset.id}`)
   invariant(preset.count === 4 && preset.questions?.length === 4, `web rapid preset must contain four questions: ${preset.id}`)
+  const kinds = new Set(preset.questions.map(question => question.kind))
+  invariant(kinds.has('direct') && kinds.has('find_fix') && kinds.has('slide_example'), `web rapid preset lacks direct/debug/slide coverage: ${preset.id}`)
+  invariant(kinds.has('predict_output') || kinds.has('predict_result'), `web rapid preset lacks output prediction: ${preset.id}`)
   for (const question of preset.questions) {
     invariant(question.id && !webBaseIds.has(question.id) && !webDrillIds.has(question.id) && !webRapidIds.has(question.id), `duplicate web rapid id ${question.id}`)
     invariant(question.section === preset.lessonIds[0], `web rapid section mismatch ${question.id}`)
     invariant(Number.isInteger(question.answer) && question.answer >= 0 && question.answer < question.choices.length, `invalid web rapid answer ${question.id}`)
     invariant(question.q_ar && question.hint_ar && question.explanation && question.explanation_ar && question.source, `incomplete web rapid question ${question.id}`)
+    invariant(question.hint_ar.startsWith('طريقة الكشف السريعة:'), `missing fast-detection method ${question.id}`)
+    invariant(question.explanation_ar.startsWith('السبب:'), `missing explicit reason ${question.id}`)
     webRapidIds.add(question.id)
   }
 }

@@ -84,6 +84,21 @@ it('keeps the Arabic translation and hint hidden until each one is requested', (
   expect(screen.getByText('تلميح بدون كشف الإجابة').closest('section')).toHaveTextContent(question.hint_ar!)
 })
 
+it('labels the rapid question type without exposing the answer', () => {
+  const question: ChoiceQuestion = {
+    id: 'kind-001',
+    kind: 'find_fix',
+    q: 'Find the error.',
+    choices: ['Correct fix', 'Wrong fix'],
+    answer: 0,
+  }
+
+  render(<SessionScreen {...baseProps} questions={[question]} />)
+
+  expect(screen.getByText('🛠 اكتشف الخطأ')).toBeVisible()
+  expect(screen.queryByText('✓ صحيح')).not.toBeInTheDocument()
+})
+
 it('closes assistance when a failed card is requeued for a new attempt', () => {
   const question: ChoiceQuestion = {
     id: 'assist-requeue-001',
@@ -238,6 +253,7 @@ it('runs a section test without study assistance or immediate feedback, then sho
   expect(screen.getByText(/1 صح من 2/)).toBeVisible()
   expect(screen.getByText(/50%/)).toBeVisible()
   expect(screen.getByText('MPI_Wait')).toBeVisible()
+  expect(screen.getByText(choice.hint_ar!)).toBeVisible()
   expect(screen.getByText(choice.explanation!)).toBeVisible()
   expect(screen.getAllByRole('complementary', { name: 'شرح الإجابة' })[1]).toHaveTextContent(
     'MPI_Comm_rank identifies the calling process inside a communicator.',

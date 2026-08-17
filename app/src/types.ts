@@ -1,4 +1,5 @@
 export type QuestionSource = 'exam' | 'slides' | 'extra' | string
+export type QuestionKind = 'direct' | 'predict_output' | 'predict_result' | 'find_fix' | 'slide_example'
 
 export interface NotesBlock {
   draw?: string[]
@@ -42,6 +43,7 @@ export interface LessonContent {
 export interface BaseQuestion {
   id: string
   q: string
+  kind?: QuestionKind
   q_ar?: string
   hint_ar?: string
   explanation?: string

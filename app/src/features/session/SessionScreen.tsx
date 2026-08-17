@@ -2,7 +2,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import type { DragEvent, KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { MathText } from '../../components/MathText'
 import { StudyText } from '../../components/StudyText'
-import { MASTERY_BOX } from '../../lib/constants'
+import { MASTERY_BOX, QUESTION_KIND_LABELS } from '../../lib/constants'
 import { isChoice, isMatch, isPractice } from '../../lib/utils'
 import type { QuestionProgress, SessionMeta, StudyQuestion } from '../../types'
 import {
@@ -130,9 +130,15 @@ function feedback(correct: boolean, sound: boolean): void {
 }
 
 function Explanation({ question, show }: { question: StudyQuestion; show: boolean }) {
-  if (!show || (!question.explanation && !question.explanation_ar)) return null
+  if (!show || (!question.hint_ar && !question.explanation && !question.explanation_ar)) return null
   return (
     <aside className="sf-session__explanation" aria-label="شرح الإجابة">
+      {question.hint_ar ? (
+        <div className="sf-session__fast-tip" dir="rtl" lang="ar">
+          <strong>طريقة الكشف السريعة</strong>
+          <MathText text={question.hint_ar} as="div" />
+        </div>
+      ) : null}
       {question.explanation ? <MathText text={question.explanation} as="div" /> : null}
       {question.explanation_ar ? (
         <div className="sf-session__explanation-ar" dir="rtl" lang="ar">
@@ -686,6 +692,7 @@ function SessionRun({
   const translationOpen = assistance.questionId === currentQuestion.id && assistance.translationOpen
   const hintOpen = assistance.questionId === currentQuestion.id && assistance.hintOpen
   const questionSource = !isMatching && !isPracticing ? sourceLabel(currentQuestion) : ''
+  const questionKind = currentQuestion.kind ? QUESTION_KIND_LABELS[currentQuestion.kind] : ''
   const usedAnswers = new Set(Object.values(active.matchAssignments))
   const remainingAnswers = active.matchAnswerOrder.filter((answer) => !usedAnswers.has(answer))
   const allMatched = isMatching && Object.keys(active.matchAssignments).length === currentQuestion.pairs.length
@@ -733,7 +740,10 @@ function SessionRun({
       <article key={`${currentQuestion.id}-${cardMotionKey}`} className={`sf-session__card ${!isTest && active.answered ? (active.correct ? 'has-correct-result' : 'has-wrong-result') : ''}`} ref={cardRef} tabIndex={-1} aria-labelledby={`sf-question-${domId}`}>
         <div className="sf-session__accent" />
         <div className="sf-session__meta">
-          <span className="sf-session__source" title={currentQuestion.source ?? ''}>{questionSource}</span>
+          <div className="sf-session__context">
+            {questionKind ? <span className="sf-session__kind">{questionKind}</span> : null}
+            <span className="sf-session__source" title={currentQuestion.source ?? ''}>{questionSource}</span>
+          </div>
           {!isTest ? (
             <div className="sf-session__question-actions">
               <span className="sf-session__boxes" aria-label={`الصندوق ${activeCard.box} من 5`}>

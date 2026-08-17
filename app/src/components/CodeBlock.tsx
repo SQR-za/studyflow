@@ -4,11 +4,12 @@ import type { LessonCodeLanguage } from '../types'
 import './StudyText.css'
 
 export type CodeBlockVariant = 'statement' | 'choice' | 'lesson'
+export type CodeLanguage = LessonCodeLanguage | 'c' | 'code'
 
 export type CodeBlockProps = {
   text: string
   variant?: CodeBlockVariant
-  language?: LessonCodeLanguage
+  language?: CodeLanguage
   copyable?: boolean
 } & Omit<ComponentPropsWithoutRef<'code'>, 'children' | 'dir'>
 
@@ -52,7 +53,7 @@ export function CodeBlock({
       className={['study-code-block', `study-code-block--${variant}`, className]
         .filter(Boolean)
         .join(' ')}
-      data-language={language}
+      data-language={language ?? 'code'}
       dir="ltr"
     >
       {text}

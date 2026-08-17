@@ -20,6 +20,7 @@ describe('StudyText code presentation', () => {
     expect(code.tagName).toBe('CODE')
     expect(code).toHaveClass('study-code-block--statement')
     expect(code).toHaveAttribute('dir', 'ltr')
+    expect(code).toHaveAttribute('data-language', 'c')
     expect(screen.getByRole('heading')).toHaveTextContent(
       `What can be printed after ${statement} completes?`,
     )
@@ -32,6 +33,38 @@ describe('StudyText code presentation', () => {
 
     expect(screen.getByText('MPI_Comm_rank')).toHaveClass('inline-code')
     expect(container.getElementsByClassName('study-code-block')).toHaveLength(0)
+  })
+
+  it.each([
+    {
+      language: 'css',
+      code: '@media screen and (max-width: 900px) {\n  .title { font-size: 2em; }\n}',
+    },
+    {
+      language: 'javascript',
+      code: 'let n = 3;\nconsole.log(n++);',
+    },
+  ])('renders fenced $language questions as labeled code blocks', ({ language, code }) => {
+    const { container } = render(
+      <h1>
+        <StudyText text={`Predict the result:\n\`\`\`${language}\n${code}\n\`\`\``} variant="question" />
+      </h1>,
+    )
+
+    const renderedCode = container.querySelector('code')
+    expect(renderedCode).not.toBeNull()
+    expect(renderedCode?.textContent).toBe(code)
+    expect(renderedCode).toHaveClass('study-code-block--statement')
+    expect(renderedCode).toHaveAttribute('data-language', language)
+    expect(renderedCode).toHaveAttribute('dir', 'ltr')
+  })
+
+  it('does not mislabel an inline MPI array assignment as CSS', () => {
+    const { container } = render(
+      <h1><StudyText text="Use `blocklengths={2,1};` for the datatype." variant="question" /></h1>,
+    )
+
+    expect(container.querySelector('code')).toHaveAttribute('data-language', 'code')
   })
 
   it('does not leave a floating sentence stop after a promoted code statement', () => {
@@ -71,6 +104,7 @@ describe('StudyText code presentation', () => {
   it('does not mistake prose or a simple math function for C code', () => {
     expect(looksLikeCodeChoice('Runs asynchronously')).toBe(false)
     expect(looksLikeCodeChoice('sin(x)')).toBe(false)
+    expect(looksLikeCodeChoice('screen is the media type; min-width is the condition')).toBe(false)
 
     const { container } = render(
       <StudyText text="Runs asynchronously" variant="choice" />,

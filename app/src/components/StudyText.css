@@ -26,7 +26,7 @@
   overflow-x: auto;
 }
 .study-code-block--statement::before {
-  content: "C / MPI";
+  content: attr(data-language);
   display: block;
   width: max-content;
   margin-block-end: .35rem;
@@ -36,6 +36,7 @@
   padding: .08rem .45rem;
   font: 700 .64rem/1.5 system-ui, sans-serif;
   letter-spacing: .04em;
+  text-transform: uppercase;
 }
 
 .study-code-block--choice {

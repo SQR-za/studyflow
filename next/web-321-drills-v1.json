@@ -1,7 +1,7 @@
 {
   "version": 2,
   "subject": "WEB-EXAM2",
-  "build": "2026-08-16-web-finals-v3",
+  "build": "2026-08-17-web-finals-v4",
   "chapters": {
     "web-exam2-t5": {
       "sections": [
@@ -241,10 +241,10 @@
             "web-exam2-t5-q47",
             "web-exam2-t5-q62",
             "web-exam2-t5-q63",
-            "web-exam2-t5-q64",
+            "web-exam2-t5-q76",
             "web-exam2-t5-q65",
             "web-exam2-t5-q66",
-            "web-exam2-t5-q67",
+            "web-exam2-t5-q79",
             "web-exam2-t5-q68",
             "web-exam2-t5-q69"
           ],
@@ -397,7 +397,7 @@
             "web-exam2-t5-q51",
             "web-exam2-t5-q70",
             "web-exam2-t5-q71",
-            "web-exam2-t5-q72",
+            "web-exam2-t5-q77",
             "web-exam2-t5-q73"
           ],
           "content": {
@@ -638,7 +638,7 @@
             "web-exam2-t5-q35",
             "web-exam2-t5-q56",
             "web-exam2-t5-q57",
-            "web-exam2-t5-q75"
+            "web-exam2-t5-q78"
           ],
           "content": {
             "summary": "يجمع الدرس قرار الاختيار بين Grid وFlexbox ويعيد بناء مثال الأعمدة من دون حسابات عرض يدوية، ثم يحلل تخطيطًا يتغير بين الشاشات.",
@@ -882,7 +882,7 @@
           "explanation": "The print media type scopes the display:none rule to printing and print preview.",
           "explanation_ar": "نوع الوسائط print يحصر قاعدة display:none في الطباعة ومعاينة الطباعة.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 31",
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 33",
           "section": "css-responsive-media"
         },
         {
@@ -1228,19 +1228,19 @@
           "section": "css-responsive-media"
         },
         {
-          "id": "web-exam2-t5-q64",
-          "q": "For which viewport does this rule apply? `@media screen and (max-width: 900px) and (min-height: 600px) and (max-height: 800px) { .title { font-size: 2em; } }`",
-          "q_ar": "لأي viewport تطبق هذه القاعدة؟ `@media screen and (max-width: 900px) and (min-height: 600px) and (max-height: 800px) { .title { font-size: 2em; } }`",
-          "hint_ar": "يجب أن تتحقق شروط العرض والحد الأدنى والأقصى للارتفاع معًا.",
+          "id": "web-exam2-t5-q76",
+          "q": "Predict the result at the boundaries. The base font-size is 1em.\n```css\n@media screen and (max-width: 900px) and (min-height: 600px) and (max-height: 800px) {\n  .title { font-size: 2em; }\n}\n```\nWhat is .title at screen sizes 900 × 600 and 900 × 801?",
+          "q_ar": "توقّع النتيجة عند الحدود. الحجم الأساسي 1em. ما حجم .title عند شاشة 900 × 600 ثم 900 × 801؟",
+          "hint_ar": "طريقة الكشف السريعة: اعتبر and بوابات متتالية؛ افحص نوع الوسائط ثم العرض ثم حدّي الارتفاع، وتذكّر أن min/max تشمل القيمة نفسها.",
           "choices": [
-            "A screen viewport of 800px by 700px",
-            "A screen viewport of 1000px by 700px",
-            "A screen viewport of 800px by 500px",
-            "A printed page of 800px by 700px"
+            "2em, then 1em",
+            "1em, then 2em",
+            "2em at both sizes",
+            "1em at both sizes"
           ],
           "answer": 0,
-          "explanation": "800px satisfies max-width:900px, and 700px is between the 600px minimum and 800px maximum height on screen media.",
-          "explanation_ar": "العرض 800 يحقق max-width، والارتفاع 700 يقع بين 600 و800، ونوع الوسائط screen.",
+          "explanation": "At 900 × 600 every condition is true, so the rule sets 2em. At 900 × 801, max-height: 800px fails, so the base 1em remains.",
+          "explanation_ar": "السبب: عند 900 × 600 تتحقق جميع الشروط لأن الحدود شاملة، فيصبح الحجم 2em. عند ارتفاع 801 يفشل max-height: 800px، فيبقى الحجم الأساسي 1em.",
           "src": "slides",
           "source": "CCSW321-Material-05 - CSS (2).pdf, slide 25",
           "section": "css-responsive-media"
@@ -1282,21 +1282,21 @@
           "section": "css-responsive-media"
         },
         {
-          "id": "web-exam2-t5-q67",
-          "q": "What is Step 0 before restructuring the boarding-pass layout?",
-          "q_ar": "ما Step 0 قبل إعادة هيكلة تخطيط بطاقة الصعود؟",
-          "hint_ar": "ابدأ بتنظيف القواعد المشتركة قبل تغيير layout model.",
+          "id": "web-exam2-t5-q79",
+          "q": "Predict the boarding-pass title at the exact width boundary.\n```css\n.lrgtxt { font-size: 4em; }\n@media (max-width: 900px) {\n  .lrgtxt { font-size: 2em; }\n}\n```\nWhat is the font-size at widths 900px and 901px?",
+          "q_ar": "توقع حجم عنوان بطاقة الصعود عند عرض 900px ثم 901px.",
+          "hint_ar": "طريقة الكشف السريعة: max-width تشمل 900 نفسها؛ افحصي 900 ثم زيدي بكسلًا واحدًا.",
           "choices": [
-            "Extract repeated visual rules into reusable classes",
-            "Delete the logo and barcode",
-            "Set every element to position: absolute",
-            "Give every article a different width"
+            "2em, then 4em",
+            "4em, then 2em",
+            "2em at both widths",
+            "4em at both widths"
           ],
           "answer": 0,
-          "explanation": "The boarding-pass walkthrough first extracts common styling into reusable classes before changing its layout.",
-          "explanation_ar": "تبدأ خطوات بطاقة الصعود باستخراج التنسيقات المتكررة إلى classes قابلة لإعادة الاستخدام.",
+          "explanation": "At 900px the max-width condition is true and overrides the base size with 2em. At 901px it is false, so the base 4em remains.",
+          "explanation_ar": "السبب: الحد 900 داخل الشرط فيطبق 2em، أما 901 فتتجاوز max-width فيعود الحجم الأساسي 4em.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 30-31",
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 33",
           "section": "css-responsive-media"
         },
         {
@@ -1372,21 +1372,21 @@
           "section": "css-grid"
         },
         {
-          "id": "web-exam2-t5-q72",
-          "q": "A 1000px grid has no gap and uses `grid-template-columns: 200px 1fr 25%;`. What are the track widths?",
-          "q_ar": "شبكة بعرض 1000px بلا gap تستخدم `grid-template-columns: 200px 1fr 25%;`. ما عروض المسارات؟",
-          "hint_ar": "احسب 25% أولًا، ثم أعطِ 1fr المساحة المتبقية.",
+          "id": "web-exam2-t5-q77",
+          "q": "Predict the Grid track widths. A 900px-wide grid has no gap and uses `grid-template-columns: 2fr 1fr;`. What are the two widths?",
+          "q_ar": "توقع عرض المسارين في Grid عرضها 900px وتستخدم 2fr 1fr بلا gap.",
+          "hint_ar": "طريقة الكشف السريعة: اجمعي حصص fr أولًا؛ 2 + 1 = 3 حصص.",
           "choices": [
-            "200px, 550px, 250px",
-            "200px, 250px, 550px",
-            "200px, 1000px, 25px",
-            "333px, 333px, 333px"
+            "600px and 300px",
+            "450px and 450px",
+            "300px and 600px",
+            "2px and 1px"
           ],
           "answer": 0,
-          "explanation": "The fixed track takes 200px, 25% takes 250px, and the single fr track receives the remaining 550px.",
-          "explanation_ar": "يأخذ المسار الثابت 200px والنسبة 250px، ويحصل 1fr على المساحة المتبقية 550px.",
+          "explanation": "The available width is split into three fractional shares: two shares are 600px and one share is 300px.",
+          "explanation_ar": "السبب: 900 ÷ 3 = 300px للحصة الواحدة؛ المسار 2fr يأخذ 600px والثاني 300px.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 36-38",
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 36",
           "section": "css-grid"
         },
         {
@@ -1426,19 +1426,19 @@
           "section": "css-flexbox"
         },
         {
-          "id": "web-exam2-t5-q75",
-          "q": "Choose the best fix that replaces `#extra article { display: inline-block; width: 30%; }` with Flexbox and removes manual article-width calculations.",
-          "q_ar": "اختر أفضل إصلاح يستبدل `#extra article { display: inline-block; width: 30%; }` بـ Flexbox ويلغي حساب عرض كل article يدويًا.",
-          "hint_ar": "حوّل الأب إلى flex container واجعل الأبناء يتشاركون المساحة.",
+          "id": "web-exam2-t5-q78",
+          "q": "Which code matches the slide Flex replacement for the old `#extra article { display: inline-block; width: 30%; }` layout?",
+          "q_ar": "أي كود يطابق استبدال Flex الظاهر في الشريحة لتخطيط articles القديم؟",
+          "hint_ar": "طريقة الكشف السريعة: layout container هو الأب #extra، لذلك display:flex توضع عليه.",
           "choices": [
-            "#extra { display: flex; gap: 5px; } #extra article { flex: 1 1 0; }",
-            "#extra article { position: fixed; width: 30%; }",
-            "#extra { display: block; } #extra article { z-index: 1; }",
-            "#extra article { display: inline; width: 30%; }"
+            "#extra article { display: flex; width: 30%; gap: 5px; }",
+            "#extra { display: inline; } #extra article { width: 30%; }",
+            "#extra { display: grid; flex-direction: row; }",
+            "#extra { display: flex; gap: 5px; } #extra article { border: 1px dashed black; }"
           ],
-          "answer": 0,
-          "explanation": "The parent becomes a flex container and flex:1 lets the articles share available space without assigning a width to each one.",
-          "explanation_ar": "يتحول الأب إلى حاوية Flex، وتجعل flex:1 العناصر تتشارك المساحة من دون width يدوي لكل عنصر.",
+          "answer": 3,
+          "explanation": "The slide turns #extra into the flex container and removes the manual article width calculation. Its exact snippet does not independently guarantee equal article widths.",
+          "explanation_ar": "السبب: تحول الشريحة #extra إلى Flex Container وتحذف width اليدوي من articles؛ والكود المعروض وحده لا يضمن تساوي عروضها.",
           "src": "slides",
           "source": "CCSW321-Material-05 - CSS (2).pdf, slide 50",
           "section": "css-layout-selection"
@@ -4029,7 +4029,7 @@
             "web-exam2-t7-q59",
             "web-exam2-t7-q79",
             "web-exam2-t7-q80",
-            "web-exam2-t7-q81"
+            "web-exam2-t7-q82"
           ],
           "content": {
             "summary": "يعرّف الدرس المكتبات والأطر المذكورة في الشرائح، يميز أدوارها، ثم يجمع ممارسات JavaScript الصحيحة من الفصل بين الطبقات إلى ترتيب التحميل والوحدات.",
@@ -4927,21 +4927,21 @@
           "section": "dom-libraries-practices"
         },
         {
-          "id": "web-exam2-t7-q81",
-          "q": "Which project structure best follows the lecture's JavaScript best practices?",
-          "q_ar": "أي بنية مشروع تتبع best practices في المحاضرة بصورة أفضل؟",
-          "hint_ar": "افصل content وpresentation وbehavior واستخدم أسماء واضحة وتحميلًا مرتبًا.",
+          "id": "web-exam2-t7-q82",
+          "q": "Find the project loading error. app.js calls a function defined in library.js.\n```html\n<script src=\"app.js\" defer></script>\n<script src=\"library.js\" defer></script>\n```\nWhat is the direct correction?",
+          "q_ar": "اكتشف خطأ تحميل المشروع: يستدعي app.js دالة موجودة في library.js. ما التصحيح المباشر؟",
+          "hint_ar": "طريقة الكشف السريعة: ارسم سهم الاعتماد؛ الملف الذي يعرّف الدالة يجب أن يظهر قبل الملف الذي يستدعيها.",
           "choices": [
-            "HTML for content, CSS for presentation, external JS for behavior, clear consistent names, correct dependency order, and suitable libraries for complex tasks",
-            "Put all behavior in inline HTML and use unclear global names",
-            "Load app code before dependencies and duplicate every function",
-            "Mix CSS declarations into JavaScript variable names"
+            "Load library.js before app.js",
+            "Remove defer from app.js only",
+            "Move both scripts into inline event attributes",
+            "Rename library.js without changing the order"
           ],
           "answer": 0,
-          "explanation": "Separation of concerns, clear naming, external modular code, correct load order, and appropriate libraries improve maintainability and performance.",
-          "explanation_ar": "يحسن فصل المسؤوليات والتسمية الواضحة والكود الخارجي المعياري وترتيب التحميل واختيار المكتبات الصيانة والأداء.",
+          "explanation": "Deferred scripts keep document order. The dependency must load before the application code that uses it, so library.js must come first.",
+          "explanation_ar": "السبب: تحافظ ملفات defer على ترتيبها في المستند؛ لذلك يجب تحميل library.js الذي يعرّف الدالة قبل app.js الذي يستخدمها.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 59-60",
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 11-13; CCSW321-Material-07 - JavaScript for Web.pdf, slides 59-60",
           "section": "dom-libraries-practices"
         }
       ]
@@ -5015,8 +5015,8 @@
     },
     {
       "id": "web-rapid-css-box-display-4",
-      "label": "⚡ CSS Box & Display · 4",
-      "description": "Four focused checks for CSS Box & Display",
+      "label": "⚡ CSS Box & Display · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "css-box-display"
@@ -5025,83 +5025,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-css-box-display-q01",
-          "q": "A designer wants more breathing room inside a card without moving nearby cards. Which area should increase?",
-          "q_ar": "يريد المصمم مساحة داخلية أكبر في البطاقة دون إبعاد البطاقات المجاورة. أي منطقة يزيدها؟",
-          "hint_ar": "المساحة المطلوبة داخل الحد.",
+          "id": "web-exam2-t5-r01",
+          "kind": "direct",
+          "section": "css-box-display",
+          "q": "Where should you check whether a CSS property is supported by the target browsers?",
+          "q_ar": "أين تتحقق من دعم خاصية CSS في المتصفحات المستهدفة؟",
+          "hint_ar": "طريقة الكشف السريعة: إذا ذكر السؤال browser support، ابحثي باسم الخاصية في Can I Use.",
           "choices": [
-            "padding",
-            "margin",
-            "border",
-            "content"
+            "npmjs.com",
+            "caniuse.com",
+            "Node.js documentation",
+            "Chrome Task Manager"
           ],
-          "answer": 0,
-          "explanation": "Padding is the space between content and the inside of the border.",
-          "explanation_ar": "Padding هي المسافة بين المحتوى وداخل الحد.",
+          "answer": 1,
+          "explanation": "The slides recommend searching for the CSS property on caniuse.com to see support by browser and version.",
+          "explanation_ar": "السبب: توصي الشريحة بالبحث عن اسم الخاصية في caniuse.com لمعرفة المتصفحات والإصدارات التي تدعمها.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 6-7",
-          "section": "css-box-display"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 3"
         },
         {
-          "id": "web-exam2-rapid-css-box-display-q02",
-          "q": "Which display value both stays inline with neighbors and accepts width: 120px?",
-          "q_ar": "أي قيمة display تبقى في السطر مع العناصر المجاورة وتقبل width: 120px؟",
-          "hint_ar": "اجمع سلوك inline مع قبول الأبعاد.",
+          "id": "web-exam2-t5-r02",
+          "kind": "predict_result",
+          "section": "css-box-display",
+          "q": "A 300px-wide container holds `<div class=\"a\">A</div><div class=\"b\">B</div>` with `.a, .b { display: inline-block; width: 120px; }`. What is the layout?",
+          "q_ar": "حاوية عرضها 300px تحتوي عنصرين inline-block عرض كل منهما 120px. كيف سيظهران؟",
+          "hint_ar": "طريقة الكشف السريعة: inline-block يبقى في السطر ويقبل width وheight.",
           "choices": [
-            "inline-block",
-            "inline",
-            "none",
-            "static"
+            "They stack on separate full-width lines",
+            "They stay side by side if space allows, and each honors 120px",
+            "They stay side by side, but width is ignored",
+            "Both elements are removed from the layout"
           ],
-          "answer": 0,
-          "explanation": "inline-block participates inline while allowing width and height.",
-          "explanation_ar": "inline-block تتصرف خطيًا وتسمح بالعرض والارتفاع.",
+          "answer": 1,
+          "explanation": "inline-block elements can remain on the same line and honor explicit dimensions. Two 120px boxes fit inside 300px.",
+          "explanation_ar": "السبب: تسمح inline-block ببقاء العنصرين في السطر نفسه مع تطبيق العرض المحدد، و240px تتسع داخل 300px.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 8",
-          "section": "css-box-display"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 8-9"
         },
         {
-          "id": "web-exam2-rapid-css-box-display-q03",
-          "q": "Which declaration makes an element take no layout space?",
-          "q_ar": "أي تصريح يجعل العنصر لا يشغل مساحة في التخطيط؟",
-          "hint_ar": "القيمة تخفي الصندوق بالكامل.",
+          "id": "web-exam2-t5-r03",
+          "kind": "find_fix",
+          "section": "css-box-display",
+          "q": "Find the error: `.label { display: inline; width: 180px; height: 60px; }`. The label must keep same-line behavior and honor both dimensions. What is the best fix?",
+          "q_ar": "اكتشف الخطأ: عنصر inline لا يطبق width وheight، والمطلوب بقاؤه داخل السطر مع تطبيقهما. ما الإصلاح؟",
+          "hint_ar": "طريقة الكشف السريعة: ابحثي عن القيمة التي تجمع سلوك inline مع قبول الأبعاد.",
           "choices": [
-            "display: none",
-            "display: block",
-            "visibility: visible",
-            "position: relative"
+            "Add `position: relative`",
+            "Change it to `display: inline-block`",
+            "Remove `width` and `height`",
+            "Add `z-index: 1`"
           ],
-          "answer": 0,
-          "explanation": "display:none hides the element and removes its box from layout.",
-          "explanation_ar": "display:none تخفي العنصر وتزيل صندوقه من التخطيط.",
+          "answer": 1,
+          "explanation": "Normal inline elements ignore width and height. inline-block preserves inline flow while accepting dimensions.",
+          "explanation_ar": "السبب: عناصر inline العادية تتجاهل العرض والارتفاع، بينما inline-block تبقي العنصر داخل السطر وتطبق الأبعاد.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 8",
-          "section": "css-box-display"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 8"
         },
         {
-          "id": "web-exam2-rapid-css-box-display-q04",
-          "q": "What should you search on caniuse.com?",
-          "q_ar": "عمّ تبحث في caniuse.com؟",
-          "hint_ar": "الموقع يفحص دعم ميزة محددة.",
+          "id": "web-exam2-t5-r04",
+          "kind": "slide_example",
+          "section": "css-box-display",
+          "q": "In the CSS box model, what is the order from the innermost area to the outermost area?",
+          "q_ar": "ما ترتيب طبقات Box Model من الداخل إلى الخارج؟",
+          "hint_ar": "طريقة الكشف السريعة: استخدمي C-P-B-M.",
           "choices": [
-            "The CSS property name",
-            "The student ID",
-            "The HTML filename only",
-            "The z-index result"
+            "padding, content, border, margin",
+            "margin, border, padding, content",
+            "content, border, padding, margin",
+            "content, padding, border, margin"
           ],
-          "answer": 0,
-          "explanation": "Searching the property name reveals browser-support data.",
-          "explanation_ar": "البحث باسم الخاصية يعرض بيانات دعم المتصفحات.",
+          "answer": 3,
+          "explanation": "Content is surrounded by padding, then border, then margin.",
+          "explanation_ar": "السبب: المحتوى في الداخل، ثم padding، ثم border، وأخيرًا margin خارج الصندوق.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 3",
-          "section": "css-box-display"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 6-7"
         }
       ]
     },
     {
       "id": "web-rapid-css-positioning-4",
-      "label": "⚡ CSS Positioning · 4",
-      "description": "Four focused checks for CSS Positioning",
+      "label": "⚡ CSS Positioning · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "css-positioning-stacking"
@@ -5110,83 +5114,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-css-positioning-q01",
-          "q": "Which position keeps the element in normal document flow by default?",
-          "q_ar": "أي position يبقي العنصر في التدفق الطبيعي افتراضيًا؟",
-          "hint_ar": "هي القيمة الافتراضية.",
+          "id": "web-exam2-t5-r05",
+          "kind": "direct",
+          "section": "css-positioning-stacking",
+          "q": "An absolutely positioned element is positioned relative to which reference?",
+          "q_ar": "بالنسبة إلى أي مرجع يتموضع عنصر position:absolute؟",
+          "hint_ar": "طريقة الكشف السريعة: ابدئي من الأب واصعدي حتى تجدي position ليست static.",
           "choices": [
-            "static",
-            "fixed",
-            "absolute",
-            "relative only"
-          ],
-          "answer": 0,
-          "explanation": "static is the default and follows normal flow.",
-          "explanation_ar": "static هي الافتراضية وتتبع التدفق الطبيعي.",
-          "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 10-11",
-          "section": "css-positioning-stacking"
-        },
-        {
-          "id": "web-exam2-rapid-css-positioning-q02",
-          "q": "An absolute child has no positioned ancestor. Its offsets use which reference?",
-          "q_ar": "طفل absolute بلا أب متموضع. أي مرجع تستخدم إزاحاته؟",
-          "hint_ar": "ابحث عن حالة fallback.",
-          "choices": [
-            "The initial containing block, usually body",
-            "Its previous sibling",
+            "Its original position in normal flow",
             "The viewport in every case",
-            "Its own normal position"
+            "Its nearest non-static positioned ancestor, otherwise the initial containing block",
+            "Its nearest sibling"
           ],
-          "answer": 0,
-          "explanation": "Absolute positioning falls back to the initial containing block when no positioned ancestor exists.",
-          "explanation_ar": "يعود absolute إلى كتلة الاحتواء الابتدائية عند غياب أب متموضع.",
+          "answer": 2,
+          "explanation": "absolute uses the nearest positioned ancestor. If none exists, it falls back to the initial containing block.",
+          "explanation_ar": "السبب: يبحث absolute عن أقرب أب position لديه ليست static، وإلا يعود إلى كتلة الاحتواء الابتدائية.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 15",
-          "section": "css-positioning-stacking"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 15"
         },
         {
-          "id": "web-exam2-rapid-css-positioning-q03",
-          "q": "At equal z-index, what is the course-slide stacking order from top?",
-          "q_ar": "عند تساوي z-index، ما ترتيب التراكب في شريحة المقرر من الأعلى؟",
-          "hint_ar": "السؤال يطلب mnemonic الشريحة، وليس قاعدة CSS عامة للمتصفح.",
+          "id": "web-exam2-t5-r06",
+          "kind": "predict_result",
+          "section": "css-positioning-stacking",
+          "q": "Predict the result: `.super { position: relative; top: -1ex; } .sub { position: relative; bottom: -1ex; }`. How are the two spans drawn?",
+          "q_ar": "توقع النتيجة: كيف يتحرك عنصرا super وsub في الكود المعروض؟",
+          "hint_ar": "طريقة الكشف السريعة: top سالب يعني لأعلى، وbottom سالب يعني لأسفل؛ relative يبقي المكان الأصلي.",
           "choices": [
-            "fixed, absolute, relative, static",
-            "static, relative, absolute, fixed",
-            "absolute, fixed, static, relative",
-            "relative, absolute, fixed, static"
+            "Both move upward",
+            "super moves upward, sub moves downward, and their original flow spaces remain",
+            "super moves downward and sub moves upward",
+            "Both are removed from normal flow"
           ],
-          "answer": 0,
-          "explanation": "The course slide gives fixed then absolute then relative, with static at the bottom.",
-          "explanation_ar": "تعطي شريحة المقرر fixed ثم absolute ثم relative وstatic في الأسفل.",
+          "answer": 1,
+          "explanation": "A negative top offset raises super, while a negative bottom offset lowers sub. Relative positioning preserves their original flow space.",
+          "explanation_ar": "السبب: القيمة السالبة لـtop ترفع super، والسالبة لـbottom تخفض sub، ولا يحذف relative المساحة الأصلية.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 19",
-          "section": "css-positioning-stacking"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 12-14"
         },
         {
-          "id": "web-exam2-rapid-css-positioning-q04",
-          "q": "Why does z-index: 999 not lift a position: static element?",
-          "q_ar": "لماذا لا ترفع z-index: 999 عنصر position: static؟",
-          "hint_ar": "المشكلة في نوع position لا الرقم.",
+          "id": "web-exam2-t5-r07",
+          "kind": "find_fix",
+          "section": "css-positioning-stacking",
+          "q": "Find the error: `.badge { position: absolute; top: 0; right: 0; }` appears at the page corner instead of the corner of `.card`. What is the best fix?",
+          "q_ar": "اكتشف الخطأ: badge مطلق ظهر في زاوية الصفحة بدل زاوية card. ما الإصلاح؟",
+          "hint_ar": "طريقة الكشف السريعة: المشكلة في مرجع absolute، وليس في top أو right.",
           "choices": [
-            "Static positioning ignores z-index",
-            "999 is too small",
-            "Only margins stack",
-            "z-index accepts strings only"
+            "Add `.card { position: relative; }`",
+            "Add `.card { display: block; }`",
+            "Change the badge to `position: static`",
+            "Add `.badge { z-index: -1; }`"
           ],
           "answer": 0,
-          "explanation": "The slide explicitly states that static positioning ignores z-index.",
-          "explanation_ar": "تنص الشريحة صراحة على أن static تتجاهل z-index.",
+          "explanation": "Making the card positioned establishes it as the badge containing block without moving the card itself.",
+          "explanation_ar": "السبب: إضافة position:relative إلى البطاقة تجعلها أقرب أب متموضع للـbadge دون تحريك البطاقة فعليًا.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 19",
-          "section": "css-positioning-stacking"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 15"
+        },
+        {
+          "id": "web-exam2-t5-r08",
+          "kind": "slide_example",
+          "section": "css-positioning-stacking",
+          "q": "In the slide example, `.background_image`, `.foreground_image`, and `.text` have z-index values 1, 2, and 3. Which layer is visible on top?",
+          "q_ar": "في مثال الشريحة، أي طبقة تظهر في الأعلى عندما تكون قيم z-index هي 1 و2 و3؟",
+          "hint_ar": "طريقة الكشف السريعة: داخل السياق نفسه، أعلى رقم يظهر فوق الأرقام الأقل.",
+          "choices": [
+            "background_image",
+            "foreground_image",
+            "All layers have the same level",
+            "text"
+          ],
+          "answer": 3,
+          "explanation": "The text has the highest z-index, so it is painted above both image layers.",
+          "explanation_ar": "السبب: لأن text يملك z-index:3، فإنه يظهر فوق foreground ذات 2 وbackground ذات 1.",
+          "src": "slides",
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 16-18"
         }
       ]
     },
     {
       "id": "web-rapid-css-responsive-4",
-      "label": "⚡ Responsive & Media · 4",
-      "description": "Four focused checks for Responsive & Media",
+      "label": "⚡ Responsive & Media · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "css-responsive-media"
@@ -5195,83 +5203,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-css-responsive-q01",
-          "q": "In @media screen and (min-width: 768px), which part is the condition?",
-          "q_ar": "في @media screen and (min-width: 768px)، أي جزء هو الشرط؟",
-          "hint_ar": "screen هو النوع، والباقي قيد.",
+          "id": "web-exam2-t5-r09",
+          "kind": "direct",
+          "section": "css-responsive-media",
+          "q": "In `@media screen and (min-width: 768px)`, which parts are the media type and the condition?",
+          "q_ar": "في media query المعروضة، ما media type وما condition؟",
+          "hint_ar": "طريقة الكشف السريعة: اسم الجهاز أو الوسيط يأتي أولًا، والاختبار يوجد داخل الأقواس.",
           "choices": [
-            "(min-width: 768px)",
-            "screen",
-            "@media",
-            "h1"
+            "screen is the condition; min-width is the selector",
+            "screen is the media type; (min-width: 768px) is the condition",
+            "@media is the media type; screen is the property",
+            "min-width is the media type; 768px is the selector"
           ],
-          "answer": 0,
-          "explanation": "The parenthesized min-width expression is the condition; screen is the media type.",
-          "explanation_ar": "تعبير min-width بين القوسين هو الشرط، وscreen نوع الوسائط.",
+          "answer": 1,
+          "explanation": "screen identifies the medium, while the parenthesized min-width feature is the condition that must be true.",
+          "explanation_ar": "السبب: screen هو نوع الوسيط، وmin-width داخل الأقواس هو الشرط المطلوب تحققه.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 22",
-          "section": "css-responsive-media"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 22"
         },
         {
-          "id": "web-exam2-rapid-css-responsive-q02",
-          "q": "What is the recommended responsive-design starting point?",
-          "q_ar": "ما نقطة البداية الموصى بها للتصميم المتجاوب؟",
-          "hint_ar": "ابدأ بالموبايل.",
+          "id": "web-exam2-t5-r10",
+          "kind": "predict_result",
+          "section": "css-responsive-media",
+          "q": "Predict the computed result at a screen viewport exactly 900px wide and 600px high: `.title { font-size: 4em; } @media screen and (max-width: 900px) and (min-height: 600px) and (max-height: 800px) { .title { font-size: 2em; } }`",
+          "q_ar": "توقع الناتج عند شاشة عرضها 900px وارتفاعها 600px بالضبط: كم يصبح font-size للعنوان؟",
+          "hint_ar": "طريقة الكشف السريعة: كل حدود min وmax شاملة؛ 900 يحقق max-width و600 يحقق min-height.",
           "choices": [
-            "The smallest screen, then scale up",
-            "The largest desktop only",
-            "The printer layout only",
-            "A fixed 1920px canvas"
+            "4em",
+            "The media query is invalid because it has multiple conditions",
+            "2em",
+            "0"
           ],
-          "answer": 0,
-          "explanation": "The slides recommend designing the smallest screen first and scaling upward.",
-          "explanation_ar": "توصي الشرائح بالبدء بأصغر شاشة ثم التوسع.",
+          "answer": 2,
+          "explanation": "All three conditions are true at the boundaries, and the medium is screen, so the later 2em declaration applies.",
+          "explanation_ar": "السبب: تتحقق جميع الشروط لأن الحدود شاملة، لذلك تطبق القاعدة الداخلية ويصبح الحجم 2em.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 21",
-          "section": "css-responsive-media"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 25"
         },
         {
-          "id": "web-exam2-rapid-css-responsive-q03",
-          "q": "Which pair is a media type followed by a media condition?",
-          "q_ar": "أي زوج يمثل نوع وسائط ثم شرط وسائط؟",
-          "hint_ar": "الأول يصف الجهاز والثاني قيدًا.",
+          "id": "web-exam2-t5-r11",
+          "kind": "find_fix",
+          "section": "css-responsive-media",
+          "q": "Find the syntax error: `@media screen and max-width: 900px { .lrgtxt { font-size: 2em; } }`. Which correction is valid?",
+          "q_ar": "اكتشف خطأ صياغة media query واختر التصحيح الصحيح.",
+          "hint_ar": "طريقة الكشف السريعة: media feature يجب أن تكون كاملة داخل أقواس دائرية.",
           "choices": [
-            "print; orientation: landscape",
-            "min-width; screen",
-            "aspect-ratio; all",
-            "padding; margin"
+            "`@media screen and (max-width: 900px) { .lrgtxt { font-size: 2em; } }`",
+            "`@media (screen max-width: 900px) { .lrgtxt { font-size: 2em; } }`",
+            "`@media screen && max-width 900px { .lrgtxt { font-size: 2em; } }`",
+            "`@media screen and [max-width: 900px] { .lrgtxt { font-size: 2em; } }`"
           ],
           "answer": 0,
-          "explanation": "print is a media type; orientation:landscape is a condition.",
-          "explanation_ar": "print نوع وسائط، وorientation:landscape شرط.",
+          "explanation": "Media features such as max-width must be enclosed in parentheses and joined to the media type with and.",
+          "explanation_ar": "السبب: يجب وضع max-width داخل أقواس دائرية وربطه بنوع الوسيط باستخدام and.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 24-25",
-          "section": "css-responsive-media"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 22-23 and 33"
         },
         {
-          "id": "web-exam2-rapid-css-responsive-q04",
-          "q": "Where is Chrome's device toolbar found?",
-          "q_ar": "أين يوجد شريط الأجهزة في Chrome؟",
-          "hint_ar": "توجد الأداة ضمن أدوات المتصفح المخصصة للمطورين.",
+          "id": "web-exam2-t5-r12",
+          "kind": "slide_example",
+          "section": "css-responsive-media",
+          "q": "The boarding-pass example uses `@media print { #extra { display: none; } }`. What appears in Print Preview?",
+          "q_ar": "ماذا يظهر في Print Preview عند تطبيق قاعدة الطباعة في مثال بطاقة الصعود؟",
+          "hint_ar": "طريقة الكشف السريعة: display:none يحذف صندوق #extra ومساحته، ولا يؤثر في الأقسام الأخرى.",
           "choices": [
-            "Inside Developer Tools after Inspect",
-            "Inside the CSS file",
-            "Inside Node.js",
-            "Inside caniuse search results"
+            "The entire boarding pass is hidden",
+            "The extra-information section is removed, while the logo, passenger information, and barcode remain",
+            "Only the extra-information articles remain",
+            "The extra section becomes transparent but keeps its layout space"
           ],
-          "answer": 0,
-          "explanation": "The slides direct the user to Inspect and the DevTools device-toolbar icon.",
-          "explanation_ar": "توجه الشرائح إلى Inspect ثم أيقونة شريط الأجهزة في DevTools.",
+          "answer": 1,
+          "explanation": "The print rule removes #extra from the layout. The essential branding, passenger details, and barcode remain.",
+          "explanation_ar": "السبب: تخفي قاعدة الطباعة قسم #extra بالكامل، بينما تبقى الهوية وبيانات المسافر والباركود.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 29",
-          "section": "css-responsive-media"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 31 and 33"
         }
       ]
     },
     {
       "id": "web-rapid-css-grid-4",
-      "label": "⚡ CSS Grid · 4",
-      "description": "Four focused checks for CSS Grid",
+      "label": "⚡ CSS Grid · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "css-grid"
@@ -5280,83 +5292,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-css-grid-q01",
-          "q": "Why is Grid called two-dimensional?",
-          "q_ar": "لماذا يسمى Grid ثنائي الأبعاد؟",
-          "hint_ar": "البعدان هما الصفوف والأعمدة.",
+          "id": "web-exam2-t5-r13",
+          "kind": "direct",
+          "section": "css-grid",
+          "q": "What does the `fr` unit represent in CSS Grid?",
+          "q_ar": "ماذا تمثل وحدة fr في CSS Grid؟",
+          "hint_ar": "طريقة الكشف السريعة: fr تعني fraction من المساحة المتاحة، وليست عدد pixels.",
           "choices": [
-            "It controls rows and columns together",
-            "It controls only the main axis",
-            "It uses two CSS files",
-            "It requires two containers"
+            "A fixed pixel measurement",
+            "A percentage of the viewport height",
+            "A fractional share of the available grid space",
+            "The number of HTML children"
           ],
-          "answer": 0,
-          "explanation": "Grid lays out content across both rows and columns.",
-          "explanation_ar": "ينظم Grid المحتوى عبر الصفوف والأعمدة معًا.",
+          "answer": 2,
+          "explanation": "fr divides available track space into proportional shares, such as the 2:1 ratio in 2fr 1fr.",
+          "explanation_ar": "السبب: تقسم fr المساحة المتاحة إلى حصص نسبية؛ مثلًا 2fr 1fr تعطي الأول ضعف حصة الثاني.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 34",
-          "section": "css-grid"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 36"
         },
         {
-          "id": "web-exam2-rapid-css-grid-q02",
-          "q": "Three columns use 1fr 1fr 1fr. What share does each receive?",
-          "q_ar": "ثلاثة أعمدة تستخدم 1fr 1fr 1fr. ما حصة كل عمود؟",
-          "hint_ar": "الحصص متساوية ومجموعها ثلاث.",
+          "id": "web-exam2-t5-r14",
+          "kind": "predict_result",
+          "section": "css-grid",
+          "q": "A grid contains six direct child items and uses `display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;`. What is the result?",
+          "q_ar": "توقع تخطيط ستة عناصر مباشرة داخل Grid من ثلاثة أعمدة 1fr وفجوة 10px.",
+          "hint_ar": "طريقة الكشف السريعة: عدّي column tracks أولًا، ثم وزعي العناصر حسب ترتيب HTML.",
           "choices": [
-            "One third of the available space",
-            "Exactly 1 pixel",
-            "One half",
-            "A fixed 100px"
+            "Three equal columns, two rows, and 10px gaps",
+            "Six columns in one row",
+            "One column containing six rows",
+            "Three fixed 1px columns"
           ],
           "answer": 0,
-          "explanation": "Equal fr values divide available space equally into thirds.",
-          "explanation_ar": "تقسم قيم fr المتساوية المساحة المتاحة إلى أثلاث.",
+          "explanation": "Three equal column tracks are created. Six auto-placed items fill the first row and then the second row.",
+          "explanation_ar": "السبب: ينشئ الكود ثلاثة أعمدة متساوية؛ تملأ العناصر 1-3 الصف الأول و4-6 الصف الثاني مع فجوات 10px.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 36",
-          "section": "css-grid"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 37"
         },
         {
-          "id": "web-exam2-rapid-css-grid-q03",
-          "q": "How many tracks does grid-column: 2 / 5 span?",
-          "q_ar": "كم مسارًا يمتد grid-column: 2 / 5؟",
-          "hint_ar": "عدد المسارات = خط النهاية ناقص خط البداية.",
+          "id": "web-exam2-t5-r15",
+          "kind": "find_fix",
+          "section": "css-grid",
+          "q": "Find the error: `.container { grid-template-columns: 1fr 1fr 1fr; gap: 10px; }` still displays its children in normal block flow. What is missing?",
+          "q_ar": "اكتشف الخطأ: تم تعريف الأعمدة والفجوة لكن الأبناء ما زالوا في normal flow. ما الخاصية الناقصة؟",
+          "hint_ar": "طريقة الكشف السريعة: يجب تفعيل layout model على الحاوية قبل أن تعمل خصائصه.",
           "choices": [
-            "3",
-            "2",
-            "5",
-            "7"
+            "`position: absolute`",
+            "`flex-direction: row`",
+            "`width: 33%` on every child",
+            "`display: grid` on the container"
           ],
-          "answer": 0,
-          "explanation": "Grid lines 2 through 5 bound three column tracks.",
-          "explanation_ar": "يحد خطا الشبكة 2 و5 ثلاثة مسارات أعمدة.",
+          "answer": 3,
+          "explanation": "Grid track declarations take effect only after the parent establishes a grid formatting context with display:grid.",
+          "explanation_ar": "السبب: لا تعمل خصائص المسارات حتى تتحول الحاوية إلى Grid Container باستخدام display:grid.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 39",
-          "section": "css-grid"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 35 and 37"
         },
         {
-          "id": "web-exam2-rapid-css-grid-q04",
-          "q": "What relationship makes an element a grid item?",
-          "q_ar": "ما العلاقة التي تجعل العنصر Grid Item؟",
-          "hint_ar": "العلاقة مباشرة.",
+          "id": "web-exam2-t5-r16",
+          "kind": "slide_example",
+          "section": "css-grid",
+          "q": "In a three-column grid, eight items are auto-placed and `.item1 { grid-column: 1 / 3; }`. Where are item1 and item2 placed?",
+          "q_ar": "في شبكة من ثلاثة أعمدة، أين يوضع item1 ذو grid-column:1/3 وأين يوضع item2؟",
+          "hint_ar": "طريقة الكشف السريعة: احسبي المسارات بين الخطين: 3 - 1 = عمودان، ثم ضعي العنصر التالي في أول خلية فارغة.",
           "choices": [
-            "It is a direct child of a grid container",
-            "It has a margin",
-            "It is a grandchild anywhere",
-            "It uses position: fixed"
+            "item1 uses column 1 only; item2 uses column 2",
+            "item1 spans columns 1 and 2 in row 1; item2 uses column 3 in row 1",
+            "item1 spans all three columns; item2 starts row 2",
+            "item1 starts in row 2; item2 fills row 1"
           ],
-          "answer": 0,
-          "explanation": "Grid items are the direct children of the grid container.",
-          "explanation_ar": "عناصر Grid هي الأبناء المباشرون لحاوية Grid.",
+          "answer": 1,
+          "explanation": "Lines 1 through 3 enclose two tracks. item1 occupies the first two columns, so auto-placement puts item2 in the remaining third column.",
+          "explanation_ar": "السبب: يمتد item1 عبر عمودين لأن الأرقام تمثل خطوطًا، ثم يوضع item2 في العمود الثالث المتبقي.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 35 and 38",
-          "section": "css-grid"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 39"
         }
       ]
     },
     {
       "id": "web-rapid-css-flexbox-4",
-      "label": "⚡ Flexbox · 4",
-      "description": "Four focused checks for Flexbox",
+      "label": "⚡ Flexbox · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "css-flexbox"
@@ -5365,83 +5381,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-css-flexbox-q01",
-          "q": "What makes Flexbox one-dimensional?",
-          "q_ar": "ما الذي يجعل Flexbox أحادي البعد؟",
-          "hint_ar": "الصف أو العمود محور واحد في كل مرة.",
+          "id": "web-exam2-t5-r17",
+          "kind": "direct",
+          "section": "css-flexbox",
+          "q": "What is the correct order of the three values in the `flex` shorthand?",
+          "q_ar": "ما الترتيب الصحيح للقيم الثلاث في اختصار flex؟",
+          "hint_ar": "طريقة الكشف السريعة: استخدمي G-S-B.",
           "choices": [
-            "It lays items along one main axis at a time",
-            "It can contain only one item",
-            "It has no cross axis",
-            "It supports only one browser"
+            "basis, grow, shrink",
+            "shrink, basis, grow",
+            "grow, shrink, basis",
+            "grow, basis, shrink"
           ],
-          "answer": 0,
-          "explanation": "Flexbox works along a single main axis, either row or column.",
-          "explanation_ar": "يعمل Flexbox على محور رئيسي واحد، صفًا أو عمودًا.",
+          "answer": 2,
+          "explanation": "The shorthand order is flex-grow, flex-shrink, then flex-basis.",
+          "explanation_ar": "السبب: الترتيب هو grow ثم shrink ثم basis.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 42-43",
-          "section": "css-flexbox"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 48-49"
         },
         {
-          "id": "web-exam2-rapid-css-flexbox-q02",
-          "q": "Which value allows overflowing flex items to move to another line?",
-          "q_ar": "أي قيمة تسمح لعناصر Flex الزائدة بالانتقال إلى سطر آخر؟",
-          "hint_ar": "فعّل الالتفاف.",
+          "id": "web-exam2-t5-r18",
+          "kind": "predict_result",
+          "section": "css-flexbox",
+          "q": "A row flex container uses `flex-wrap: wrap`. Its width can hold exactly three of four items. What is the layout?",
+          "q_ar": "توقع الناتج: حاوية Flex أفقية تستخدم wrap وتتسع لثلاثة من أربعة عناصر فقط.",
+          "hint_ar": "طريقة الكشف السريعة: wrap ينقل أول عنصر لا يتسع إلى flex line جديدة.",
           "choices": [
-            "flex-wrap: wrap",
-            "flex-wrap: nowrap",
-            "flex-grow: 0",
-            "display: block on body"
+            "All four items remain on one line and overflow",
+            "Items 1, 2, and 3 are on the first line; item 4 moves to the second line",
+            "Every item becomes a separate column",
+            "The fourth item is hidden"
           ],
-          "answer": 0,
-          "explanation": "wrap creates another flex line when items do not fit.",
-          "explanation_ar": "تنشئ wrap سطر Flex آخر عندما لا تتسع العناصر.",
+          "answer": 1,
+          "explanation": "Wrapping allows additional flex lines, so the fourth item moves to the next line.",
+          "explanation_ar": "السبب: لأن wrap مفعلة، تنتقل القطعة الرابعة إلى سطر Flex جديد بدل تجاوز الحاوية.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 44",
-          "section": "css-flexbox"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 45"
         },
         {
-          "id": "web-exam2-rapid-css-flexbox-q03",
-          "q": "In flex: 0 1 100px, which behavior is disabled?",
-          "q_ar": "في flex: 0 1 100px، أي سلوك معطل؟",
-          "hint_ar": "الترتيب grow ثم shrink ثم basis.",
+          "id": "web-exam2-t5-r19",
+          "kind": "find_fix",
+          "section": "css-flexbox",
+          "q": "Find and correct both errors: the intended result is a vertical, non-wrapping layout, but the code uses `flex-wrap: no-wrap; flex-direction: row;`. Which pair is correct?",
+          "q_ar": "اكتشف الخطأين: المطلوب تخطيط عمودي بلا التفاف، لكن الكود يستخدم no-wrap وrow. ما التصحيح؟",
+          "hint_ar": "طريقة الكشف السريعة: القيمة الصحيحة كلمة واحدة nowrap، والاتجاه العمودي column.",
           "choices": [
-            "Growth",
-            "Shrinkage",
-            "Initial basis",
-            "Flex layout itself"
+            "`flex-wrap: wrap; flex-direction: row;`",
+            "`flex-wrap: no-wrap; flex-direction: column;`",
+            "`flex-wrap: nowrap; flex-direction: row;`",
+            "`flex-wrap: nowrap; flex-direction: column;`"
           ],
-          "answer": 0,
-          "explanation": "The first value is flex-grow, and zero disables growth.",
-          "explanation_ar": "القيمة الأولى flex-grow، والصفر يعطل النمو.",
+          "answer": 3,
+          "explanation": "The valid keyword is nowrap, not no-wrap. A vertical main axis requires flex-direction:column.",
+          "explanation_ar": "السبب: no-wrap قيمة غير صحيحة؛ الصحيح nowrap. ولترتيب العناصر رأسيًا يجب استخدام column بدل row.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 48-49",
-          "section": "css-flexbox"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 44 and 46-47"
         },
         {
-          "id": "web-exam2-rapid-css-flexbox-q04",
-          "q": "Which property aligns on the cross axis?",
-          "q_ar": "أي خاصية تحاذي على المحور المتقاطع؟",
-          "hint_ar": "justify للمحور الرئيسي.",
+          "id": "web-exam2-t5-r20",
+          "kind": "slide_example",
+          "section": "css-flexbox",
+          "q": "How does an item with `flex: 1 1 100px` behave as the container size changes?",
+          "q_ar": "كيف يتصرف عنصر يستخدم flex:1 1 100px عند تغير مساحة الحاوية؟",
+          "hint_ar": "طريقة الكشف السريعة: اقرئيها: grow=1، shrink=1، basis=100px.",
           "choices": [
-            "align-items",
-            "justify-content",
-            "flex-basis",
-            "grid-column"
+            "It starts at 100px and can grow or shrink to fit available space",
+            "It stays exactly 100px in every case",
+            "It can grow but cannot shrink",
+            "It can shrink but cannot grow"
           ],
           "answer": 0,
-          "explanation": "align-items controls cross-axis alignment.",
-          "explanation_ar": "تتحكم align-items بمحاذاة المحور المتقاطع.",
+          "explanation": "The 100px basis is the starting size, while both grow and shrink are enabled.",
+          "explanation_ar": "السبب: يبدأ العنصر من 100px، ثم يمكنه التوسع عند وجود مساحة أو الانكماش عند ضيقها.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 48",
-          "section": "css-flexbox"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 49"
         }
       ]
     },
     {
       "id": "web-rapid-css-layout-choice-4",
-      "label": "⚡ Grid/Flex Decisions · 4",
-      "description": "Four focused checks for Grid/Flex Decisions",
+      "label": "⚡ Grid/Flex Decisions · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "css-layout-selection"
@@ -5450,83 +5470,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-css-layout-choice-q01",
-          "q": "Choose the best match: overall page rows and columns?",
-          "q_ar": "اختر الأنسب: صفوف وأعمدة الصفحة كاملة؟",
-          "hint_ar": "المطلوب تخطيط كلي ثنائي الأبعاد.",
+          "id": "web-exam2-t5-r21",
+          "kind": "direct",
+          "section": "css-layout-selection",
+          "q": "Which layout system is the better first choice when a page must coordinate rows and columns together?",
+          "q_ar": "ما نظام التخطيط الأنسب عندما نحتاج التحكم في الصفوف والأعمدة معًا؟",
+          "hint_ar": "طريقة الكشف السريعة: صفوف مع أعمدة تعني نظامًا ثنائي الأبعاد.",
           "choices": [
-            "Grid",
+            "CSS Grid",
             "Flexbox only",
-            "inline text",
-            "z-index"
+            "display:inline",
+            "position:fixed"
           ],
           "answer": 0,
-          "explanation": "Grid is presented as the stronger overall page-layout tool.",
-          "explanation_ar": "تقدم Grid كأداة أقوى لتخطيط الصفحة الكلي.",
+          "explanation": "Grid is two-dimensional and is designed to coordinate row and column tracks together.",
+          "explanation_ar": "السبب: Grid ثنائي الأبعاد، لذلك يناسب التحكم المتزامن في الصفوف والأعمدة.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 43",
-          "section": "css-layout-selection"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 43 and 50"
         },
         {
-          "id": "web-exam2-rapid-css-layout-choice-q02",
-          "q": "Choose the best match: distribute and align items along one row?",
-          "q_ar": "اختر الأنسب: توزيع ومحاذاة عناصر على صف واحد؟",
-          "hint_ar": "المهمة على محور واحد.",
+          "id": "web-exam2-t5-r22",
+          "kind": "predict_result",
+          "section": "css-layout-selection",
+          "q": "Three direct `<article>` children use `#extra { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }`. What is the result?",
+          "q_ar": "توقع ناتج نسخة Grid في مثال #extra ذي ثلاثة عناصر article.",
+          "hint_ar": "طريقة الكشف السريعة: ثلاث قيم 1fr تعني ثلاثة tracks متساوية.",
           "choices": [
-            "Flexbox",
-            "Grid only",
-            "position: static",
-            "@media print"
+            "One vertical column",
+            "A flex row with content-sized articles",
+            "Three equal columns separated by 5px gaps",
+            "Three overlapping absolute elements"
           ],
-          "answer": 0,
-          "explanation": "Flexbox is ideal for distributing and aligning items on one axis.",
-          "explanation_ar": "Flexbox مثالي لتوزيع ومحاذاة العناصر على محور واحد.",
+          "answer": 2,
+          "explanation": "The three direct children are auto-placed into three equal fractional columns with a 5px gap.",
+          "explanation_ar": "السبب: يوضع كل article في عمود 1fr متساوٍ، وتفصل بينها فجوات مقدارها 5px.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 43",
-          "section": "css-layout-selection"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 50"
         },
         {
-          "id": "web-exam2-rapid-css-layout-choice-q03",
-          "q": "Which pair correctly activates the two advanced layout containers?",
-          "q_ar": "أي زوج يفعّل حاويتي التخطيط المتقدم بشكل صحيح؟",
-          "hint_ar": "يُفعّل النظامان على Parent Container باستخدام الخاصية نفسها.",
+          "id": "web-exam2-t5-r23",
+          "kind": "find_fix",
+          "section": "css-layout-selection",
+          "q": "Find the error: `#extra article { display: grid; grid-template-columns: 1fr 1fr 1fr; }` does not arrange the three articles as page columns. What is the best fix?",
+          "q_ar": "اكتشف الخطأ: تم وضع خصائص Grid على كل article بدل ترتيب articles نفسها. ما الإصلاح؟",
+          "hint_ar": "طريقة الكشف السريعة: خصائص layout توضع على الأب الذي يحتوي العناصر المراد ترتيبها.",
           "choices": [
-            "display:grid and display:flex",
-            "position:grid and position:flex",
-            "layout:2d and layout:1d",
-            "grid:true and flex:true"
+            "Add z-index to every article",
+            "Move `display:grid` and `grid-template-columns` to `#extra`",
+            "Change every article to `position:absolute`",
+            "Keep Grid on each article and add `width:30%`"
           ],
-          "answer": 0,
-          "explanation": "Grid and Flexbox are enabled with display:grid and display:flex.",
-          "explanation_ar": "يُفعّل Grid وFlexbox باستخدام display:grid وdisplay:flex.",
+          "answer": 1,
+          "explanation": "The parent must become the grid container so its direct article children become grid items.",
+          "explanation_ar": "السبب: يجب تحويل #extra إلى Grid Container حتى تصبح عناصر article المباشرة Grid Items.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 35 and 44",
-          "section": "css-layout-selection"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 50"
         },
         {
-          "id": "web-exam2-rapid-css-layout-choice-q04",
-          "q": "Which alternative named in the slides also provides advanced layouts?",
-          "q_ar": "ما البديل المذكور في الشرائح لتوفير تخطيطات متقدمة؟",
-          "hint_ar": "هو إطار CSS مشهور.",
+          "id": "web-exam2-t5-r24",
+          "kind": "slide_example",
+          "section": "css-layout-selection",
+          "q": "Which snippet matches the slide Flex replacement for the old `inline-block; width: 30%` article layout?",
+          "q_ar": "أي snippet يطابق استبدال Flex المعروض في الشريحة بدل inline-block وwidth:30%؟",
+          "hint_ar": "طريقة الكشف السريعة: فعّلي Flex على الأب #extra، وليس على كل article.",
           "choices": [
-            "A CSS framework such as Bootstrap",
-            "A Java compiler",
-            "A database index",
-            "A prompt dialog"
+            "`#extra article { display: flex; width: 30%; gap: 5px; }`",
+            "`#extra { display: inline; } #extra article { width: 30%; }`",
+            "`#extra { display: grid; flex-direction: row; }`",
+            "`#extra { display: flex; gap: 5px; } #extra article { border: 1px dashed black; }`"
           ],
-          "answer": 0,
-          "explanation": "The slides name Bootstrap as a framework alternative for advanced layouts.",
-          "explanation_ar": "تذكر الشرائح Bootstrap كبديل إطاري للتخطيطات المتقدمة.",
+          "answer": 3,
+          "explanation": "The slide turns #extra into the flex container and removes the manual article width calculation. Its exact snippet does not independently guarantee equal article widths.",
+          "explanation_ar": "السبب: تحول الشريحة #extra إلى Flex Container وتحذف حساب width اليدوي من articles. الكود المعروض وحده لا يضمن تساوي عروضها.",
           "src": "slides",
-          "source": "CCSW321-Material-05 - CSS (2).pdf, slides 5 and 50",
-          "section": "css-layout-selection"
+          "source": "CCSW321-Material-05 - CSS (2).pdf, slide 50"
         }
       ]
     },
     {
       "id": "web-rapid-js-runtime-4",
-      "label": "⚡ JS Runtime & Loading · 4",
-      "description": "Four focused checks for JS Runtime & Loading",
+      "label": "⚡ JS Runtime & Loading · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "js-role-runtime-inclusion"
@@ -5535,83 +5559,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-js-runtime-q01",
-          "q": "Which script tag can validly use defer?",
-          "q_ar": "أي وسم script يمكنه استخدام defer بشكل صحيح؟",
-          "hint_ar": "defer يحتاج src.",
+          "id": "web-exam2-t6-r01",
+          "kind": "direct",
+          "section": "js-role-runtime-inclusion",
+          "q": "Which statement about `<script src=\"app.js\" defer></script>` is correct?",
+          "q_ar": "أي عبارة صحيحة عن script خارجي يحمل defer؟",
+          "hint_ar": "طريقة الكشف السريعة: اربطي defer بمرحلتين: parsing ووجود src.",
           "choices": [
-            "<script src=\"app.js\" defer></script>",
-            "<script defer>let x=1;</script> only",
-            "<button defer>Run</button>",
-            "<link defer href=\"app.js\">"
+            "It blocks parsing and runs immediately.",
+            "It is fetched without blocking HTML parsing and runs after parsing completes.",
+            "It works only when the script has no src attribute.",
+            "It waits until every image and stylesheet has loaded."
           ],
-          "answer": 0,
-          "explanation": "The slides state that defer works only with external scripts that specify src.",
-          "explanation_ar": "تنص الشرائح على أن defer يعمل فقط مع السكربتات الخارجية ذات src.",
+          "answer": 1,
+          "explanation": "defer applies to external scripts, avoids blocking parsing, and schedules execution after HTML parsing.",
+          "explanation_ar": "السبب: وجود src شرط، والتنفيذ بعد parsing وليس بعد تحميل كل الموارد.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 11-13",
-          "section": "js-role-runtime-inclusion"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 11-13"
         },
         {
-          "id": "web-exam2-rapid-js-runtime-q02",
-          "q": "Which statement fits JavaScript execution?",
-          "q_ar": "أي عبارة تناسب تنفيذ JavaScript؟",
-          "hint_ar": "قارنها باللغات المترجمة.",
+          "id": "web-exam2-t6-r02",
+          "kind": "predict_output",
+          "section": "js-role-runtime-inclusion",
+          "q": "A script in `<head>` runs `document.getElementById(\"msg\").textContent = \"Ready\"`, while `<p id=\"msg\">` appears later in `<body>`. What occurs?",
+          "q_ar": "ماذا يحدث إذا حاول script داخل head تعديل عنصر msg الموجود لاحقًا في body؟",
+          "hint_ar": "طريقة الكشف السريعة: اسألي: هل وصل parser إلى العنصر وقت التنفيذ؟",
           "choices": [
-            "No main method; ordinary code runs top-to-bottom, function declarations are hoisted, and classes stay unusable before initialization",
-            "A main method is mandatory",
-            "The developer must compile it before every browser run",
-            "Files always load in reverse"
+            "Ready appears normally.",
+            "Nothing happens and no error is raised.",
+            "A TypeError occurs because getElementById returns null.",
+            "A SyntaxError occurs because textContent is invalid."
           ],
-          "answer": 0,
-          "explanation": "There is no required main method and ordinary statements run top-to-bottom. Function declarations are hoisted; class declarations remain unusable in their temporal dead zone until initialization.",
-          "explanation_ar": "لا توجد main مطلوبة، والتنفيذ المعتاد من الأعلى للأسفل. تُرفع function declarations، لكن class declarations لا تُستخدم داخل temporal dead zone قبل تهيئتها.",
+          "answer": 2,
+          "explanation": "The element does not exist yet, so the selector returns null and accessing textContent fails.",
+          "explanation_ar": "السبب: السكربت العادي في head ينفذ قبل إنشاء العنصر.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 5",
-          "section": "js-role-runtime-inclusion"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 11-12"
         },
         {
-          "id": "web-exam2-rapid-js-runtime-q03",
-          "q": "Which pairing is correct?",
-          "q_ar": "أي مطابقة صحيحة؟",
-          "hint_ar": "إحداهما تشغل JS خارج المتصفح والأخرى تدير الحزم.",
+          "id": "web-exam2-t6-r03",
+          "kind": "find_fix",
+          "section": "js-role-runtime-inclusion",
+          "q": "Which fix gives defer behavior to `<script defer>document.getElementById(\"msg\").textContent=\"Ready\";</script>`?",
+          "q_ar": "ما التصحيح الذي يجعل defer فعالًا مع هذا الكود inline؟",
+          "hint_ar": "طريقة الكشف السريعة: defer لا يعمل على inline script.",
           "choices": [
-            "Node.js—server runtime; NPM—dependency manager",
-            "Node.js—CSS framework; NPM—browser",
-            "Node.js—DOM selector; NPM—event",
-            "Node.js—database; NPM—HTML tag"
+            "Change it to `<script defer=\"false\">`.",
+            "Move the inline script to the top of head.",
+            "Move the code to app.js and use `<script src=\"app.js\" defer></script>`.",
+            "Replace defer with async."
           ],
-          "answer": 0,
-          "explanation": "Node.js runs JavaScript outside the browser; NPM installs and updates dependencies.",
-          "explanation_ar": "يشغل Node.js JavaScript خارج المتصفح، ويدير NPM تثبيت الاعتمادات وتحديثها.",
+          "answer": 2,
+          "explanation": "The code must be external and referenced through src for defer to apply.",
+          "explanation_ar": "السبب: المشكلة ليست قيمة defer؛ المشكلة غياب src.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 9",
-          "section": "js-role-runtime-inclusion"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 13"
         },
         {
-          "id": "web-exam2-rapid-js-runtime-q04",
-          "q": "Why can a head script without defer get null from getElementById?",
-          "q_ar": "لماذا قد يحصل سكربت في head بلا defer على null من getElementById؟",
-          "hint_ar": "السكربت يعمل قبل تحميل محتوى body.",
+          "id": "web-exam2-t6-r04",
+          "kind": "slide_example",
+          "section": "js-role-runtime-inclusion",
+          "q": "How are `<button onclick=\"save()\">`, `<script>save();</script>`, and `<script src=\"app.js\"></script>` classified, in order?",
+          "q_ar": "ما تصنيف أمثلة onclick وscript الداخلي وscript ذي src بالترتيب؟",
+          "hint_ar": "طريقة الكشف السريعة: attribute ثم كود داخل الصفحة ثم ملف منفصل.",
           "choices": [
-            "The target element has not been parsed yet",
-            "IDs work only in CSS",
-            "null means the element is global",
-            "The browser has no DOM"
+            "Inline, embedded, external",
+            "Embedded, inline, external",
+            "External, embedded, inline",
+            "Inline, external, embedded"
           ],
           "answer": 0,
-          "explanation": "The target content may not exist in the DOM when the early script executes.",
-          "explanation_ar": "قد لا يكون المحتوى الهدف موجودًا في DOM عندما ينفذ السكربت مبكرًا.",
+          "explanation": "Event-attribute code is inline, code inside script is embedded, and src references an external file.",
+          "explanation_ar": "السبب: مكان الكود هو الذي يحدد نوع inclusion.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 11",
-          "section": "js-role-runtime-inclusion"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 10-12"
         }
       ]
     },
     {
       "id": "web-rapid-js-values-4",
-      "label": "⚡ JS Values & Scope · 4",
-      "description": "Four focused checks for JS Values & Scope",
+      "label": "⚡ JS Values & Scope · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "js-values-scope"
@@ -5620,83 +5648,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-js-values-q01",
-          "q": "Which value means deliberately “no value”?",
-          "q_ar": "أي قيمة تعني تعمد عدم وجود قيمة؟",
-          "hint_ar": "تم إسناد الغياب عمدًا.",
+          "id": "web-exam2-t6-r05",
+          "kind": "direct",
+          "section": "js-values-scope",
+          "q": "Which declaration creates a block-scoped binding that may be reassigned?",
+          "q_ar": "أي declaration ينشئ binding بنطاق block ويمكن إعادة إسناده؟",
+          "hint_ar": "طريقة الكشف السريعة: فرّقي بين إعادة الإسناد وبين block scope.",
           "choices": [
-            "null",
-            "undefined",
-            "0",
-            "\"\""
+            "var",
+            "let",
+            "const",
+            "An assignment with no declaration keyword"
           ],
-          "answer": 0,
-          "explanation": "null represents an intentionally absent value.",
-          "explanation_ar": "تمثل null غياب قيمة بشكل مقصود.",
+          "answer": 1,
+          "explanation": "let is block-scoped and allows reassignment.",
+          "explanation_ar": "السبب: const block-scoped لكنه لا يقبل إعادة إسناد binding، وvar function-scoped.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 20",
-          "section": "js-values-scope"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 22-26"
         },
         {
-          "id": "web-exam2-rapid-js-values-q02",
-          "q": "What is typeof false?",
-          "q_ar": "ما نتيجة typeof false؟",
-          "hint_ar": "typeof يعيد اسم النوع.",
+          "id": "web-exam2-t6-r06",
+          "kind": "slide_example",
+          "section": "js-values-scope",
+          "q": "What does `console.log(typeof null, typeof [20,\"k\"], typeof undefined);` print?",
+          "q_ar": "ماذا يطبع typeof للقيم null وarray وundefined؟",
+          "hint_ar": "طريقة الكشف السريعة: تذكري نتيجتي typeof غير البديهية لـnull وarray.",
           "choices": [
-            "\"boolean\"",
-            "\"false\"",
-            "\"object\"",
-            "\"number\""
+            "object object undefined",
+            "null array undefined",
+            "object array null",
+            "null object undefined"
           ],
           "answer": 0,
-          "explanation": "The console example reports boolean for both true and false.",
-          "explanation_ar": "يعرض مثال وحدة التحكم النوع boolean لكل من true وfalse.",
+          "explanation": "typeof null is historically \"object\"; arrays are objects; undefined reports \"undefined\".",
+          "explanation_ar": "السبب: لا تعتمدي على الاسم الظاهر للقيمة؛ احفظي نتائج console في الشريحة.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 21",
-          "section": "js-values-scope"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 21"
         },
         {
-          "id": "web-exam2-rapid-js-values-q03",
-          "q": "Which declarations are block-scoped?",
-          "q_ar": "أي تصريحات لها نطاق كتلة؟",
-          "hint_ar": "var هو المختلف.",
+          "id": "web-exam2-t6-r07",
+          "kind": "predict_output",
+          "section": "js-values-scope",
+          "q": "What is printed by `var x=1; function A(){var x=25; return ++x;} function B(){const old=x; x*=10; return old;} console.log(A(),B(),A(),B(),x);`?",
+          "q_ar": "ما ناتج تتبع الدالتين A وB مع local x وglobal x؟",
+          "hint_ar": "طريقة الكشف السريعة: A تعيد إنشاء local x؛ B تعدل global x وتحفظ قيمته.",
           "choices": [
-            "let and const",
-            "var only",
-            "All undeclared assignments",
-            "function names only"
+            "26 1 26 10 100",
+            "26 1 27 10 100",
+            "26 10 26 100 100",
+            "25 1 25 10 100"
           ],
           "answer": 0,
-          "explanation": "let and const end at the block boundary; var is function-scoped.",
-          "explanation_ar": "ينتهي نطاق let وconst عند حدود الكتلة، بينما var ذو نطاق دالة.",
+          "explanation": "A local x resets to 25 each call; B observes and multiplies the persistent global x.",
+          "explanation_ar": "السبب: local يعيد 26 كل مرة، بينما global ينتقل 1 ثم 10 ثم 100.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 22 and 26",
-          "section": "js-values-scope"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 27"
         },
         {
-          "id": "web-exam2-rapid-js-values-q04",
-          "q": "Which value is truthy?",
-          "q_ar": "أي قيمة truthy؟",
-          "hint_ar": "السلسلة غير الفارغة truthy حتى لو احتوت صفرًا.",
+          "id": "web-exam2-t6-r08",
+          "kind": "find_fix",
+          "section": "js-values-scope",
+          "q": "How should `if (true) { let i=10; } console.log(i);` be fixed while keeping i block-scoped?",
+          "q_ar": "كيف نصحح الوصول إلى i مع إبقائها block-scoped؟",
+          "hint_ar": "طريقة الكشف السريعة: مكان الاستخدام يجب أن يقع داخل نفس الأقواس.",
           "choices": [
-            "\"0\"",
-            "0",
-            "NaN",
-            "\"\""
+            "Change let to an undeclared assignment.",
+            "Move console.log(i) inside the block.",
+            "Add `delete i` after the block.",
+            "Replace console.log with document.write."
           ],
-          "answer": 0,
-          "explanation": "The numeric zero, NaN, and the empty string are falsy here; the nonempty string \"0\" is truthy.",
-          "explanation_ar": "الصفر العددي وNaN والسلسلة الفارغة falsy، أما السلسلة غير الفارغة \"0\" فهي truthy.",
+          "answer": 1,
+          "explanation": "A let binding is inaccessible after its block ends, so the read must remain inside the block.",
+          "explanation_ar": "السبب: خارج الأقواس ستكون النتيجة ReferenceError.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 31",
-          "section": "js-values-scope"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 25-26"
         }
       ]
     },
     {
       "id": "web-rapid-js-operators-4",
-      "label": "⚡ JS Operators · 4",
-      "description": "Four focused checks for JS Operators",
+      "label": "⚡ JS Operators · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "js-operators-coercion"
@@ -5705,83 +5737,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-js-operators-q01",
-          "q": "What does 0 === \"0\" evaluate to?",
-          "q_ar": "ما نتيجة 0 === \"0\"؟",
-          "hint_ar": "النوعان مختلفان ولا يوجد تحويل.",
+          "id": "web-exam2-t6-r09",
+          "kind": "direct",
+          "section": "js-operators-coercion",
+          "q": "Which groups associate from right to left in the lecture precedence table?",
+          "q_ar": "أي مجموعات operators تتجمع من اليمين إلى اليسار؟",
+          "hint_ar": "طريقة الكشف السريعة: ابحثي عن unary و?: وassignment.",
           "choices": [
-            "false",
-            "true",
-            "0",
-            "undefined"
+            "Multiplication, addition, and relational operators",
+            "Equality, logical AND, and logical OR",
+            "Unary operators, ternary conditional, and assignment",
+            "All binary operators"
           ],
-          "answer": 0,
-          "explanation": "Strict equality compares without converting the string to a number.",
-          "explanation_ar": "تقارن المساواة الصارمة بلا تحويل السلسلة إلى رقم.",
+          "answer": 2,
+          "explanation": "The table marks unary, conditional, and assignment operators as right-associative.",
+          "explanation_ar": "السبب: معظم binary operators الأخرى في الجدول تتجمع من اليسار.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 32-33",
-          "section": "js-operators-coercion"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 36"
         },
         {
-          "id": "web-exam2-rapid-js-operators-q02",
-          "q": "Which comparison remains false even when both operands are NaN?",
-          "q_ar": "أي مقارنة تبقى false حتى عندما يكون الطرفان NaN؟",
-          "hint_ar": "NaN لا يساوي نفسه.",
+          "id": "web-exam2-t6-r10",
+          "kind": "slide_example",
+          "section": "js-operators-coercion",
+          "q": "What does `console.log(\"\" == 0, 0 === \"0\", null == undefined, [\"\"] === \"\");` print?",
+          "q_ar": "ما نتائج المقارنات loose وstrict المعروضة؟",
+          "hint_ar": "طريقة الكشف السريعة: loose قد يحول الأنواع؛ strict لا يحولها.",
           "choices": [
-            "NaN === NaN",
-            "0 === 0",
-            "\"a\" === \"a\"",
-            "null === null"
+            "false false false false",
+            "true false true false",
+            "true true true true",
+            "false true false true"
           ],
-          "answer": 0,
-          "explanation": "The slides show NaN comparison as false even with equality operators.",
-          "explanation_ar": "تظهر الشرائح مقارنة NaN بنفسه على أنها false.",
+          "answer": 1,
+          "explanation": "Loose equality coerces the empty string and treats null and undefined as equal; strict equality rejects the type mismatches.",
+          "explanation_ar": "السبب: حددي أولًا هل العامل == أم === قبل مقارنة القيم.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 32-33",
-          "section": "js-operators-coercion"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 32-33"
         },
         {
-          "id": "web-exam2-rapid-js-operators-q03",
-          "q": "Which operator group is evaluated first in 1 + 2 > 2 && true?",
-          "q_ar": "أي مجموعة معاملات تُنفذ أولًا في 1 + 2 > 2 && true؟",
-          "hint_ar": "جدول الأولوية يضع الجمع قبل relational ثم logical AND.",
+          "id": "web-exam2-t6-r11",
+          "kind": "predict_output",
+          "section": "js-operators-coercion",
+          "q": "What is printed by `let c=5; console.log(c,c++,c); c=5; console.log(c,++c,c);`?",
+          "q_ar": "ما ناتج postincrement ثم preincrement؟",
+          "hint_ar": "طريقة الكشف السريعة: postfix يستخدم القديم ثم يزيد؛ prefix يزيد ثم يستخدم.",
           "choices": [
-            "Additive +",
-            "Relational >",
-            "Logical &&",
-            "Assignment ="
+            "5 5 6, then 5 6 6",
+            "5 6 6, then 5 5 6",
+            "5 5 5, then 6 6 6",
+            "6 6 6, then 5 6 6"
           ],
           "answer": 0,
-          "explanation": "Addition precedes relational comparison, which precedes logical AND.",
-          "explanation_ar": "يسبق الجمع المقارنة العلائقية، وتسبق المقارنة AND المنطقية.",
+          "explanation": "c++ yields the old value before incrementing, whereas ++c increments before yielding.",
+          "explanation_ar": "السبب: تتبعي لحظة استخدام القيمة، لا القيمة النهائية فقط.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 36",
-          "section": "js-operators-coercion"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 37-38"
         },
         {
-          "id": "web-exam2-rapid-js-operators-q04",
-          "q": "Which expression increments before yielding the value?",
-          "q_ar": "أي تعبير يزيد القيمة قبل إرجاعها؟",
-          "hint_ar": "prefix قبل الاستخدام.",
+          "id": "web-exam2-t6-r12",
+          "kind": "find_fix",
+          "section": "js-operators-coercion",
+          "q": "The requirement is: score must be the Number 60, not the String \"60\". Which condition fixes `score == \"60\"`?",
+          "q_ar": "كيف نصحح الشرط ليقبل Number 60 فقط؟",
+          "hint_ar": "طريقة الكشف السريعة: نحتاج مقارنة النوع والقيمة دون coercion.",
           "choices": [
-            "++c",
-            "c++",
-            "c += 0",
-            "c--"
+            "score = 60",
+            "score != 60",
+            "score == 60",
+            "score === 60"
           ],
-          "answer": 0,
-          "explanation": "Preincrement ++c changes c first; postincrement c++ yields the old value first.",
-          "explanation_ar": "يزيد ++c القيمة أولًا، بينما يعيد c++ القيمة القديمة أولًا.",
+          "answer": 3,
+          "explanation": "Strict equality requires both the numeric type and the value 60.",
+          "explanation_ar": "السبب: العامل == قد يقبل السلسلة \"60\" بعد التحويل.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 37-38",
-          "section": "js-operators-coercion"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 32-33"
         }
       ]
     },
     {
       "id": "web-rapid-js-functions-4",
-      "label": "⚡ Functions & Objects · 4",
-      "description": "Four focused checks for Functions & Objects",
+      "label": "⚡ Functions & Objects · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "js-functions-objects"
@@ -5790,83 +5826,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-js-functions-q01",
-          "q": "Which function form has no own this?",
-          "q_ar": "أي شكل دالة لا يملك this خاصة به؟",
-          "hint_ar": "هي صيغة ES6 المختصرة.",
+          "id": "web-exam2-t6-r13",
+          "kind": "direct",
+          "section": "js-functions-objects",
+          "q": "Which function form does not create its own `this`?",
+          "q_ar": "أي صيغة function لا تنشئ this خاصًا بها؟",
+          "hint_ar": "طريقة الكشف السريعة: ابحثي عن صيغة ES6 المختصرة.",
           "choices": [
-            "Arrow function",
             "Function declaration",
-            "Object method in every case",
-            "Constructor function"
+            "Regular function expression",
+            "Arrow function",
+            "Constructor function used with new"
           ],
-          "answer": 0,
-          "explanation": "The slides specifically note that arrow functions do not have their own this.",
-          "explanation_ar": "تذكر الشرائح تحديدًا أن arrow functions لا تملك this خاصة بها.",
+          "answer": 2,
+          "explanation": "Arrow functions capture this lexically from their surrounding scope.",
+          "explanation_ar": "السبب: لهذا لا تناسب method يحتاج this للكائن نفسه دون عناية.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 40",
-          "section": "js-functions-objects"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 40"
         },
         {
-          "id": "web-exam2-rapid-js-functions-q02",
-          "q": "What does new Person(...) create?",
-          "q_ar": "ماذا ينشئ new Person(...)؟",
-          "hint_ar": "new يعمل مع constructor.",
+          "id": "web-exam2-t6-r14",
+          "kind": "predict_output",
+          "section": "js-functions-objects",
+          "q": "What is printed by `console.log(person.getAge()); person.setAge(35); console.log(person.getAge());` when person.age starts at 30?",
+          "q_ar": "ما ناتج getAge قبل وبعد استدعاء setAge(35)؟",
+          "hint_ar": "طريقة الكشف السريعة: setter يغير property الموجودة على this.",
           "choices": [
-            "A new Person object instance",
-            "A string named Person",
-            "A global CSS class",
-            "A DOM NodeList"
+            "30 then 30",
+            "30 then 35",
+            "35 then 30",
+            "undefined then 35"
           ],
-          "answer": 0,
-          "explanation": "new invokes the constructor to produce a fresh object instance.",
-          "explanation_ar": "تستدعي new المُنشئ لإنتاج نسخة كائن جديدة.",
+          "answer": 1,
+          "explanation": "getAge first reads 30; setAge updates this.age, so the second read returns 35.",
+          "explanation_ar": "السبب: this تشير إلى person عند الاستدعاء عبر person.method().",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 43",
-          "section": "js-functions-objects"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 45"
         },
         {
-          "id": "web-exam2-rapid-js-functions-q03",
-          "q": "Inside person.sayHello, what does this.name read?",
-          "q_ar": "داخل person.sayHello، ماذا تقرأ this.name؟",
-          "hint_ar": "this تعني الكائن الحالي.",
+          "id": "web-exam2-t6-r15",
+          "kind": "find_fix",
+          "section": "js-functions-objects",
+          "q": "Which correction fixes the slide code `bye(Moayad');`?",
+          "q_ar": "ما التصحيح الصحيح لاستدعاء bye في الشريحة؟",
+          "hint_ar": "طريقة الكشف السريعة: المشكلة اقتباس ناقص حول string argument.",
           "choices": [
-            "The name property of the current person object",
-            "The function name",
-            "A global HTML name",
-            "The constructor source code"
+            "bye('Moayad');",
+            "bye(Moayad);",
+            "bye(\"Moayad');",
+            "bye = ('Moayad');"
           ],
           "answer": 0,
-          "explanation": "Within the method, this refers to the current person object.",
-          "explanation_ar": "داخل الدالة تشير this إلى كائن person الحالي.",
+          "explanation": "The name is a string literal and needs matching opening and closing quotes.",
+          "explanation_ar": "السبب: الصيغة الأصلية SyntaxError بسبب عدم تطابق الاقتباسات.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 44-45",
-          "section": "js-functions-objects"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 40"
         },
         {
-          "id": "web-exam2-rapid-js-functions-q04",
-          "q": "Which keyword creates an instance from a constructor function?",
-          "q_ar": "أي كلمة تنشئ instance من constructor function؟",
-          "hint_ar": "تأتي الكلمة قبل اسم constructor عند الاستدعاء.",
+          "id": "web-exam2-t6-r16",
+          "kind": "slide_example",
+          "section": "js-functions-objects",
+          "q": "After `const person2 = new Person(\"Jane\",25,\"Graphic Designer\");`, what does `console.log(person2.name + \":\" + person2.age);` print?",
+          "q_ar": "ما ناتج قراءة properties من instance المنشأة بـnew؟",
+          "hint_ar": "طريقة الكشف السريعة: constructor ينسخ arguments إلى this.name وthis.age.",
           "choices": [
-            "new",
-            "this",
-            "const",
-            "return"
+            "Person:Jane",
+            "Jane:Graphic Designer",
+            "Jane:25",
+            "undefined:25"
           ],
-          "answer": 0,
-          "explanation": "The new keyword creates and initializes a fresh object from a constructor function.",
-          "explanation_ar": "تنشئ الكلمة new كائنًا جديدًا وتهيئه باستخدام constructor function.",
+          "answer": 2,
+          "explanation": "new creates an instance whose name is Jane and age is 25.",
+          "explanation_ar": "السبب: كل argument يُحفظ في property المقابلة داخل constructor.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 44-45",
-          "section": "js-functions-objects"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 43"
         }
       ]
     },
     {
       "id": "web-rapid-js-arrays-4",
-      "label": "⚡ Arrays & Methods · 4",
-      "description": "Four focused checks for Arrays & Methods",
+      "label": "⚡ Arrays & Methods · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "js-arrays-methods"
@@ -5875,83 +5915,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-js-arrays-q01",
-          "q": "Starting with [\"a\"], then push(\"b\") and pop(), what remains?",
-          "q_ar": "بدءًا من [\"a\"] ثم push(\"b\") وpop()، ماذا يبقى؟",
-          "hint_ar": "push يضيف في النهاية وpop يحذف آخر عنصر.",
+          "id": "web-exam2-t6-r17",
+          "kind": "direct",
+          "section": "js-arrays-methods",
+          "q": "Which set contains only methods that mutate the original array?",
+          "q_ar": "أي مجموعة methods تعدل المصفوفة الأصلية؟",
+          "hint_ar": "طريقة الكشف السريعة: ميزي methods التي تغير الأصل عن التي تعيد قيمة جديدة.",
           "choices": [
-            "[\"a\"]",
-            "[\"b\"]",
-            "[]",
-            "[\"a\",\"b\"]"
+            "concat, slice, join",
+            "slice, indexOf, concat",
+            "sort, push, pop, splice",
+            "join, indexOf, slice"
           ],
-          "answer": 0,
-          "explanation": "The pushed b is immediately removed by pop, leaving the original a.",
-          "explanation_ar": "تُضاف b ثم تحذفها pop مباشرة، فتبقى a الأصلية.",
+          "answer": 2,
+          "explanation": "sort, push, pop, and splice modify the original array.",
+          "explanation_ar": "السبب: concat وslice وjoin لا تمثل تعديلًا مباشرًا للأصل.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 46-48",
-          "section": "js-arrays-methods"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 48-49"
         },
         {
-          "id": "web-exam2-rapid-js-arrays-q02",
-          "q": "What sentinel indicates indexOf did not find a value?",
-          "q_ar": "ما القيمة التي تشير إلى أن indexOf لم تجد القيمة؟",
-          "hint_ar": "ليست صفرًا لأن صفر فهرس صالح.",
+          "id": "web-exam2-t6-r18",
+          "kind": "predict_output",
+          "section": "js-arrays-methods",
+          "q": "What is printed by `let g=[\"milk\",\"tea\"]; g.push(\"apple\"); let removed=g.pop(); console.log(g.length,removed,g.indexOf(\"milk\"));`?",
+          "q_ar": "ما ناتج push ثم pop ثم indexOf؟",
+          "hint_ar": "طريقة الكشف السريعة: push يضيف، pop يزيل آخر عنصر، والفهرسة تبدأ من صفر.",
           "choices": [
-            "-1",
-            "0",
-            "null",
-            "NaN"
+            "3 apple 1",
+            "2 apple 0",
+            "2 tea 1",
+            "3 tea 0"
           ],
-          "answer": 0,
-          "explanation": "indexOf returns -1 when no matching element exists.",
-          "explanation_ar": "تعيد indexOf القيمة -1 عند عدم وجود عنصر مطابق.",
+          "answer": 1,
+          "explanation": "apple is added then removed, leaving two items; milk remains at index 0.",
+          "explanation_ar": "السبب: تعليق الشريحة الذي يقول إن milk عند 1 خطأ؛ الصحيح 0.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 49",
-          "section": "js-arrays-methods"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 46-49"
         },
         {
-          "id": "web-exam2-rapid-js-arrays-q03",
-          "q": "Which method returns a subarray without the replace-in-place role?",
-          "q_ar": "أي دالة تعيد مصفوفة فرعية دون دور الاستبدال داخل الأصل؟",
-          "hint_ar": "احذف حرف p ذهنيًا.",
+          "id": "web-exam2-t6-r19",
+          "kind": "find_fix",
+          "section": "js-arrays-methods",
+          "q": "Which line correctly fixes the malformed forEach example on slide 47?",
+          "q_ar": "أي صيغة تصلح الأقواس والإغلاق في مثال forEach؟",
+          "hint_ar": "طريقة الكشف السريعة: أغلقي function ثم أغلقي استدعاء forEach بـ);.",
           "choices": [
-            "slice",
-            "splice",
-            "push",
-            "sort"
+            "groceries.forEach(function(element) { console.log(element); });",
+            "groceries.forEach = function(element) { console.log(element); };",
+            "groceries.forEach(element) => console.log(element);",
+            "groceries.forEach(function(element) {{ console.log(element); }"
           ],
           "answer": 0,
-          "explanation": "slice returns a selected subarray; splice is the in-place replacement method.",
-          "explanation_ar": "تعيد slice مصفوفة فرعية، بينما splice تستبدل داخل الأصل.",
+          "explanation": "The callback needs one balanced block, followed by the closing parenthesis and semicolon for forEach.",
+          "explanation_ar": "السبب: الشريحة تحتوي قوس فتح زائد وإغلاقًا ناقصًا.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 49",
-          "section": "js-arrays-methods"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 47"
         },
         {
-          "id": "web-exam2-rapid-js-arrays-q04",
-          "q": "How is array size read?",
-          "q_ar": "كيف يُقرأ حجم المصفوفة؟",
-          "hint_ar": "تُقرأ المعلومة كخاصية من Array object، لا باستدعاء Helper function.",
+          "id": "web-exam2-t6-r20",
+          "kind": "slide_example",
+          "section": "js-arrays-methods",
+          "q": "What GPAs are printed for Moayad [85,90,75], Ali [70,80,90], and Osama [80,75,85]?",
+          "q_ar": "ما قيم GPA للطلاب الثلاثة في مثال الشرائح؟",
+          "hint_ar": "طريقة الكشف السريعة: اجمعي الدرجات واقسمي على grades.length لكل طالب.",
           "choices": [
-            "items.length",
-            "items.length()",
-            "length(items)",
-            "items.size()"
+            "80, 85, 90",
+            "83, 80, 75",
+            "83.333..., 85, 80",
+            "83.333..., 80, 80"
           ],
-          "answer": 0,
-          "explanation": "Array length is a property accessed without parentheses.",
-          "explanation_ar": "length للمصفوفة خاصية تُستخدم بلا أقواس.",
+          "answer": 3,
+          "explanation": "The averages are 250/3, 240/3, and 240/3.",
+          "explanation_ar": "السبب: Moayad يحصل على 83.333...، وعلي وأسامة على 80.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 46",
-          "section": "js-arrays-methods"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 52-53"
         }
       ]
     },
     {
       "id": "web-rapid-js-exceptions-4",
-      "label": "⚡ Exceptions & Built-ins · 4",
-      "description": "Four focused checks for Exceptions & Built-ins",
+      "label": "⚡ Exceptions & Built-ins · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "js-exceptions-builtins"
@@ -5960,83 +6004,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-js-exceptions-q01",
-          "q": "Which block contains the code being monitored for exceptions?",
-          "q_ar": "أي كتلة تحتوي الكود الذي تتم مراقبته للاستثناءات؟",
-          "hint_ar": "اسمها يعني المحاولة.",
+          "id": "web-exam2-t6-r21",
+          "kind": "direct",
+          "section": "js-exceptions-builtins",
+          "q": "Which mapping of built-in functions is correct?",
+          "q_ar": "أي mapping صحيح للدوال المدمجة؟",
+          "hint_ar": "طريقة الكشف السريعة: افصلي dialogs عن parsing وعن timing.",
           "choices": [
-            "try",
-            "catch",
-            "finally only",
-            "alert"
+            "confirm returns OK/Cancel as true/false; setTimeout runs once; setInterval repeats; parseFloat parses a decimal",
+            "confirm parses integers; setTimeout repeats; setInterval runs once; parseFloat shows a dialog",
+            "confirm returns text input; setTimeout parses numbers; setInterval throws errors; parseFloat returns Boolean",
+            "confirm writes HTML; setTimeout blocks forever; setInterval runs once; parseFloat removes decimals"
           ],
           "answer": 0,
-          "explanation": "Potentially throwing code is placed in try.",
-          "explanation_ar": "يوضع الكود المحتمل أن يرمي استثناء داخل try.",
+          "explanation": "Each function in the first choice matches its stated browser or global behavior.",
+          "explanation_ar": "السبب: confirm منطقي، وtimeout مرة، وinterval متكرر، وparseFloat للعشري.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 50-51",
-          "section": "js-exceptions-builtins"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 41"
         },
         {
-          "id": "web-exam2-rapid-js-exceptions-q02",
-          "q": "What information does catch(error) receive?",
-          "q_ar": "ما المعلومات التي تستقبلها catch(error)؟",
-          "hint_ar": "المعامل يصف ما حدث.",
+          "id": "web-exam2-t6-r22",
+          "kind": "slide_example",
+          "section": "js-exceptions-builtins",
+          "q": "The class-average loop reads 10 grades whose total is 794, then executes `average = total / 10`. What is written?",
+          "q_ar": "ما الناتج النهائي لمثال متوسط عشر درجات إذا كان total يساوي 794؟",
+          "hint_ar": "طريقة الكشف السريعة: راجعي termination phase والقسمة على 10.",
           "choices": [
-            "The exception object",
-            "The HTML document",
-            "The CSS selector list",
-            "Only a boolean"
+            "Class average is 794",
+            "Class average is 79",
+            "Class average is 79.4",
+            "Class average is 7.94"
           ],
-          "answer": 0,
-          "explanation": "The catch parameter is the error/exception object.",
-          "explanation_ar": "معامل catch هو كائن الخطأ أو الاستثناء.",
+          "answer": 2,
+          "explanation": "The program divides the total by the fixed grade count, producing 79.4.",
+          "explanation_ar": "السبب: المثال count-controlled ويستخدم عشر مدخلات.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 50-51",
-          "section": "js-exceptions-builtins"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 17-18"
         },
         {
-          "id": "web-exam2-rapid-js-exceptions-q03",
-          "q": "Which timing function executes once after a delay?",
-          "q_ar": "أي دالة توقيت تنفذ مرة واحدة بعد تأخير؟",
-          "hint_ar": "Timeout مرة؛ Interval تكرار.",
+          "id": "web-exam2-t6-r23",
+          "kind": "predict_output",
+          "section": "js-exceptions-builtins",
+          "q": "What is logged by `try { console.log(\"A\"); throw new Error(\"x\"); console.log(\"B\"); } catch(e) { console.log(e.message); }`?",
+          "q_ar": "ما الذي يُطبع قبل throw وبعد انتقال التنفيذ إلى catch؟",
+          "hint_ar": "طريقة الكشف السريعة: أي سطر بعد throw داخل try لا ينفذ.",
           "choices": [
-            "setTimeout()",
-            "setInterval()",
-            "isNaN()",
-            "confirm()"
+            "A, B, x",
+            "A, x",
+            "x, B",
+            "Only A"
           ],
-          "answer": 0,
-          "explanation": "setTimeout schedules one delayed execution.",
-          "explanation_ar": "تجدول setTimeout تنفيذًا واحدًا بعد تأخير.",
+          "answer": 1,
+          "explanation": "A is logged, throw skips B, and catch logs the error message x.",
+          "explanation_ar": "السبب: throw ينقل التحكم فورًا إلى catch.",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 41",
-          "section": "js-exceptions-builtins"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 50-51"
         },
         {
-          "id": "web-exam2-rapid-js-exceptions-q04",
-          "q": "Which dialog is best for a yes/no-style OK-or-Cancel decision?",
-          "q_ar": "أي مربع حوار مناسب لقرار OK أو Cancel؟",
-          "hint_ar": "يحتوي زرين.",
+          "id": "web-exam2-t6-r24",
+          "kind": "find_fix",
+          "section": "js-exceptions-builtins",
+          "q": "Which fix makes `try { new Error(\"Invalid\"); console.log(\"OK\"); } catch(e) { console.log(e.message); }` enter catch?",
+          "q_ar": "كيف نجعل إنشاء Error ينقل التنفيذ إلى catch؟",
+          "hint_ar": "طريقة الكشف السريعة: إنشاء object لا يعني رميه.",
           "choices": [
-            "confirm()",
-            "alert()",
-            "parseFloat()",
-            "console.log()"
+            "Replace catch with if.",
+            "Remove the Error object.",
+            "Add finally before catch.",
+            "Use `throw new Error(\"Invalid\");`."
           ],
-          "answer": 0,
-          "explanation": "confirm supplies OK and Cancel choices.",
-          "explanation_ar": "توفر confirm خياري OK وCancel.",
+          "answer": 3,
+          "explanation": "Only throw raises the exception and transfers control to catch.",
+          "explanation_ar": "السبب: new Error وحدها تنشئ object ثم يستمر console.log(\"OK\").",
           "src": "slides",
-          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 41",
-          "section": "js-exceptions-builtins"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slide 51"
         }
       ]
     },
     {
       "id": "web-rapid-dom-model-4",
-      "label": "⚡ DOM Model · 4",
-      "description": "Four focused checks for DOM Model",
+      "label": "⚡ DOM Model · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "dom-model-tree"
@@ -6045,83 +6093,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-dom-model-q01",
-          "q": "Who creates the DOM when a page loads?",
-          "q_ar": "من ينشئ DOM عند تحميل الصفحة؟",
-          "hint_ar": "يُبنى أثناء تحميل الصفحة.",
+          "id": "web-exam2-t7-r01",
+          "kind": "direct",
+          "section": "dom-model-tree",
+          "q": "What is the DOM?",
+          "q_ar": "ما هو Document Object Model؟",
+          "hint_ar": "طريقة الكشف السريعة: اربطي browser وobjects والوصول إلى document.",
           "choices": [
-            "The browser",
-            "The CSS file",
-            "The database",
-            "The user manually"
+            "A database stored on the server",
+            "A browser-created interface representing the document as objects that scripts can access and update",
+            "A CSS-only rendering algorithm",
+            "A JavaScript package manager"
           ],
-          "answer": 0,
-          "explanation": "The browser creates the page's DOM during loading.",
-          "explanation_ar": "ينشئ المتصفح DOM للصفحة أثناء التحميل.",
+          "answer": 1,
+          "explanation": "The browser builds an object representation that JavaScript can inspect and modify.",
+          "explanation_ar": "السبب: DOM هو الواجهة بين JavaScript والمستند.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 3",
-          "section": "dom-model-tree"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 3-7"
         },
         {
-          "id": "web-exam2-rapid-dom-model-q02",
-          "q": "Which node is above the root element node?",
-          "q_ar": "أي عقدة تقع فوق عقدة عنصر الجذر؟",
-          "hint_ar": "هي أعلى عقدة في الشجرة.",
+          "id": "web-exam2-t7-r02",
+          "kind": "slide_example",
+          "section": "dom-model-tree",
+          "q": "For `<body><h1>Title</h1><p>A<a>Link</a>B</p><p>End</p></body>`, which nodes are direct children of body?",
+          "q_ar": "ما الأبناء المباشرون لـbody في شجرة HTML المعطاة؟",
+          "hint_ar": "طريقة الكشف السريعة: احترمي nesting؛ a داخل p وليس داخل body مباشرة.",
           "choices": [
-            "Document",
-            "Text",
-            "Attribute",
-            "Sibling"
+            "h1, a, text, p",
+            "h1 and a only",
+            "h1, p, p",
+            "document, html, h1"
           ],
-          "answer": 0,
-          "explanation": "Document is the topmost node, followed by the root element.",
-          "explanation_ar": "Document هي أعلى عقدة ثم يأتي عنصر الجذر.",
+          "answer": 2,
+          "explanation": "The body directly contains one h1 and two paragraph elements.",
+          "explanation_ar": "السبب: الرابط والنصوص أبناء للفقرة الأولى.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 5",
-          "section": "dom-model-tree"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 4"
         },
         {
-          "id": "web-exam2-rapid-dom-model-q03",
-          "q": "Can one DOM node have two parents?",
-          "q_ar": "هل يمكن لعقدة DOM واحدة أن تملك أبوين؟",
-          "hint_ar": "الشجرة تعطي مسارًا واحدًا للأعلى.",
+          "id": "web-exam2-t7-r03",
+          "kind": "find_fix",
+          "section": "dom-model-tree",
+          "q": "A student says, \"The html element is the topmost DOM node.\" What is the correction?",
+          "q_ar": "ما تصحيح القول بأن html هي أعلى node في DOM؟",
+          "hint_ar": "طريقة الكشف السريعة: فرّقي بين topmost node وroot element.",
           "choices": [
-            "No; it has zero or one parent",
-            "Yes; every node has two",
-            "Only text nodes can",
-            "Only after an event"
+            "The Document node is topmost; html is the root element below it.",
+            "body is topmost; document is below it.",
+            "The first text node is always topmost.",
+            "There is no hierarchy in the DOM."
           ],
           "answer": 0,
-          "explanation": "A node has at most one parent in the shown tree model.",
-          "explanation_ar": "للعقدة أب واحد كحد أقصى في نموذج الشجرة المعروض.",
+          "explanation": "Document is the top node, followed by the html root element.",
+          "explanation_ar": "السبب: html هي root element وليست Document node.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 5",
-          "section": "dom-model-tree"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 5"
         },
         {
-          "id": "web-exam2-rapid-dom-model-q04",
-          "q": "Which object is the main JavaScript entry point to DOM methods?",
-          "q_ar": "أي كائن هو نقطة دخول JavaScript الرئيسية لطرق DOM؟",
-          "hint_ar": "هو رابط JavaScript بالمستند.",
+          "id": "web-exam2-t7-r04",
+          "kind": "predict_result",
+          "section": "dom-model-tree",
+          "q": "Which set of operations can JavaScript perform through the DOM?",
+          "q_ar": "ما العمليات التي يتيحها DOM لـJavaScript؟",
+          "hint_ar": "طريقة الكشف السريعة: DOM يشمل structure وstyle وevents.",
           "choices": [
-            "document",
-            "console",
-            "Math",
-            "JSON"
+            "Add or remove HTML nodes only",
+            "Change CSS styles only",
+            "Attach event reactions only",
+            "Add or remove nodes, change attributes or styles, and attach or remove events"
           ],
-          "answer": 0,
-          "explanation": "The document object exposes navigation and manipulation methods.",
-          "explanation_ar": "يعرض الكائن document طرق التنقل والتعديل.",
+          "answer": 3,
+          "explanation": "The DOM exposes document structure, attributes, styling, and event behavior.",
+          "explanation_ar": "السبب: قدراته لا تقتصر على نوع تعديل واحد.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 8-9",
-          "section": "dom-model-tree"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 7-9"
         }
       ]
     },
     {
       "id": "web-rapid-dom-selectors-4",
-      "label": "⚡ DOM Selectors · 4",
-      "description": "Four focused checks for DOM Selectors",
+      "label": "⚡ DOM Selectors · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "dom-selection-collections"
@@ -6130,83 +6182,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-dom-selectors-q01",
-          "q": "Which method returns all CSS-selector matches?",
-          "q_ar": "أي دالة تعيد كل مطابقات محدد CSS؟",
-          "hint_ar": "All تعني الجميع.",
+          "id": "web-exam2-t7-r05",
+          "kind": "direct",
+          "section": "dom-selection-collections",
+          "q": "Which pair normally returns one element or null rather than a collection?",
+          "q_ar": "أي زوج يعيد عنصرًا مفردًا أو null؟",
+          "hint_ar": "طريقة الكشف السريعة: لاحظي المفرد في أسماء methods.",
           "choices": [
-            "querySelectorAll",
-            "querySelector",
-            "getElementById",
-            "parentNode"
+            "getElementsByTagName and querySelectorAll",
+            "getElementById and querySelector",
+            "getElementsByName and getElementsByClassName",
+            "querySelectorAll and getElementsByName"
           ],
-          "answer": 0,
-          "explanation": "querySelectorAll returns a NodeList of all matches.",
-          "explanation_ar": "تعيد querySelectorAll قائمة NodeList بكل المطابقات.",
+          "answer": 1,
+          "explanation": "getElementById and querySelector are single-result selectors.",
+          "explanation_ar": "السبب: methods الأخرى في الخيارات تعيد HTMLCollection أو NodeList.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 15-17",
-          "section": "dom-selection-collections"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 12-17"
         },
         {
-          "id": "web-exam2-rapid-dom-selectors-q02",
-          "q": "Which selector finds the first input whose name is email?",
-          "q_ar": "أي محدد يجد أول input قيمة name فيه email؟",
-          "hint_ar": "استخدم CSS attribute selector.",
+          "id": "web-exam2-t7-r06",
+          "kind": "predict_output",
+          "section": "dom-selection-collections",
+          "q": "The form contains `<input type=\"text\" name=\"stdname\">` and `<input type=\"submit\">`. What does `console.log(document.querySelectorAll(\"input\").length, document.querySelector(\"input[name='stdname']\").type);` print?",
+          "q_ar": "ما ناتج عدد inputs ونوع input ذي name=stdname؟",
+          "hint_ar": "طريقة الكشف السريعة: querySelectorAll يجمع الاثنين؛ querySelector attribute يختار الأول المطلوب.",
           "choices": [
-            "document.querySelector('input[name=\"email\"]')",
-            "document.querySelector(\"#name.email\")",
-            "document.getElementById(\"input email\")",
-            "document.parentNode(\"email\")"
+            "2 text",
+            "1 text",
+            "2 submit",
+            "undefined text"
           ],
           "answer": 0,
-          "explanation": "querySelector accepts the CSS attribute-selector syntax.",
-          "explanation_ar": "تقبل querySelector صيغة محدد السمات في CSS.",
+          "explanation": "There are two input elements, and the named one has type text.",
+          "explanation_ar": "السبب: الأول text والثاني submit.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 16",
-          "section": "dom-selection-collections"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 11 and 16-17"
         },
         {
-          "id": "web-exam2-rapid-dom-selectors-q03",
-          "q": "What is Array.from(nodes) used for here?",
-          "q_ar": "لماذا تستخدم Array.from(nodes) هنا؟",
-          "hint_ar": "الهدف الحصول على دوال Array.",
+          "id": "web-exam2-t7-r07",
+          "kind": "slide_example",
+          "section": "dom-selection-collections",
+          "q": "The HTML has `<h1 class=\"title\">`, but the slide uses `getElementsByClassName(\"msg\")`. Which expression selects that h1?",
+          "q_ar": "ما التصحيح المباشر لاختيار h1 ذي class=title؟",
+          "hint_ar": "طريقة الكشف السريعة: استخدمي قيمة class الفعلية ثم index صفر.",
           "choices": [
-            "To convert a collection/NodeList into an array",
-            "To create a DOM element",
-            "To remove the parent",
-            "To validate email"
+            "document.getElementById(\"title\")",
+            "document.querySelectorAll(\"msg\")",
+            "document.getElementsByClassName(\"title\")[0]",
+            "document.getElementsByName(\"title\")"
           ],
-          "answer": 0,
-          "explanation": "Array.from makes a real array that can use normal array methods.",
-          "explanation_ar": "تنشئ Array.from مصفوفة حقيقية يمكنها استخدام دوال المصفوفات.",
+          "answer": 2,
+          "explanation": "The class is title, and the plural class-name method returns a collection.",
+          "explanation_ar": "السبب: msg هو id للفقرة وليس class للعنوان.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 18",
-          "section": "dom-selection-collections"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 11 and 14"
         },
         {
-          "id": "web-exam2-rapid-dom-selectors-q04",
-          "q": "Which method returns one node rather than a collection?",
-          "q_ar": "أي دالة تعيد عقدة واحدة بدل مجموعة؟",
-          "hint_ar": "الاسم مفرد وليس Elements.",
+          "id": "web-exam2-t7-r08",
+          "kind": "find_fix",
+          "section": "dom-selection-collections",
+          "q": "How should `document.querySelectorAll(\"input\").map(x => x.type)` be fixed?",
+          "q_ar": "كيف نصلح استخدام map على NodeList؟",
+          "hint_ar": "طريقة الكشف السريعة: حوّلي collection إلى Array أولًا.",
           "choices": [
-            "getElementById",
-            "getElementsByTagName",
-            "getElementsByName",
-            "getElementsByClassName"
+            "Use querySelector instead and keep map.",
+            "Add [0] after map.",
+            "Replace map with getElementById.",
+            "Use `Array.from(document.querySelectorAll(\"input\")).map(x => x.type)`."
           ],
-          "answer": 0,
-          "explanation": "getElementById returns the single matching node.",
-          "explanation_ar": "تعيد getElementById العقدة المطابقة المفردة.",
+          "answer": 3,
+          "explanation": "querySelectorAll returns a NodeList, so Array.from enables normal array methods.",
+          "explanation_ar": "السبب: NodeList ليست Array كاملة.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 12-15",
-          "section": "dom-selection-collections"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 17-18"
         }
       ]
     },
     {
       "id": "web-rapid-dom-lifecycle-4",
-      "label": "⚡ DOM Node Lifecycle · 4",
-      "description": "Four focused checks for DOM Node Lifecycle",
+      "label": "⚡ DOM Node Lifecycle · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "dom-traversal-lifecycle"
@@ -6215,83 +6271,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-dom-lifecycle-q01",
-          "q": "Why is a newly created p not visible immediately?",
-          "q_ar": "لماذا لا تظهر p المنشأة حديثًا فورًا؟",
-          "hint_ar": "الإنشاء منفصل عن الربط.",
+          "id": "web-exam2-t7-r09",
+          "kind": "direct",
+          "section": "dom-traversal-lifecycle",
+          "q": "What is true immediately after `const p=document.createElement(\"p\");`?",
+          "q_ar": "ما حالة p مباشرة بعد createElement؟",
+          "hint_ar": "طريقة الكشف السريعة: create ليست link.",
           "choices": [
-            "It is free-floating until linked to the DOM",
-            "Paragraphs cannot be created",
-            "It needs z-index",
-            "createElement hides nodes"
+            "p is already visible at the top of body.",
+            "p is a detached node and is not visible until linked to the DOM.",
+            "p is automatically appended to document.",
+            "p replaces the first existing paragraph."
           ],
-          "answer": 0,
-          "explanation": "createElement creates the node but does not attach it to the document.",
-          "explanation_ar": "تنشئ createElement العقدة لكنها لا تربطها بالمستند.",
+          "answer": 1,
+          "explanation": "createElement allocates the node, but append, prepend, or insertBefore is needed to display it.",
+          "explanation_ar": "السبب: العقدة تظل free-floating حتى ربطها.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 24 and 26",
-          "section": "dom-traversal-lifecycle"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 24 and 26"
         },
         {
-          "id": "web-exam2-rapid-dom-lifecycle-q02",
-          "q": "Where does appendChild place the new node?",
-          "q_ar": "أين تضع appendChild العقدة الجديدة؟",
-          "hint_ar": "append تعني الإضافة في النهاية.",
+          "id": "web-exam2-t7-r10",
+          "kind": "predict_output",
+          "section": "dom-traversal-lifecycle",
+          "q": "Given `<body><section><p>Class List:</p><ul><li>A</li></ul><p>More</p></section></body>`, what is printed?\n```javascript\nconst section = document.querySelector(\"section\");\nconsole.log(section.parentElement.tagName, section.childNodes.length, section.firstChild.nextSibling.tagName);\n```",
+          "q_ar": "ما ناتج parent وعدد children والـsibling التالي لأول child؟",
+          "hint_ar": "طريقة الكشف السريعة: أب section هو body، وأبناؤها p ثم ul ثم p.",
           "choices": [
-            "At the end of the parent's children",
-            "Before the parent",
-            "At the document root only",
-            "Outside the DOM"
+            "HTML 2 P",
+            "BODY 2 LI",
+            "BODY 3 UL",
+            "SECTION 3 P"
           ],
-          "answer": 0,
-          "explanation": "appendChild inserts the new node as the last child.",
-          "explanation_ar": "تدرج appendChild العقدة الجديدة كآخر ابن.",
+          "answer": 2,
+          "explanation": "The section is under body, contains three nodes in the compact markup, and the node after the first p is ul.",
+          "explanation_ar": "السبب: اتبعي العلاقات رأسيًا ثم أفقيًا.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 24",
-          "section": "dom-traversal-lifecycle"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 21"
         },
         {
-          "id": "web-exam2-rapid-dom-lifecycle-q03",
-          "q": "Which property moves to the next node on the same level?",
-          "q_ar": "أي خاصية تنتقل إلى العقدة التالية في المستوى نفسه؟",
-          "hint_ar": "المستوى نفسه يعني sibling.",
-          "choices": [
-            "nextSibling",
-            "parentNode",
-            "firstChild",
-            "lastChild"
-          ],
-          "answer": 0,
-          "explanation": "nextSibling traverses to the following sibling node.",
-          "explanation_ar": "تنتقل nextSibling إلى عقدة الشقيق التالية.",
-          "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 20",
-          "section": "dom-traversal-lifecycle"
-        },
-        {
-          "id": "web-exam2-rapid-dom-lifecycle-q04",
-          "q": "Which standard call inserts newNode at the start of parent?",
-          "q_ar": "أي استدعاء قياسي يدرج newNode في بداية parent؟",
-          "hint_ar": "تنبيه: prependChild اسم غير قياسي في الشريحة.",
+          "id": "web-exam2-t7-r11",
+          "kind": "slide_example",
+          "section": "dom-traversal-lifecycle",
+          "q": "Which standard call replaces the slide nonstandard `parent.prependChild(newNode)`?",
+          "q_ar": "ما البديل القياسي لـprependChild غير الموجودة؟",
+          "hint_ar": "طريقة الكشف السريعة: الـmethod القياسية اسمها أقصر.",
           "choices": [
             "parent.prepend(newNode)",
-            "parent.prependChild(newNode)",
-            "parent.removeChild(newNode)",
-            "newNode.append(parent)"
+            "parent.appendChild(newNode)",
+            "newNode.prepend(parent)",
+            "parent.removeChild(newNode)"
           ],
           "answer": 0,
-          "explanation": "The standard method is prepend; the slide's prependChild wording is a course-material API typo.",
-          "explanation_ar": "الدالة القياسية هي prepend؛ ولفظ prependChild في الشريحة خطأ API في مادة المقرر.",
+          "explanation": "prepend inserts the node at the beginning of the parent children.",
+          "explanation_ar": "السبب: prependChild ليست DOM method قياسية.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 24 (API correction)",
-          "section": "dom-traversal-lifecycle"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 24"
+        },
+        {
+          "id": "web-exam2-t7-r12",
+          "kind": "find_fix",
+          "section": "dom-traversal-lifecycle",
+          "q": "Which replacement safely fixes the loop that uses `i <= count` while repeatedly removing `firstChild`?",
+          "q_ar": "ما التصحيح الآمن لتفريغ container بالكامل؟",
+          "hint_ar": "طريقة الكشف السريعة: قارني <= بعدد العناصر، ولاحظي أن children لا تحسب text nodes بينما firstChild قد يكون text node.",
+          "choices": [
+            "for (let i=0; i<=count; i++) container.appendChild(container.firstChild);",
+            "if (container.children) container.removeChild(container);",
+            "container.children.forEach(child => child.removeChild(container));",
+            "while (container.firstChild) container.removeChild(container.firstChild);"
+          ],
+          "answer": 3,
+          "explanation": "The while loop continues only while a removable first child exists.",
+          "explanation_ar": "السبب: يتجنب off-by-one ويشمل text nodes أيضًا.",
+          "src": "slides",
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 40"
         }
       ]
     },
     {
       "id": "web-rapid-dom-content-4",
-      "label": "⚡ DOM Content & Style · 4",
-      "description": "Four focused checks for DOM Content & Style",
+      "label": "⚡ DOM Content & Style · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "dom-content-attributes-style"
@@ -6300,83 +6360,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-dom-content-q01",
-          "q": "Which property preserves markup such as <em> when assigning content?",
-          "q_ar": "أي خاصية تفسر الوسوم مثل <em> عند إسناد المحتوى؟",
-          "hint_ar": "HTML في الاسم.",
+          "id": "web-exam2-t7-r13",
+          "kind": "direct",
+          "section": "dom-content-attributes-style",
+          "q": "Which mapping is correct?",
+          "q_ar": "أي mapping صحيح لـinnerHTML وinnerText وvalue؟",
+          "hint_ar": "طريقة الكشف السريعة: markup مقابل text مقابل form control.",
           "choices": [
-            "innerHTML",
-            "innerText",
-            "value only",
-            "parentNode"
+            "innerHTML - form value; innerText - HTML markup; value - CSS",
+            "innerHTML - CSS; innerText - attribute; value - event",
+            "innerHTML - markup content; innerText - text only; value - current form-control value",
+            "innerHTML - NodeList; innerText - HTMLCollection; value - DOM tree"
           ],
-          "answer": 0,
-          "explanation": "innerHTML parses and sets HTML markup.",
-          "explanation_ar": "تفسر innerHTML وسوم HTML وتضبطها.",
+          "answer": 2,
+          "explanation": "Each property targets a distinct form of element content.",
+          "explanation_ar": "السبب: اختيار property الخاطئة يغير النتيجة المرئية أو يعيد قيمة غير مطلوبة.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 25 and 28",
-          "section": "dom-content-attributes-style"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 25 and 28"
         },
         {
-          "id": "web-exam2-rapid-dom-content-q02",
-          "q": "Which property sets the selected data of a <select>?",
-          "q_ar": "أي خاصية تضبط البيانات المختارة في <select>؟",
-          "hint_ar": "select عنصر نموذج.",
+          "id": "web-exam2-t7-r14",
+          "kind": "predict_output",
+          "section": "dom-content-attributes-style",
+          "q": "After `a.innerHTML=\"<strong>Hi</strong>\"; b.innerText=\"<strong>Hi</strong>\";`, what appears?",
+          "q_ar": "ما الفرق المرئي بين إسناد markup إلى innerHTML وإسناده إلى innerText؟",
+          "hint_ar": "طريقة الكشف السريعة: واحدة تفسر tags والأخرى تعرضها كنص.",
           "choices": [
-            "value",
-            "innerText only",
-            "src",
-            "childNodes"
+            "Both show literal angle-bracket text.",
+            "a shows bold Hi; b shows the literal `<strong>Hi</strong>` text.",
+            "a shows literal text; b shows bold Hi.",
+            "Both elements become hidden."
           ],
-          "answer": 0,
-          "explanation": "Form elements such as select use value.",
-          "explanation_ar": "تستخدم عناصر النماذج مثل select خاصية value.",
+          "answer": 1,
+          "explanation": "innerHTML parses the strong element, while innerText does not interpret markup.",
+          "explanation_ar": "السبب: لذلك يظهر Hi منسقًا في a والعلامات حرفيًا في b.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 25",
-          "section": "dom-content-attributes-style"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 25 and 28"
         },
         {
-          "id": "web-exam2-rapid-dom-content-q03",
-          "q": "Convert font-weight to its element.style property name.",
-          "q_ar": "حوّل font-weight إلى اسم الخاصية في element.style.",
-          "hint_ar": "صيغة CSS النصية وصيغة الوصول إلى property في JavaScript تستخدمان convention مختلفًا.",
+          "id": "web-exam2-t7-r15",
+          "kind": "find_fix",
+          "section": "dom-content-attributes-style",
+          "q": "Which correction fixes `image.addAttribute(\"src\",\"new.png\")`?",
+          "q_ar": "ما التصحيح القياسي لـaddAttribute؟",
+          "hint_ar": "طريقة الكشف السريعة: الـmethod الموجودة في DOM تبدأ بـset.",
           "choices": [
-            "fontWeight",
-            "font-weight",
-            "font_weight",
-            "Fontweight"
+            "image.setAttribute(\"src\",\"new.png\")",
+            "image.createAttribute(\"src\",\"new.png\")",
+            "image.add(\"src\",\"new.png\")",
+            "image.attribute.src(\"new.png\")"
           ],
           "answer": 0,
-          "explanation": "JavaScript style property names use camelCase: fontWeight.",
-          "explanation_ar": "تستخدم أسماء style في JavaScript صيغة camelCase: fontWeight.",
+          "explanation": "setAttribute is the standard method for creating or updating an attribute.",
+          "explanation_ar": "السبب: addAttribute ليست method صالحة على element.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 30",
-          "section": "dom-content-attributes-style"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 29 and 40"
         },
         {
-          "id": "web-exam2-rapid-dom-content-q04",
-          "q": "Which property changes the sofa picture file?",
-          "q_ar": "أي خاصية تغير ملف صورة الأريكة؟",
-          "hint_ar": "الصورة تستخدم سمة مصدر.",
+          "id": "web-exam2-t7-r16",
+          "kind": "slide_example",
+          "section": "dom-content-attributes-style",
+          "q": "What visible result follows the slide code?\n```javascript\nimage.src = \"new-picture.png\";\nelement.style.fontWeight = \"bold\";\n```",
+          "q_ar": "ما النتيجة المرئية لكود السلايد الذي يغير src وfontWeight؟",
+          "hint_ar": "طريقة الكشف السريعة: src يحدد ملف الصورة المعروض، وfontWeight يحدد سماكة النص.",
           "choices": [
-            "sofaImage.src",
-            "sofaImage.value",
-            "sofaImage.innerText",
-            "sofaImage.parentNode"
+            "The image is hidden, and the selected text becomes normal weight.",
+            "Only the image changes; the text style cannot be changed through JavaScript.",
+            "The selected text becomes bold, but the image stays unchanged.",
+            "The image changes to new-picture.png, and the selected element’s text becomes bold."
           ],
-          "answer": 0,
-          "explanation": "The lab changes the image through its src property.",
-          "explanation_ar": "يغير المختبر الصورة عبر خاصية src.",
-          "src": "extra",
-          "source": "CCSW-321 Lab 7, Sofa.js, lines 5-8",
-          "section": "dom-content-attributes-style"
+          "answer": 3,
+          "explanation": "Assigning src changes the displayed image, and assigning style.fontWeight changes the selected element’s inline CSS weight to bold.",
+          "explanation_ar": "السبب: يغير src ملف الصورة المعروض، بينما يضبط style.fontWeight سماكة نص العنصر إلى bold.",
+          "src": "slides",
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 29-30"
         }
       ]
     },
     {
       "id": "web-rapid-dom-events-4",
-      "label": "⚡ Events & Validation · 4",
-      "description": "Four focused checks for Events & Validation",
+      "label": "⚡ Events & Validation · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "dom-events-validation"
@@ -6385,83 +6449,87 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-dom-events-q01",
-          "q": "What is the function invoked after an event fires called?",
-          "q_ar": "ماذا تسمى الدالة التي تُستدعى بعد إطلاق الحدث؟",
-          "hint_ar": "هي الدالة التي تستمع للحدث.",
+          "id": "web-exam2-t7-r17",
+          "kind": "direct",
+          "section": "dom-events-validation",
+          "q": "Which line registers editText as a click handler without calling it immediately?",
+          "q_ar": "أي سطر يمرر editText كمرجع دون تشغيلها فورًا؟",
+          "hint_ar": "طريقة الكشف السريعة: اسم event بلا on، واسم function بلا أقواس.",
           "choices": [
-            "Event handler",
-            "Grid item",
-            "Constructor only",
-            "Media condition"
+            "button.addEventListener(editText, \"click\");",
+            "button.addEventListener(\"onclick\", editText());",
+            "button.addEventListener(\"click\", editText);",
+            "button.click = editText();"
           ],
-          "answer": 0,
-          "explanation": "The listening function is the event handler.",
-          "explanation_ar": "الدالة المستمعة للحدث هي event handler.",
+          "answer": 2,
+          "explanation": "addEventListener expects the event-type string and the function reference.",
+          "explanation_ar": "السبب: إضافة () تستدعي الدالة أثناء التسجيل.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 32-34",
-          "section": "dom-events-validation"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 34-35"
         },
         {
-          "id": "web-exam2-rapid-dom-events-q02",
-          "q": "Which call correctly attaches handler to a click?",
-          "q_ar": "أي استدعاء يربط handler بحدث click بشكل صحيح؟",
-          "hint_ar": "الحدث أولًا ثم الدالة.",
+          "id": "web-exam2-t7-r18",
+          "kind": "predict_output",
+          "section": "dom-events-validation",
+          "q": "A paragraph initially says \"Write your thing in here!\". The click handler prompts, receives \"Hello World!\", and runs `document.querySelector(\"p\").innerText=mytxt`. What becomes visible?",
+          "q_ar": "ما النص الظاهر بعد أن يعيد prompt القيمة Hello World؟",
+          "hint_ar": "طريقة الكشف السريعة: تتبعي القيمة الراجعة من prompt إلى innerText.",
           "choices": [
-            "button.addEventListener(\"click\", handler)",
-            "button.addEventListener(handler, \"click\") only",
-            "button.click = \"handler()\" array",
-            "document.addChild(\"click\")"
+            "Hello World!",
+            "Write your thing in here!",
+            "The literal word mytxt",
+            "Nothing, because prompt cannot return text"
           ],
           "answer": 0,
-          "explanation": "addEventListener takes the event name then the handler function.",
-          "explanation_ar": "تأخذ addEventListener اسم الحدث ثم دالة المعالجة.",
+          "explanation": "The returned string is assigned directly to the paragraph innerText.",
+          "explanation_ar": "السبب: الـhandler يستبدل محتوى الفقرة بالقيمة الجديدة.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 34",
-          "section": "dom-events-validation"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 35"
         },
         {
-          "id": "web-exam2-rapid-dom-events-q03",
-          "q": "Which two steps are essential before invalid form data reaches the backend?",
-          "q_ar": "ما الخطوتان الأساسيتان قبل وصول بيانات النموذج غير الصالحة للخلفية؟",
-          "hint_ar": "واحدة للإرسال وواحدة لإيقافه عند الخطأ.",
+          "id": "web-exam2-t7-r19",
+          "kind": "find_fix",
+          "section": "dom-events-validation",
+          "q": "Which pair correctly fixes immediate invocation on click and handles Enter in the To-Do input?",
+          "q_ar": "أي زوج يصلح listener الإضافة ويفحص زر Enter؟",
+          "hint_ar": "طريقة الكشف السريعة: مرري reference، وافحصي e.key، ثم استدعي داخل الشرط.",
           "choices": [
-            "Give inputs name attributes and prevent invalid submission",
-            "Remove all input IDs and submit first",
-            "Use z-index and Grid",
-            "Convert the form to a NodeList"
+            "`addEventListener(\"click\", addElement())`; `if(e.code=\"Enter\") addElement`",
+            "`addEventListener(\"click\", addElement)`; `if(e.key === \"Enter\") addElement()`",
+            "`addEventListener(addElement,\"click\")`; `if(e.key) return`",
+            "`onclick(addElement)`; `if(e.value === \"Enter\") addElement()`"
           ],
-          "answer": 0,
-          "explanation": "name identifies submitted fields, and preventDefault stops a bad submit while validation reports errors.",
-          "explanation_ar": "تعرّف name الحقول المرسلة، ويوقف preventDefault الإرسال السيئ أثناء عرض أخطاء التحقق.",
+          "answer": 1,
+          "explanation": "The click listener receives the function itself; the keyboard handler calls it only when the key is Enter.",
+          "explanation_ar": "السبب: هذا يمنع التنفيذ المبكر ويطابق تدفق المثال.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 47 and 49",
-          "section": "dom-events-validation"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 36-40"
         },
         {
-          "id": "web-exam2-rapid-dom-events-q04",
-          "q": "Which check blocks an injected option that is not Google, TV, or Friend?",
-          "q_ar": "أي فحص يمنع خيارًا محقونًا ليس Google أو TV أو Friend؟",
-          "hint_ar": "قارن القيمة بقائمة مسموحة.",
+          "id": "web-exam2-t7-r20",
+          "kind": "slide_example",
+          "section": "dom-events-validation",
+          "q": "For the slide validation code exactly as written, an otherwise empty form is submitted with no radio selected. How many messages are produced, and is submission prevented?",
+          "q_ar": "بتتبع كود التحقق في السلايد كما كُتب، كم رسالة ينتج النموذج الفارغ بلا radio محدد، وهل يُمنع submit؟",
+          "hint_ar": "طريقة الكشف السريعة: [0].value تقرأ قيمة أول radio حتى لو لم يُحدد؛ ثم احسبي أخطاء name وemail وmobile.",
           "choices": [
-            "Whitelist validation",
-            "Presence only",
-            "Length only",
-            "CSS validation"
+            "5 messages; submission continues",
+            "5 messages; submission is prevented",
+            "6 messages; submission continues",
+            "6 messages; submission is prevented"
           ],
-          "answer": 0,
-          "explanation": "Whitelist validation accepts only values in the approved set.",
-          "explanation_ar": "يقبل فحص whitelist القيم الموجودة في المجموعة المعتمدة فقط.",
+          "answer": 1,
+          "explanation": "The code adds five messages: name presence, email presence and format, and mobile presence and format. Its unchecked-radio bug reads the first radio value anyway; the nonempty messages array still triggers preventDefault.",
+          "explanation_ar": "السبب: [0].value تقرأ Google حتى دون تحديد radio، فتتبقى خمسة أخطاء؛ والفحص الصحيح للاختيار يستخدم input[name=\"aboutus\"]:checked. وجود الأخطاء يستدعي preventDefault.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 42",
-          "section": "dom-events-validation"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 48 and 50-51"
         }
       ]
     },
     {
       "id": "web-rapid-dom-libraries-4",
-      "label": "⚡ Libraries & Practices · 4",
-      "description": "Four focused checks for Libraries & Practices",
+      "label": "⚡ Libraries & Practices · 4 mixed",
+      "description": "Direct, output, debugging, and slide-example checks",
       "count": 4,
       "lessonIds": [
         "dom-libraries-practices"
@@ -6470,76 +6538,80 @@
       "quick": true,
       "questions": [
         {
-          "id": "web-exam2-rapid-dom-libraries-q01",
-          "q": "Which tool is a utility library for arrays, objects, and strings?",
-          "q_ar": "أي أداة مكتبة مساعدة للمصفوفات والكائنات والسلاسل؟",
-          "hint_ar": "ليست إطار واجهات.",
+          "id": "web-exam2-t7-r21",
+          "kind": "direct",
+          "section": "dom-libraries-practices",
+          "q": "How does the lecture distinguish a library from a framework?",
+          "q_ar": "كيف تميز المحاضرة library عن framework؟",
+          "hint_ar": "طريقة الكشف السريعة: فكري في الحجم وإمكان الإضافة التدريجية مقابل البنية الشاملة.",
           "choices": [
-            "Lodash",
-            "Angular",
-            "Vue.js",
-            "Node.js"
+            "A library is usually smaller and can be adopted gradually; a framework supplies broader application structure.",
+            "A library controls the entire application, while a framework is one small function.",
+            "Libraries work only on servers; frameworks work only in browsers.",
+            "There is no distinction."
           ],
           "answer": 0,
-          "explanation": "The slides describe Lodash as a general utility library for these data types.",
-          "explanation_ar": "تصف الشرائح Lodash كمكتبة أدوات عامة لهذه الأنواع من البيانات.",
+          "explanation": "Libraries are commonly narrower and incrementally adoptable, whereas frameworks organize more of the application.",
+          "explanation_ar": "السبب: الفرق في مقدار البنية والتحكم الذي توفره الأداة.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 57",
-          "section": "dom-libraries-practices"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 56"
         },
         {
-          "id": "web-exam2-rapid-dom-libraries-q02",
-          "q": "Which tool provides full MVC, two-way binding, and dependency injection?",
-          "q_ar": "أي أداة توفر MVC كاملًا وربطًا ثنائي الاتجاه وحقن الاعتمادات؟",
-          "hint_ar": "هو framework كامل.",
+          "id": "web-exam2-t7-r22",
+          "kind": "slide_example",
+          "section": "dom-libraries-practices",
+          "q": "Which mapping is correct?",
+          "q_ar": "أي mapping صحيح للمكتبات المذكورة؟",
+          "hint_ar": "طريقة الكشف السريعة: DOM، dates، utilities، components.",
           "choices": [
-            "Angular",
-            "React",
-            "Moment.js",
-            "jQuery"
+            "jQuery - date formatting; Moment.js - DOM events; Lodash - MVC; React - AJAX only",
+            "jQuery - dependency injection; Moment.js - arrays; Lodash - dates; React - SQL",
+            "jQuery - DOM/events/AJAX; Moment.js - date/time; Lodash - utilities; React - component UIs",
+            "jQuery - server runtime; Moment.js - CSS; Lodash - HTML parser; React - package manager"
           ],
-          "answer": 0,
-          "explanation": "Angular is the framework matched to MVC, two-way binding, and dependency injection.",
-          "explanation_ar": "Angular هو الإطار المطابق لـ MVC والربط الثنائي وحقن الاعتمادات.",
+          "answer": 2,
+          "explanation": "Each tool in the third choice matches the role stated in the slides.",
+          "explanation_ar": "السبب: اربطي اسم الأداة بالمشكلة المحددة التي تبسطها.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slide 58",
-          "section": "dom-libraries-practices"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 57-58"
         },
         {
-          "id": "web-exam2-rapid-dom-libraries-q03",
-          "q": "Which variable policy reduces naming conflicts and security issues?",
-          "q_ar": "أي سياسة للمتغيرات تقلل تعارض الأسماء ومشكلات الأمان؟",
-          "hint_ar": "قلّل ما تضيفه الشيفرة إلى الـshared outer namespace.",
+          "id": "web-exam2-t7-r23",
+          "kind": "find_fix",
+          "section": "dom-libraries-practices",
+          "q": "Which refactor best fixes `<button onclick=\"save()\">` plus global inline JavaScript according to the lecture practices?",
+          "q_ar": "ما refactor الأفضل للكود inline والglobal وفق best practices؟",
+          "hint_ar": "طريقة الكشف السريعة: افصلي content وpresentation وbehavior، واستخدمي DOM listener.",
           "choices": [
-            "Avoid unnecessary globals",
-            "Make every variable global",
-            "Remove all functions",
-            "Use inline JavaScript only"
+            "Add more inline onclick attributes.",
+            "Move behavior to an external JS file, select the button through the DOM, attach a listener, and keep functions modular.",
+            "Move the JavaScript into CSS.",
+            "Make every variable global so all files can access it."
           ],
-          "answer": 0,
-          "explanation": "The best-practice slide says to avoid global variables and functions.",
-          "explanation_ar": "توصي شريحة الممارسات بتجنب المتغيرات والدوال العامة.",
+          "answer": 1,
+          "explanation": "External modular JavaScript improves separation, reuse, and naming safety.",
+          "explanation_ar": "السبب: inline behavior والglobals يزيدان الترابط والتعارضات.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 59-60",
-          "section": "dom-libraries-practices"
+          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 59-60"
         },
         {
-          "id": "web-exam2-rapid-dom-libraries-q04",
-          "q": "Which loading plan follows the best-practice slide?",
-          "q_ar": "أي خطة تحميل تتبع شريحة الممارسات الأفضل؟",
-          "hint_ar": "الترتيب والجاهزية مهمان.",
+          "id": "web-exam2-t7-r24",
+          "kind": "predict_result",
+          "section": "dom-libraries-practices",
+          "q": "app.js calls functions provided by vendor.js and both depend on the DOM. Which loading order follows the lecture?",
+          "q_ar": "ما ترتيب تحميل dependency ثم app مع انتظار parsing؟",
+          "hint_ar": "طريقة الكشف السريعة: dependency أولًا، وكلاهما بعد parsing.",
           "choices": [
-            "Load dependencies in order and run after the page is loaded",
-            "Run app code before dependencies",
-            "Mix all behavior into HTML attributes",
-            "Ignore page readiness"
+            "app.js first, then vendor.js, both before any HTML",
+            "Load only app.js because dependencies are automatic",
+            "Use two inline scripts in arbitrary order",
+            "`<script src=\"vendor.js\" defer></script>` followed by `<script src=\"app.js\" defer></script>`"
           ],
-          "answer": 0,
-          "explanation": "The slides emphasize correct file order and executing after the page is completely loaded.",
-          "explanation_ar": "تؤكد الشرائح ترتيب الملفات الصحيح والتنفيذ بعد اكتمال تحميل الصفحة.",
+          "answer": 3,
+          "explanation": "The dependency must appear first; defer preserves order while postponing execution until parsing completes.",
+          "explanation_ar": "السبب: app لا يمكنه استدعاء API لم يُحمّل بعد.",
           "src": "slides",
-          "source": "CCSW321-Material-07 - JavaScript for Web.pdf, slides 59-60",
-          "section": "dom-libraries-practices"
+          "source": "CCSW321-Material-06 - JavaScript.pdf, slides 11-13; CCSW321-Material-07 - JavaScript for Web.pdf, slides 59-60"
         }
       ]
     }

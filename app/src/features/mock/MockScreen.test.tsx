@@ -103,4 +103,45 @@ describe('MockScreen comprehensive selection', () => {
     expect(screen.getByText(`1/${choiceQuestions.length}`)).toBeInTheDocument()
     expect(screen.queryByText(matchQuestion.q)).not.toBeInTheDocument()
   })
+
+  it('shows rapid-question kind, formatted code, and fast detection guidance in review', () => {
+    const rapidQuestion: ChoiceQuestion = {
+      id: 'rapid-css-001',
+      kind: 'find_fix',
+      q: 'Find the error:\n```css\n.card { display: flex; }\n```',
+      hint_ar: 'طريقة الكشف السريعة: افحصي الخاصية داخل القاعدة.',
+      choices: ['No error', 'Remove display'],
+      answer: 0,
+      explanation_ar: 'السبب: display: flex صحيحة.',
+    }
+    const rapidPreset = {
+      id: 'rapid-css',
+      label: 'CSS rapid',
+      quick: true,
+      count: 1,
+      lessonIds: ['mpi-full'],
+      questions: [rapidQuestion],
+    }
+
+    render(<MockScreen
+      data={{ [subject.code]: subject }}
+      order={[subject.code]}
+      hidden={[]}
+      drillBundles={{ [subject.code]: { version: 2, subject: subject.code, chapters: {}, presets: [rapidPreset] } }}
+      onBack={vi.fn()}
+      onRecord={vi.fn()}
+      onReviewWrong={vi.fn()}
+      onStartComprehensive={vi.fn()}
+    />)
+
+    fireEvent.click(screen.getByRole('button', { name: /CSS rapid/ }))
+    expect(screen.getByText('🛠 اكتشف الخطأ')).toBeVisible()
+    expect(screen.getByText('.card { display: flex; }')).toHaveAttribute('data-language', 'css')
+
+    fireEvent.click(screen.getByRole('button', { name: /إنهاء/ }))
+
+    expect(screen.getAllByText('🛠 اكتشف الخطأ')).toHaveLength(1)
+    expect(screen.queryByText(/```css/)).not.toBeInTheDocument()
+    expect(screen.getByText(rapidQuestion.hint_ar!)).toBeVisible()
+  })
 })
