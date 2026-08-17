@@ -44,6 +44,7 @@ function renderHome(nextSubject: Subject, overrides: Partial<React.ComponentProp
     onStartLessonTest: vi.fn(),
     onStartLessonQuickTest: vi.fn(),
     onOpenLesson: vi.fn(),
+    onOpenCram: vi.fn(),
     onOpenNotes: vi.fn(),
     onToggleExtra: vi.fn(),
     onChangeDuration: vi.fn(),
@@ -101,5 +102,18 @@ describe('HomeScreen lesson reading', () => {
       lessonIds: new Set([lesson.id]),
     })
     expect(screen.queryByRole('button', { name: /درس/ })).not.toBeInTheDocument()
+  })
+})
+
+describe('HomeScreen final cram guide', () => {
+  it('shows and opens the four-hour guide for the Web final', () => {
+    const webSubject: Subject = { ...subject, name: 'CCSW-321 Web Final', code: 'WEB-EXAM2' }
+    const onOpenCram = vi.fn()
+    renderHome(webSubject, { onOpenCram })
+
+    fireEvent.click(screen.getByRole('button', { name: /افتح الملخص/ }))
+
+    expect(screen.getByRole('heading', { name: 'ملخص آخر 4 ساعات' })).toBeInTheDocument()
+    expect(onOpenCram).toHaveBeenCalledOnce()
   })
 })

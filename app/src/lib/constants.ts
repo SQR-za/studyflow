@@ -26,7 +26,7 @@ export const GAPS: Record<number, number> = { 1: 2, 2: 4, 3: 7, 4: 12, 5: 20 }
 export const MASTERY_BOX = 4
 export const DAY_MS = 86_400_000
 export const SESSION_CAP = 5
-export const APP_BUILD = 'v2.0.0-preview.10'
+export const APP_BUILD = 'v2.0.0-preview.11'
 
 export const GIST_API_URL = 'https://api.github.com/gists'
 export const GIST_FILENAME = 'studyflow-progress.json'

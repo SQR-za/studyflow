@@ -3,6 +3,8 @@ import { flushSync } from 'react-dom'
 import { Button } from './components/Ui'
 import { Toast } from './components/Toast'
 import { HomeScreen, type StartRequest } from './features/home/HomeScreen'
+import { CramScreen } from './features/cram/CramScreen'
+import { WEB_FINAL_CRAM_GUIDE } from './features/cram/webFinalCram'
 import { LessonScreen } from './features/lesson/LessonScreen'
 import { MockScreen, type MockResultPayload } from './features/mock/MockScreen'
 import { NotesScreen } from './features/notes/NotesScreen'
@@ -250,8 +252,16 @@ export function App() {
   return (
     <div className="app-shell">
       <Activity mode={screen === 'home' ? 'visible' : 'hidden'}>
-        <HomeScreen data={app.data} order={app.order} schedule={app.schedule} store={app.store} settings={app.settings} daily={app.daily} quickPresets={Object.values(app.drillBundles).flatMap(bundle => bundle.presets.filter(preset => preset.quick))} onOpenScreen={next => transitionTo(next)} onStart={start} onStartStarred={startStarred} onStartDue={startDue} onStartLessonTest={startLessonTest} onStartLessonQuickTest={startLessonQuickTest} onOpenLesson={openLesson} onOpenNotes={openNotes} onToggleExtra={() => app.updateSettings(current => ({ includeExtra: !current.includeExtra }))} onChangeDuration={sessionMins => app.updateSettings({ sessionMins })} />
+        <HomeScreen data={app.data} order={app.order} schedule={app.schedule} store={app.store} settings={app.settings} daily={app.daily} quickPresets={Object.values(app.drillBundles).flatMap(bundle => bundle.presets.filter(preset => preset.quick))} onOpenScreen={next => transitionTo(next)} onStart={start} onStartStarred={startStarred} onStartDue={startDue} onStartLessonTest={startLessonTest} onStartLessonQuickTest={startLessonQuickTest} onOpenLesson={openLesson} onOpenCram={() => transitionTo('cram')} onOpenNotes={openNotes} onToggleExtra={() => app.updateSettings(current => ({ includeExtra: !current.includeExtra }))} onChangeDuration={sessionMins => app.updateSettings({ sessionMins })} />
       </Activity>
+
+      {screen === 'cram' ? (
+        <CramScreen
+          guide={WEB_FINAL_CRAM_GUIDE}
+          onBack={() => transitionTo('home')}
+          onOpenTests={() => transitionTo('mock')}
+        />
+      ) : null}
 
       {screen === 'lesson' && selectedSubject && selectedChapter && selectedLesson ? (
         <LessonScreen
