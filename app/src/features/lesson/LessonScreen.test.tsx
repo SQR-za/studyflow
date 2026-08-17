@@ -1,7 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import webDrillsAsset from '../../../public/web-321-drills-v1.json'
-import { validateWebDrills } from '../../lib/content'
 import type { Lesson, LessonContent } from '../../types'
 import { LessonScreen } from './LessonScreen'
 
@@ -128,40 +126,4 @@ describe('LessonScreen', () => {
     expect(onStartQuickTest).toHaveBeenCalledOnce()
     expect(onStartFullTest).toHaveBeenCalledOnce()
   })
-
-  it('renders every checked-in Web lesson payload with deployment-safe media URLs', () => {
-    const validated = validateWebDrills(webDrillsAsset)
-    const sections = Object.values(validated.chapters).flatMap(chapter => chapter.sections)
-
-    sections.forEach((section, index) => {
-      if (!section.content) throw new Error(`Missing content for ${section.id}`)
-      const shippedLesson: Lesson = { id: section.id, label: section.label, questions: [], content: section.content }
-      const expectedCodeBlocks = section.content.blocks.filter(block => block.type === 'code').length
-      const expectedFigures = section.content.blocks.filter(block => block.type === 'figure' || (block.type === 'code' && Boolean(block.result))).length
-      const view = render(
-        <LessonScreen
-          subject="CCSW-321"
-          chapter="Web Development"
-          color="#38bdf8"
-          lesson={shippedLesson}
-          lessonPosition={index + 1}
-          lessonCount={sections.length}
-          onBack={vi.fn()}
-          onOpenLesson={vi.fn()}
-          onStartLearn={vi.fn()}
-          onStartFullTest={vi.fn()}
-        />,
-      )
-
-      expect(view.container.querySelectorAll('.study-code-block--lesson')).toHaveLength(expectedCodeBlocks)
-      const images = [...view.container.querySelectorAll('img')]
-      expect(images).toHaveLength(expectedFigures)
-      for (const image of images) {
-        expect(image.getAttribute('src')).toMatch(/^\/studyflow\/next\/lesson-assets\//)
-        expect(image).toHaveAttribute('loading', 'lazy')
-        expect(image).toHaveAttribute('decoding', 'async')
-      }
-      view.unmount()
-    })
-  }, 15_000)
 })

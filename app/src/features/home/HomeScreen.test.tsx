@@ -6,10 +6,10 @@ import type { DrillPreset, Lesson, LessonContent, Subject } from '../../types'
 const question = { id: 'q1', q: 'Question?', choices: ['A', 'B'], answer: 0 }
 const lesson: Lesson = { id: 'mpi-foundations', label: '1 · MPI Foundations', questions: [question] }
 const subject: Subject = {
-  name: 'CCCS-422 Final',
-  code: 'CCCS422-FINAL',
-  color: '#f43f5e',
-  chapters: [{ id: 't6', label: 'Topic 6', questions: [question], lessons: [lesson] }],
+  name: 'Security+ · CompTIA SY0-701',
+  code: 'SEC-PLUS',
+  color: '#38bdf8',
+  chapters: [{ id: 'd1', label: 'Domain 1', questions: [question], lessons: [lesson] }],
 }
 const quickPreset: DrillPreset = {
   id: 'rapid-mpi-foundations-4',
@@ -44,7 +44,6 @@ function renderHome(nextSubject: Subject, overrides: Partial<React.ComponentProp
     onStartLessonTest: vi.fn(),
     onStartLessonQuickTest: vi.fn(),
     onOpenLesson: vi.fn(),
-    onOpenCram: vi.fn(),
     onOpenNotes: vi.fn(),
     onToggleExtra: vi.fn(),
     onChangeDuration: vi.fn(),
@@ -102,18 +101,5 @@ describe('HomeScreen lesson reading', () => {
       lessonIds: new Set([lesson.id]),
     })
     expect(screen.queryByRole('button', { name: /درس/ })).not.toBeInTheDocument()
-  })
-})
-
-describe('HomeScreen final cram guide', () => {
-  it('shows and opens the four-hour guide for the Web final', () => {
-    const webSubject: Subject = { ...subject, name: 'CCSW-321 Web Final', code: 'WEB-EXAM2' }
-    const onOpenCram = vi.fn()
-    renderHome(webSubject, { onOpenCram })
-
-    fireEvent.click(screen.getByRole('button', { name: /افتح الملخص/ }))
-
-    expect(screen.getByRole('heading', { name: 'ملخص آخر 4 ساعات' })).toBeInTheDocument()
-    expect(onOpenCram).toHaveBeenCalledOnce()
   })
 })

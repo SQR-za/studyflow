@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import webDrillsAsset from '../../public/web-321-drills-v1.json'
-import { createEmptyDrills, loadCachedPreparedContent, prepareContent, validatePdcDrills, validateWebDrills } from './content'
+import securityPlusAsset from '../../public/security-plus-sy0-701.json'
+import { createEmptyDrills, loadCachedPreparedContent, prepareContent, validateBuiltinContent, validateDrills } from './content'
 import { publicAssetUrl } from './assets'
 import type { ContentBundle, DrillsBundle, LessonContent } from '../types'
 
@@ -42,13 +42,18 @@ describe('publicAssetUrl', () => {
   })
 })
 
-describe('checked-in Web lesson content', () => {
-  it('passes the runtime schema with content for all 18 sections', () => {
-    const validated = validateWebDrills(webDrillsAsset)
-    const sections = Object.values(validated.chapters).flatMap(chapter => chapter.sections)
+describe('checked-in Security+ content', () => {
+  it('ships only SY0-701 with every domain, objective, and question', () => {
+    const validated = validateBuiltinContent(securityPlusAsset)
+    const subject = validated.subjects['SEC-PLUS']
+    const questions = subject.chapters.flatMap(chapter => chapter.questions)
+    const objectives = subject.chapters.flatMap(chapter => chapter.objectives ?? [])
 
-    expect(sections).toHaveLength(18)
-    expect(sections.every(section => Boolean(section.content))).toBe(true)
+    expect(Object.keys(validated.subjects)).toEqual(['SEC-PLUS'])
+    expect(subject.chapters).toHaveLength(5)
+    expect(objectives).toHaveLength(28)
+    expect(questions).toHaveLength(987)
+    expect(questions.filter(question => question.type === 'match')).toHaveLength(111)
   })
 })
 
@@ -65,20 +70,20 @@ describe('prepareContent', () => {
   })
 
   it('accepts legacy sections without content and rejects malformed lesson content', () => {
-    const legacy = JSON.parse(JSON.stringify({ ...drills, subject: 'WEB-EXAM2' }))
+    const legacy = JSON.parse(JSON.stringify(drills))
     delete legacy.chapters.c1.sections[0].content
-    expect(validateWebDrills(legacy).chapters.c1.sections[0].content).toBeUndefined()
+    expect(validateDrills(legacy, 'TEST').chapters.c1.sections[0].content).toBeUndefined()
 
-    const malformed = JSON.parse(JSON.stringify({ ...drills, subject: 'WEB-EXAM2' }))
+    const malformed = JSON.parse(JSON.stringify(drills))
     malformed.chapters.c1.sections[0].content.blocks[0].paragraphs = 'not-an-array'
-    expect(() => validateWebDrills(malformed)).toThrow(/النص غير صالح/)
+    expect(() => validateDrills(malformed, 'TEST')).toThrow(/النص غير صالح/)
 
-    const unsafeFigure = JSON.parse(JSON.stringify({ ...drills, subject: 'WEB-EXAM2' }))
+    const unsafeFigure = JSON.parse(JSON.stringify(drills))
     unsafeFigure.chapters.c1.sections[0].content.blocks.push({
       type: 'figure',
       figure: { src: '../private.png', alt: 'Unsafe', caption: 'Unsafe path', source: 'Test', width: 100, height: 100 },
     })
-    expect(() => validateWebDrills(unsafeFigure)).toThrow(/مسار الصورة غير صالح/)
+    expect(() => validateDrills(unsafeFigure, 'TEST')).toThrow(/مسار الصورة غير صالح/)
   })
 
   it('composes cached/custom content synchronously before network refresh', () => {
@@ -103,7 +108,7 @@ describe('prepareContent', () => {
         ],
       }],
     }
-    expect(validatePdcDrills({ ...rapid, subject: 'CCCS422-FINAL' }).presets[0].questions).toHaveLength(2)
+    expect(validateDrills(rapid, 'TEST').presets[0].questions).toHaveLength(2)
     expect(prepareContent(builtin, { version: 1, subjects: {}, schedule: { plan: [], exams: [] } }, rapid).data.TEST.chapters[0].questions.map(question => question.id)).toEqual(['q1', 'q2'])
   })
 
@@ -111,29 +116,29 @@ describe('prepareContent', () => {
     const twoSubjects: ContentBundle = {
       version: 1,
       subjects: {
-        PDC: { name: 'PDC', code: 'PDC', color: '#fff', chapters: [{ id: 'pdc-c1', label: 'PDC Chapter', questions: [{ id: 'pdc-q1', q: 'Base PDC?', choices: ['A', 'B'], answer: 0 }] }] },
-        WEB: { name: 'Web', code: 'WEB', color: '#fff', chapters: [{ id: 'web-c1', label: 'Web Chapter', questions: [{ id: 'web-q1', q: 'Base Web?', choices: ['A', 'B'], answer: 0 }] }] },
+        ALPHA: { name: 'Alpha', code: 'ALPHA', color: '#fff', chapters: [{ id: 'alpha-c1', label: 'Alpha Chapter', questions: [{ id: 'alpha-q1', q: 'Base Alpha?', choices: ['A', 'B'], answer: 0 }] }] },
+        BETA: { name: 'Beta', code: 'BETA', color: '#fff', chapters: [{ id: 'beta-c1', label: 'Beta Chapter', questions: [{ id: 'beta-q1', q: 'Base Beta?', choices: ['A', 'B'], answer: 0 }] }] },
       },
       schedule: { plan: [], exams: [] },
     }
-    const pdc: DrillsBundle = { version: 2, subject: 'PDC', chapters: { 'pdc-c1': { questions: [{ id: 'pdc-q2', q: 'PDC drill?', choices: ['A', 'B'], answer: 1 }], sections: [{ id: 'pdc-s1', label: 'PDC section', questionIds: ['pdc-q1', 'pdc-q2'] }] } }, presets: [] }
-    const web: DrillsBundle = { version: 2, subject: 'WEB', chapters: { 'web-c1': { questions: [{ id: 'web-q2', q: 'Web drill?', choices: ['A', 'B'], answer: 1 }], sections: [{ id: 'web-s1', label: 'Web section', questionIds: ['web-q1', 'web-q2'] }] } }, presets: [] }
-    const prepared = prepareContent(twoSubjects, { version: 1, subjects: {}, schedule: { plan: [], exams: [] } }, pdc, web)
+    const alpha: DrillsBundle = { version: 2, subject: 'ALPHA', chapters: { 'alpha-c1': { questions: [{ id: 'alpha-q2', q: 'Alpha drill?', choices: ['A', 'B'], answer: 1 }], sections: [{ id: 'alpha-s1', label: 'Alpha section', questionIds: ['alpha-q1', 'alpha-q2'] }] } }, presets: [] }
+    const beta: DrillsBundle = { version: 2, subject: 'BETA', chapters: { 'beta-c1': { questions: [{ id: 'beta-q2', q: 'Beta drill?', choices: ['A', 'B'], answer: 1 }], sections: [{ id: 'beta-s1', label: 'Beta section', questionIds: ['beta-q1', 'beta-q2'] }] } }, presets: [] }
+    const prepared = prepareContent(twoSubjects, { version: 1, subjects: {}, schedule: { plan: [], exams: [] } }, alpha, beta)
 
-    expect(prepared.data.PDC.chapters[0].questions.map(question => question.id)).toEqual(['pdc-q1', 'pdc-q2'])
-    expect(prepared.data.WEB.chapters[0].questions.map(question => question.id)).toEqual(['web-q1', 'web-q2'])
-    expect(Object.keys(prepared.drillBundles)).toEqual(['PDC', 'WEB'])
-    expect(validateWebDrills({ ...web, subject: 'WEB-EXAM2' }).subject).toBe('WEB-EXAM2')
+    expect(prepared.data.ALPHA.chapters[0].questions.map(question => question.id)).toEqual(['alpha-q1', 'alpha-q2'])
+    expect(prepared.data.BETA.chapters[0].questions.map(question => question.id)).toEqual(['beta-q1', 'beta-q2'])
+    expect(Object.keys(prepared.drillBundles)).toEqual(['ALPHA', 'BETA'])
+    expect(validateDrills(beta, 'BETA').subject).toBe('BETA')
   })
 
   it('supports metadata-only quick presets that sample from a lesson at launch', () => {
-    const web: DrillsBundle = {
+    const quick: DrillsBundle = {
       version: 2,
-      subject: 'WEB-EXAM2',
+      subject: 'TEST',
       chapters: {},
-      presets: [{ id: 'web-quick', label: 'Web quick', count: 4, quick: true, timed: true, lessonIds: ['web-css-boxes'] }],
+      presets: [{ id: 'section-quick', label: 'Section quick', count: 4, quick: true, timed: true, lessonIds: ['section-one'] }],
     }
-    expect(validateWebDrills(web).presets[0].questions).toBeUndefined()
+    expect(validateDrills(quick, 'TEST').presets[0].questions).toBeUndefined()
   })
 
   it('keeps a same-code custom subject as a complete override without built-in drills or presets', () => {
@@ -163,7 +168,7 @@ describe('prepareContent', () => {
       presets: [{ id: 'web-preset', label: 'Built-in preset', count: 2, lessonIds: ['web-section'] }],
     }
 
-    const prepared = prepareContent(builtinWeb, customWeb, createEmptyDrills('PDC'), webDrills)
+    const prepared = prepareContent(builtinWeb, customWeb, createEmptyDrills('UNRELATED'), webDrills)
 
     expect(prepared.data.WEB.name).toBe('My Web')
     expect(prepared.data.WEB.chapters[0].questions.map(question => question.id)).toEqual(['custom-q'])

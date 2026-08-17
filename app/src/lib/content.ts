@@ -17,11 +17,7 @@ import {
   BUILTIN_CODES,
   BUILTIN_CONTENT_ASSET,
   DEFAULT_SUBJECT_COLOR,
-  PDC_DRILLS_ASSET,
-  PDC_SUBJECT_CODE,
   STORAGE_KEYS,
-  WEB_DRILLS_ASSET,
-  WEB_SUBJECT_CODE,
 } from './constants'
 import { loadJson, saveJson } from './storage'
 
@@ -30,7 +26,6 @@ type UnknownRecord = Record<string, unknown>
 export interface LoadedPreparedContent extends PreparedContent {
   builtinContent: ContentBundle
   customContent: ContentBundle
-  webDrills: DrillsBundle
 }
 
 export interface LoadPreparedContentOptions {
@@ -44,12 +39,8 @@ export function createEmptyContent(): ContentBundle {
   return { version: 1, subjects: {}, schedule: { plan: [], exams: [] } }
 }
 
-export function createEmptyDrills(subject = PDC_SUBJECT_CODE): DrillsBundle {
+export function createEmptyDrills(subject = ''): DrillsBundle {
   return { version: 2, subject, chapters: {}, presets: [] }
-}
-
-export function createEmptyWebDrills(): DrillsBundle {
-  return createEmptyDrills(WEB_SUBJECT_CODE)
 }
 
 // Exported for consumers that only need a read-only fallback. Use the factory
@@ -215,14 +206,31 @@ export function validateContent(raw: unknown): ContentBundle {
   }
 }
 
-/** The checked-in finals bundle intentionally has exactly 3 x 35 questions per subject. */
-export function validateBuiltinFinals(raw: unknown): ContentBundle {
+/** Validate the complete checked-in CompTIA Security+ SY0-701 catalog. */
+export function validateBuiltinContent(raw: unknown): ContentBundle {
   const content = validateContent(raw)
-  for (const code of BUILTIN_CODES) {
-    const subject = content.subjects[code]
-    const total = subject?.chapters.reduce((sum, chapter) => sum + (chapter.questions?.length ?? 0), 0) ?? 0
-    if (!subject || subject.chapters.length !== 3 || total !== 105) {
-      validationError(`حزمة ${code} غير مكتملة`)
+  const subject = content.subjects[BUILTIN_CODES[0]]
+  const questions = subject?.chapters.flatMap((chapter) => chapter.questions ?? []) ?? []
+  const objectives = subject?.chapters.flatMap((chapter) => chapter.objectives ?? []) ?? []
+  const matchQuestions = questions.filter((question) => question.type === 'match')
+  if (Object.keys(content.subjects).length !== 1
+    || !subject
+    || subject.chapters.length !== 5
+    || questions.length !== 987
+    || objectives.length !== 28
+    || matchQuestions.length !== 111) {
+    validationError('حزمة Security+ SY0-701 غير مكتملة')
+  }
+
+  for (const chapter of subject.chapters) {
+    const objectiveIds = new Set((chapter.objectives ?? []).map((objective) => String(objective.num)))
+    if (!objectiveIds.size || objectiveIds.size !== Object.keys(chapter.objNotes ?? {}).length) {
+      validationError(`أهداف ${chapter.id} أو ملاحظاتها غير مكتملة`)
+    }
+    for (const question of chapter.questions) {
+      if (!objectiveIds.has(String(question.obj ?? ''))) {
+        validationError(`السؤال ${question.id} غير مربوط بهدف صالح`)
+      }
     }
   }
   return content
@@ -287,16 +295,6 @@ export function validateDrills(raw: unknown, expectedSubject: string, label = ex
   return raw as unknown as DrillsBundle
 }
 
-/** Validate the additive CCCS-422 drill/lesson package (v2). */
-export function validatePdcDrills(raw: unknown): DrillsBundle {
-  return validateDrills(raw, PDC_SUBJECT_CODE, 'PDC')
-}
-
-/** Validate the additive CCSW-321 drill/lesson package (v2). */
-export function validateWebDrills(raw: unknown): DrillsBundle {
-  return validateDrills(raw, WEB_SUBJECT_CODE, 'Web')
-}
-
 export function mergeSchedules(builtin: StudySchedule | undefined, custom: StudySchedule | undefined): StudySchedule {
   const days = new Map<string, PlanDay>()
   const exams = new Map<string, StudySchedule['exams'][number]>()
@@ -341,19 +339,18 @@ function lessonsFromSections(chapter: Chapter, sections: LessonSection[]): Lesso
 export function prepareContent(
   builtinContent: ContentBundle = createEmptyContent(),
   customContent: ContentBundle = createEmptyContent(),
-  drillsBundle: DrillsBundle = createEmptyDrills(),
-  webDrillsBundle: DrillsBundle = createEmptyWebDrills(),
+  ...drillBundlesInput: DrillsBundle[]
 ): PreparedContent {
   const data = cloneJson({ ...builtinContent.subjects, ...customContent.subjects })
   const schedule = mergeSchedules(builtinContent.schedule, customContent.schedule)
   const order = Object.keys(data)
-  const drills = cloneJson(drillsBundle)
-  const webDrills = cloneJson(webDrillsBundle)
+  const bundles = drillBundlesInput.map(cloneJson)
+  const drills = bundles[0] ?? createEmptyDrills()
   const customSubjectCodes = new Set(Object.keys(customContent.subjects ?? {}))
-  const drillBundles = [drills, webDrills].reduce<Record<string, DrillsBundle>>((catalog, bundle) => {
+  const drillBundles = bundles.reduce<Record<string, DrillsBundle>>((catalog, bundle) => {
     // A user-imported subject is a complete override. Built-in additive drills
     // and presets must not leak back into a subject with the same code.
-    if (!customSubjectCodes.has(bundle.subject)) catalog[bundle.subject] = bundle
+    if (bundle.subject && !customSubjectCodes.has(bundle.subject)) catalog[bundle.subject] = bundle
     return catalog
   }, {})
 
@@ -441,73 +438,40 @@ export function loadCachedPreparedContent(options: LoadPreparedContentOptions = 
 
   const builtinContent = validatedOrFallback(
     loadJson<unknown>(STORAGE_KEYS.builtin, createEmptyContent(), storage),
-    validateBuiltinFinals,
+    validateBuiltinContent,
     createEmptyContent,
   )
-  const drills = validatedOrFallback(
-    loadJson<unknown>(STORAGE_KEYS.drills, createEmptyDrills(), storage),
-    validatePdcDrills,
-    createEmptyDrills,
-  )
-  const webDrills = validatedOrFallback(
-    loadJson<unknown>(STORAGE_KEYS.webDrills, createEmptyWebDrills(), storage),
-    validateWebDrills,
-    createEmptyWebDrills,
-  )
-
   return {
-    ...prepareContent(builtinContent, customContent, drills, webDrills),
+    ...prepareContent(builtinContent, customContent),
     builtinContent,
     customContent,
-    webDrills,
   }
 }
 
 /**
- * Load both checked-in public bundles, falling back to their exact legacy
- * localStorage caches, then compose them with the user's private content.
+ * Load the checked-in Security+ catalog, falling back to its localStorage
+ * cache, then compose it with the user's private content.
  */
 export async function loadPreparedContent(options: LoadPreparedContentOptions = {}): Promise<LoadedPreparedContent> {
   const cached = loadCachedPreparedContent(options)
   const storage = options.storage
   let builtinContent = cached.builtinContent
-  let drills = cached.drills
-  let webDrills = cached.webDrills
   const customContent = cached.customContent
 
   const fetcher = options.fetcher ?? (typeof globalThis.fetch === 'function' ? globalThis.fetch.bind(globalThis) : undefined)
   const baseUrl = options.baseUrl ?? APP_BASE_PATH
-  ;[builtinContent, drills, webDrills] = await Promise.all([
-    refreshBundle(
-      publicAssetUrl(BUILTIN_CONTENT_ASSET, baseUrl),
-      builtinContent,
-      validateBuiltinFinals,
-      STORAGE_KEYS.builtin,
-      fetcher,
-      storage,
-    ),
-    refreshBundle(
-      publicAssetUrl(PDC_DRILLS_ASSET, baseUrl),
-      drills,
-      validatePdcDrills,
-      STORAGE_KEYS.drills,
-      fetcher,
-      storage,
-    ),
-    refreshBundle(
-      publicAssetUrl(WEB_DRILLS_ASSET, baseUrl),
-      webDrills,
-      validateWebDrills,
-      STORAGE_KEYS.webDrills,
-      fetcher,
-      storage,
-    ),
-  ])
+  builtinContent = await refreshBundle(
+    publicAssetUrl(BUILTIN_CONTENT_ASSET, baseUrl),
+    builtinContent,
+    validateBuiltinContent,
+    STORAGE_KEYS.builtin,
+    fetcher,
+    storage,
+  )
 
   return {
-    ...prepareContent(builtinContent, customContent, drills, webDrills),
+    ...prepareContent(builtinContent, customContent),
     builtinContent,
     customContent,
-    webDrills,
   }
 }

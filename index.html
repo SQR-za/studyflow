@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="StudyFlow" />
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="apple-touch-icon" href="icon-512.png" /><link rel="icon" href="icon-512.png" />
-<title>StudyFlow · مذاكرة ذكية</title>
+<title>StudyFlow · Security+ SY0-701</title>
 <style>
   :root{--bg:#0d1014;--bg2:#12161b;--bg3:#171c22;--bg4:#1e2530;--line:#262d36;--txt:#e6e9ec;--muted:#99a3a8;--muted2:#69737a;--good:#3ecf8e;--good-bg:#0e2a1f;--bad:#e5484d;--bad-bg:#2a1315;--warn:#f0a85a;--accent:#2dd4bf;--accent2:#14b8a6;--radius:18px;--shadow:0 12px 44px rgba(0,0,0,.55);}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -314,7 +314,7 @@
 
   <!-- NOTES --><div id="notes"><div class="sess-top"><button class="iconlg" id="notesBack">→</button><div class="ttl">📝 الناقص — مذاكرة يدوية <span class="ch" id="nTitle"></span></div></div><div class="note-intro">أشياء ما يغطّيها اختبار الاختيارات — ذاكرها يدوياً.</div><div id="notesBody"></div></div>
 
-  <!-- PLAN --><div id="plan"><div class="sess-top"><button class="iconlg" id="planBack">→</button><div class="ttl">📅 خطة المذاكرة للفاينل</div></div><div class="cdrow" id="cdRow"></div><div class="note-intro">لكل شابتر: <b>📖 محاضرة + 📝 ملخص + 💡 كونسبت</b> ثم <b>🃏 فلاش كاردز</b>. تبي تنبيهات؟ من ⚙️ نزّل ملف <span class="ltr">.ics</span>.</div><div id="planList"></div></div>
+  <!-- PLAN --><div id="plan"><div class="sess-top"><button class="iconlg" id="planBack">→</button><div class="ttl">📅 خطة مذاكرة Security+</div></div><div class="cdrow" id="cdRow"></div><div class="note-intro">راجع كل Domain ثم اختبر نفسك على كل Objective. تبي تنبيهات؟ من ⚙️ نزّل ملف <span class="ltr">.ics</span>.</div><div id="planList"></div></div>
 
   <!-- WEAK --><div id="weak"><div class="sess-top"><button class="iconlg" id="weakBack">→</button><div class="ttl">📉 أضعف شباترك</div></div><div class="note-intro">مرتّبة من الأضعف إتقاناً — ابدأ من فوق. اضغط الشابتر للمذاكرة.</div><div id="weakList"></div></div>
 
@@ -323,7 +323,7 @@
   <!-- SETTINGS -->
   <div id="settings">
     <div class="sess-top"><button class="iconlg" id="setBack">→</button><div class="ttl">⚙️ الإعدادات</div></div>
-    <div class="sec"><h3>📚 المحتوى الدراسي</h3><div class="hint" style="margin-bottom:8px">مجموعتا الفاينل جاهزتان تلقائيًا. أي ملف <span class="ltr">studyflow-data.json</span> إضافي تستورده يُحفظ داخل هذا المتصفح ولا يُرفع إلى GitHub.</div><div class="setrow"><button class="sbtn primary" id="contentImportBtn">⬆️ استورد المحتوى</button><button class="sbtn" id="contentExportBtn">⬇️ صدّر المحتوى</button><button class="sbtn danger" id="contentClearBtn">إزالة المحتوى الخاص</button><input type="file" id="contentFile" accept=".json,application/json" style="display:none"></div></div>
+    <div class="sec"><h3>📚 المحتوى الدراسي</h3><div class="hint" style="margin-bottom:8px">محتوى Security+ SY0-701 جاهز تلقائيًا. أي ملف <span class="ltr">studyflow-data.json</span> إضافي تستورده يُحفظ داخل هذا المتصفح ولا يُرفع إلى GitHub.</div><div class="setrow"><button class="sbtn primary" id="contentImportBtn">⬆️ استورد المحتوى</button><button class="sbtn" id="contentExportBtn">⬇️ صدّر المحتوى</button><button class="sbtn danger" id="contentClearBtn">إزالة المحتوى الخاص</button><input type="file" id="contentFile" accept=".json,application/json" style="display:none"></div></div>
     <div class="sec"><h3>🎯 الهدف اليومي</h3><div class="setrow"><span class="lab">عدد الأسئلة/المسائل في اليوم</span><input class="tinp" id="goalInp" type="number" min="5" step="5" style="width:90px"><button class="sbtn primary" id="goalSave">حفظ</button></div></div>
     <div class="sec"><h3>👁️ المواد الظاهرة</h3><div class="hint" style="margin-bottom:8px">اختر المواد اللي تظهر في الرئيسية والموك. الباقي ينخفي — بياناته وتقدّمك يبقون محفوظين.</div><div class="mockopt" id="subjToggles"></div></div>
     <div class="sec"><h3>🎯 الجلسة والتركيز</h3>
@@ -349,11 +349,11 @@
 
 <script>
 "use strict";
-const SKEY="studyflow-v1",SET="studyflow-set-v1",PKEY="studyflow-plan-v1",PASS="studyflow-pass-v1",DKEY="studyflow-daily-v1",SYNCKEY="studyflow-sync-v1",CONTENTKEY="studyflow-content-v1",BUILTINKEY="studyflow-builtin-finals-2026-t3-v1",PDC_DRILLS_KEY="studyflow-pdc-422-drills-v2";
+const SKEY="studyflow-v1",SET="studyflow-set-v1",PKEY="studyflow-plan-v1",PASS="studyflow-pass-v1",DKEY="studyflow-daily-v1",SYNCKEY="studyflow-sync-v1",CONTENTKEY="studyflow-content-v1",BUILTINKEY="studyflow-builtin-security-plus-sy0-701-v1";
 const GAPS={1:2,2:4,3:7,4:12,5:20},MB=4,DAYMS=86400000,SESSION_CAP=5;
-const EMPTY_CONTENT={version:1,subjects:{},schedule:{plan:[],exams:[]}},EMPTY_DRILLS={version:2,subject:"CCCS422-FINAL",chapters:{},presets:[]},BUILTIN_CONTENT_URL="finals-2026-t3.json?v=20260816-1",PDC_DRILLS_URL="pdc-422-drills-v2.json?v=20260811-3",BUILTIN_CODES=["CCCS422-FINAL","WEB-EXAM2"];
+const EMPTY_CONTENT={version:1,subjects:{},schedule:{plan:[],exams:[]}},EMPTY_DRILLS={version:2,subject:"",chapters:{},presets:[]},BUILTIN_CONTENT_URL="security-plus-sy0-701.json?v=20260817-1",BUILTIN_CODES=["SEC-PLUS"];
 function lj(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}} function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-let CONTENT=lj(CONTENTKEY,EMPTY_CONTENT),BUILTIN_CONTENT=lj(BUILTINKEY,EMPTY_CONTENT),PDC_DRILLS=lj(PDC_DRILLS_KEY,EMPTY_DRILLS);
+let CONTENT=lj(CONTENTKEY,EMPTY_CONTENT),BUILTIN_CONTENT=lj(BUILTINKEY,EMPTY_CONTENT),BUILTIN_DRILLS=EMPTY_DRILLS;
 let DATA={},SCHED={plan:[],exams:[]},ORDER=[];
 function mergedSchedule(builtin,custom){
   const days=new Map(),exams=new Map();
@@ -371,7 +371,6 @@ function mergedSchedule(builtin,custom){
 }
 function prepareContent(){
   DATA=JSON.parse(JSON.stringify(Object.assign({},BUILTIN_CONTENT.subjects||{},CONTENT.subjects||{})));SCHED=mergedSchedule(BUILTIN_CONTENT.schedule,CONTENT.schedule);ORDER=Object.keys(DATA);
-  const pdc=DATA[PDC_DRILLS.subject];if(pdc&&PDC_DRILLS.chapters){for(const ch of(pdc.chapters||[])){const pack=PDC_DRILLS.chapters[ch.id];if(!pack)continue;ch.questions=Array.isArray(ch.questions)?ch.questions:[];const seen=new Set(ch.questions.map(q=>q.id));for(const q of(pack.questions||[]))if(!seen.has(q.id)){ch.questions.push(q);seen.add(q.id)}ch.sections=pack.sections||[];}}
   for(const code of ORDER){const subj=DATA[code];subj.code=subj.code||code;subj.color=subj.color||"#38bdf8";subj.chapters=Array.isArray(subj.chapters)?subj.chapters:[];for(const ch of subj.chapters){ch.questions=Array.isArray(ch.questions)?ch.questions:[];ch.practice=Array.isArray(ch.practice)?ch.practice:[];if(ch.sections&&ch.sections.length){const byId=new Map(ch.questions.map(q=>[q.id,q]));ch.lessons=ch.sections.map(s=>({id:s.id,label:s.label,questions:(s.questionIds||[]).map(id=>byId.get(id)).filter(Boolean),notes:s.notes||null}))}else if(ch.objectives&&ch.objectives.length)ch.lessons=ch.objectives.map(o=>({id:ch.id+"-"+String(o.num).replace(".","_"),num:o.num,label:o.label,questions:ch.questions.filter(q=>q.obj===o.num),notes:(ch.objNotes&&ch.objNotes[o.num])||null}));else if(!ch.questions.length&&ch.lessons)ch.questions=ch.lessons.flatMap(l=>l.questions||[]);}}
 }
 prepareContent();
@@ -397,26 +396,21 @@ function validateContent(raw){
   if(typeof schedule!=="object"||!Array.isArray(schedule.plan||[])||!Array.isArray(schedule.exams||[]))throw new Error("schedule غير صالح");
   return{version:1,subjects,schedule:{plan:schedule.plan||[],exams:schedule.exams||[]}};
 }
-function validateBuiltinFinals(raw){
+function validateBuiltinContent(raw){
   const content=validateContent(raw);
-  for(const code of BUILTIN_CODES){const subject=content.subjects[code],total=subject?.chapters?.reduce((n,ch)=>n+(ch.questions||[]).length,0)||0;if(!subject||subject.chapters.length!==3||total!==105)throw new Error(`حزمة ${code} غير مكتملة`);}
+  const subject=content.subjects["SEC-PLUS"],questions=subject?.chapters?.flatMap(ch=>ch.questions||[])||[],objectives=subject?.chapters?.flatMap(ch=>ch.objectives||[])||[];
+  if(Object.keys(content.subjects).length!==1||!subject||subject.chapters.length!==5||questions.length!==987||objectives.length!==28||questions.filter(q=>q.type==="match").length!==111)throw new Error("حزمة Security+ SY0-701 غير مكتملة");
   return content;
 }
-function validatePdcDrills(raw){
-  if(!raw||raw.version!==2||raw.subject!=="CCCS422-FINAL"||!raw.chapters||!Array.isArray(raw.presets))throw new Error("حزمة تدريبات PDC غير صالحة");
-  const ids=new Set();for(const[chapterId,pack]of Object.entries(raw.chapters)){if(!Array.isArray(pack.sections)||!Array.isArray(pack.questions))throw new Error(`حزمة ${chapterId} ناقصة`);for(const q of pack.questions){if(!q.id||!q.q||ids.has(q.id)||!Array.isArray(q.choices)||q.choices.length<2||!Number.isInteger(q.answer)||q.answer<0||q.answer>=q.choices.length)throw new Error(`سؤال PDC غير صالح: ${q.id||"بدون id"}`);ids.add(q.id)}for(const s of pack.sections)if(!s.id||!s.label||!Array.isArray(s.questionIds)||!s.questionIds.length)throw new Error(`قسم PDC غير صالح في ${chapterId}`)}
-  return raw;
-}
-async function loadBuiltinFinals(){
-  try{const response=await fetch(BUILTIN_CONTENT_URL,{cache:"no-store"});if(response.ok){BUILTIN_CONTENT=validateBuiltinFinals(await response.json());sv(BUILTINKEY,BUILTIN_CONTENT)}}catch(e){}
-  try{const response=await fetch(PDC_DRILLS_URL,{cache:"no-store"});if(response.ok){PDC_DRILLS=validatePdcDrills(await response.json());sv(PDC_DRILLS_KEY,PDC_DRILLS)}}catch(e){}
+async function loadBuiltinContent(){
+  try{const response=await fetch(BUILTIN_CONTENT_URL,{cache:"no-store"});if(response.ok){BUILTIN_CONTENT=validateBuiltinContent(await response.json());sv(BUILTINKEY,BUILTIN_CONTENT)}}catch(e){}
   prepareContent();
 }
 function replaceContent(raw){CONTENT=validateContent(raw);sv(CONTENTKEY,CONTENT);prepareContent();SETTINGS.hidden=[];saveSet();renderHome();}
 function downloadJSON(name,value){const blob=new Blob([JSON.stringify(value,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 let STORE=lj(SKEY,{q:{},star:{},tests:{},attempts:[]});if(!STORE.star)STORE.star={};if(!STORE.tests)STORE.tests={};if(!Array.isArray(STORE.attempts))STORE.attempts=[];
 let SETTINGS=Object.assign({includeExtra:true,goal:50,sound:false,sessionMins:20,fullscreen:true,hidden:[]},lj(SET,{}));
-if(SETTINGS.builtinFinalsBuild!=="2026-08-12-v4"){SETTINGS.hidden=(SETTINGS.hidden||[]).filter(code=>!BUILTIN_CODES.includes(code));SETTINGS.builtinFinalsBuild="2026-08-12-v4";sv(SET,SETTINGS)}
+if(SETTINGS.builtinContentBuild!=="security-plus-sy0-701-2026-08-17-v1"){SETTINGS.hidden=(SETTINGS.hidden||[]).filter(code=>!BUILTIN_CODES.includes(code));SETTINGS.builtinContentBuild="security-plus-sy0-701-2026-08-17-v1";sv(SET,SETTINGS)}
 let PLANDONE=lj(PKEY,{}); let DAILY=lj(DKEY,{dates:{}}); let SYNC=lj(SYNCKEY,{token:"",gistId:"",enabled:false});
 function saveStore(){sv(SKEY,STORE);schedulePush();} function saveSet(){sv(SET,SETTINGS);} function savePlan(){sv(PKEY,PLANDONE);schedulePush();} function saveDaily(){sv(DKEY,DAILY);schedulePush();}
 function qstate(id){return STORE.q[id]||(STORE.q[id]={box:1,seen:0,correct:0,wrong:0,due:0,last:0})}
@@ -661,7 +655,7 @@ function renderMockSetup(){
   const hasLessons=lessonsOf(DATA[mkSel.code]).length>0;
   const chs=`<button data-s="__ALL__" class="${mkSel.scope==="__ALL__"?"sel":""}">كل المادة</button>`+DATA[mkSel.code].chapters.map(c=>`<button data-s="${c.id}" class="${mkSel.scope===c.id?"sel":""}">${escHtml(c.label.replace(/·.*/,"").trim())}</button>`).join("")+(hasLessons?`<button data-s="__LESSONS__" class="${mkSel.scope==="__LESSONS__"?"sel":""}">🧩 دروس مخصّصة</button>`:"");
   const cnts=[5,10,20,30,40].map(n=>`<button data-n="${n}" class="${mkSel.count===n?"sel":""}">${n} سؤال</button>`).join("");
-  const presets=mkSel.code===PDC_DRILLS.subject?(PDC_DRILLS.presets||[]):[];const presetHtml=presets.length?`<div class="sec"><h3>اختبارات جاهزة حسب أهمية الفاينل</h3><div class="presetgrid">${presets.map(p=>`<button class="preset" data-preset="${p.id}"><b>${escHtml(p.label)}</b><small>${escHtml(p.description)} · ${presetTotal(p)} سؤال</small></button>`).join("")}</div></div>`:"";
+  const presets=mkSel.code===BUILTIN_DRILLS.subject?(BUILTIN_DRILLS.presets||[]):[];const presetHtml=presets.length?`<div class="sec"><h3>اختبارات جاهزة</h3><div class="presetgrid">${presets.map(p=>`<button class="preset" data-preset="${p.id}"><b>${escHtml(p.label)}</b><small>${escHtml(p.description)} · ${presetTotal(p)} سؤال</small></button>`).join("")}</div></div>`:"";
   const attempts=(STORE.attempts||[]).filter(a=>a.code===mkSel.code).slice(0,5);const attemptsHtml=attempts.length?`<div class="sec"><h3>آخر محاولاتك</h3>${attempts.map(a=>{const rd=readiness(a.pct);return `<div class="attempt"><span>${escHtml(a.label)}</span><span class="${rd.cls}">${rd.text}</span><span class="apct" style="color:${a.pct>=90?'var(--good)':a.pct>=70?'#facc15':'var(--bad)'}">${a.pct}%</span></div>`}).join("")}</div>`:"";
   h.innerHTML=`<div class="note-intro">الاختبار لا يعرض التصحيح أثناء الحل. في النهاية تحصل على النتيجة، تقييم الجاهزية، وتحليل كل قسم.</div>${presetHtml}
     <div class="sec"><h3>المادة</h3><div class="mockopt" id="mkSubs">${subs}</div><h3>النطاق</h3><div class="mockopt" id="mkChs">${chs}</div>${mkSel.scope==="__LESSONS__"?`<div id="mkLessons"></div>`:""}<h3>عدد الأسئلة</h3><div class="mockopt" id="mkCnts">${cnts}</div>
@@ -690,7 +684,7 @@ function startMock(){
   launchMockPool(pool,{code:mkSel.code,label,lessonIds:[...mkSel.lessonIds],timed:mkSel.timed})
 }
 function startLessonTest(code,lessonId){const lesson=lessonById(code,lessonId);if(!lesson)return;const pool=shuffle(visLes(lesson).filter(q=>q.choices)).slice(0,10);launchMockPool(pool,{code,label:"اختبار القسم · "+lesson.label,lessonIds:[lessonId],timed:true})}
-function startPreset(id){const p=(PDC_DRILLS.presets||[]).find(x=>x.id===id);if(!p)return;const code=PDC_DRILLS.subject;let pool=[];if(p.parts){for(const part of p.parts){const ch=chapterById(code,part.chapterId);if(ch)pool.push(...shuffle(visQ(ch).filter(q=>q.choices)).slice(0,part.count))}}else if(p.lessonIds){pool=shuffle(poolLessons(code,new Set(p.lessonIds)).filter(q=>q.choices)).slice(0,p.count)}mkSel.code=code;launchMockPool(shuffle(pool),{code,label:p.label,lessonIds:p.lessonIds||[],presetId:p.id,timed:p.timed!==false})}
+function startPreset(id){const p=(BUILTIN_DRILLS.presets||[]).find(x=>x.id===id);if(!p)return;const code=BUILTIN_DRILLS.subject;let pool=[];if(p.parts){for(const part of p.parts){const ch=chapterById(code,part.chapterId);if(ch)pool.push(...shuffle(visQ(ch).filter(q=>q.choices)).slice(0,part.count))}}else if(p.lessonIds){pool=shuffle(poolLessons(code,new Set(p.lessonIds)).filter(q=>q.choices)).slice(0,p.count)}mkSel.code=code;launchMockPool(shuffle(pool),{code,label:p.label,lessonIds:p.lessonIds||[],presetId:p.id,timed:p.timed!==false})}
 function tickMock(){clearInterval(mkInt);mkInt=setInterval(()=>{Mk.secLeft--;const m=Math.floor(Mk.secLeft/60),s=Mk.secLeft%60;$("#mockTimer").textContent=`⏱ ${m}:${String(s).padStart(2,"0")}`;if(Mk.secLeft<=0){clearInterval(mkInt);finishMock()}},1000);const m=Math.floor(Mk.secLeft/60);$("#mockTimer").textContent=`⏱ ${m}:00`}
 function renderMockQ(){const it=Mk.items[Mk.idx];$("#mkPos").textContent=(Mk.idx+1)+"/"+Mk.items.length;$("#mkLeft").textContent=(Mk.items.length-Mk.idx-1);$("#mkFill").style.width=(Mk.idx/Mk.items.length*100)+"%";$("#mkQ").innerHTML=mathToHtml(it.q.q);renderQuestionAssist("#mkAssist",it.q,it);const ch=$("#mkChoices");ch.innerHTML="";const K=["A","B","C","D"];it.shuf.forEach((t,i)=>{const b=document.createElement("button");b.className="choice"+(it.pick===i?" correct":"");b.innerHTML=`<span class="key">${K[i]}</span><span class="ctxt" dir="auto">${mathToHtml(t)}</span>`;b.onclick=()=>{it.pick=i;renderMockQ()};ch.appendChild(b)});$("#mkNext").textContent=Mk.idx===Mk.items.length-1?"إنهاء ✓":"التالي ↵"}
 function mockNext(){if(Mk.idx<Mk.items.length-1){Mk.idx++;renderMockQ()}else finishMock()}
@@ -758,7 +752,7 @@ function chooseContentFile(){const f=$("#contentFile");f.value="";f.click()}
 $("#contentImportHome").onclick=chooseContentFile;$("#contentImportBtn").onclick=chooseContentFile;
 $("#contentFile").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{replaceContent(JSON.parse(await f.text()));alert(`تم استيراد ${ORDER.length} مادة ✓`);show("home")}catch(err){alert("تعذّر استيراد المحتوى: "+err.message)}};
 $("#contentExportBtn").onclick=()=>downloadJSON("studyflow-data.json",CONTENT);
-$("#contentClearBtn").onclick=()=>{if(!confirm("إزالة المحتوى الخاص المستورد؟ تقدّمك ومجموعتا الفاينل سيبقيان محفوظين."))return;CONTENT={version:1,subjects:{},schedule:{plan:[],exams:[]}};sv(CONTENTKEY,CONTENT);prepareContent();renderHome();renderSubjToggles();alert("تمت إزالة المحتوى الخاص")};
+$("#contentClearBtn").onclick=()=>{if(!confirm("إزالة المحتوى الخاص المستورد؟ تقدّمك ومحتوى Security+ سيبقيان محفوظين."))return;CONTENT={version:1,subjects:{},schedule:{plan:[],exams:[]}};sv(CONTENTKEY,CONTENT);prepareContent();renderHome();renderSubjToggles();alert("تمت إزالة المحتوى الخاص")};
 function renderSubjToggles(){const host=$("#subjToggles");if(!host)return;const h=SETTINGS.hidden||[];host.innerHTML=ORDER.map(c=>DATA[c]?`<button data-sc="${c}" class="${h.includes(c)?"":"sel"}">${subjName(c)}</button>`:"").join("");host.querySelectorAll("button").forEach(b=>b.onclick=()=>{const c=b.dataset.sc;const hid=SETTINGS.hidden||(SETTINGS.hidden=[]);const i=hid.indexOf(c);if(i>=0)hid.splice(i,1);else hid.push(c);saveSet();renderSubjToggles();renderHome()})}
 function openSettings(){$("#lockStatus").textContent=localStorage.getItem(PASS)?"مُفعّل ✓":"مطفّأ";$("#goalInp").value=SETTINGS.goal;$("#soundSwitch").classList.toggle("on",SETTINGS.sound);$("#sessMinInp").value=SETTINGS.sessionMins||20;$("#fsSwitch").classList.toggle("on",SETTINGS.fullscreen!==false);$("#ghToken").value=SYNC.token||"";renderSubjToggles();syncStat(SYNC.enabled?"مُفعّلة ✓":"مطفّأة");show("settings")}
 $("#goalSave").onclick=()=>{const v=parseInt($("#goalInp").value)||50;SETTINGS.goal=Math.max(5,v);saveSet();alert("تم")};
@@ -777,7 +771,7 @@ $("#syncOff").onclick=()=>{SYNC.enabled=false;sv(SYNCKEY,SYNC);syncStat("مطف�
 $("#syncNow").onclick=async()=>{syncStat("جارٍ…");await syncPull();await syncPush();renderHome()};
 $("#syncTest").onclick=async()=>{const t=$("#ghToken").value.trim();if(!t){alert("الصق التوكن");return}try{const r=await fetch("https://api.github.com/gists?per_page=1",{headers:{Authorization:"Bearer "+t,Accept:"application/vnd.github+json"},cache:"no-store"});if(!r.ok){syncStat("التوكن غير صالح ("+r.status+")");return}const sc=r.headers.get("X-OAuth-Scopes");if(sc!==null&&sc.indexOf("gist")<0){syncStat("⚠️ التوكن صالح لكن بدون صلاحية gist. لازم Classic token (مو fine-grained) مع تفعيل ☑ gist.")}else{syncStat("الاتصال ناجح ✓"+(sc===null?"":" · صلاحية gist موجودة")+" — اضغط «تفعيل»")}}catch(e){syncStat("تعذّر الاتصال")}};
 
-function downloadICS(time){const[hh,mm]=time.split(":");const pad=n=>String(n).padStart(2,"0");const esc=s=>String(s).replace(/[,;\\]/g,m=>"\\"+m).replace(/\n/g,"\\n");let L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//StudyFlow//AR","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:StudyFlow"];for(const day of SCHED.plan){if(!day.tasks.length)continue;const ch=day.tasks.map(t=>t.review?subjName(t.c)+" مراجعة":(chapterById(t.c,t.ch)?chapterById(t.c,t.ch).label:t.ch)).join("، ");const dt=day.d.replace(/-/g,"");L.push("BEGIN:VEVENT","UID:sf-s-"+day.d+"@sf","DTSTAMP:20260601T000000Z","DTSTART:"+dt+"T"+pad(hh)+pad(mm)+"00","DTEND:"+dt+"T"+pad((+hh+2)%24)+pad(mm)+"00","SUMMARY:"+esc("📚 StudyFlow: "+ch),"BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:وقت المذاكرة","TRIGGER:PT0S","END:VALARM","END:VEVENT")}for(const e of SCHED.exams){const dt=e.d.replace(/-/g,""),tm=e.t.replace(":","")+"00";L.push("BEGIN:VEVENT","UID:sf-e-"+e.c+"@sf","DTSTAMP:20260601T000000Z","DTSTART:"+dt+"T"+tm,"DTEND:"+dt+"T"+pad((+tm.slice(0,2)+1))+tm.slice(2),"SUMMARY:"+esc("🎯 اختبار "+subjName(e.c)),"BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:اختبار بكرة","TRIGGER:-P1D","END:VALARM","END:VEVENT")}L.push("END:VCALENDAR");const blob=new Blob([L.join("\r\n")],{type:"text/calendar"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="studyflow.ics";a.click()}
+function downloadICS(time){const[hh,mm]=time.split(":");const pad=n=>String(n).padStart(2,"0");const esc=s=>String(s).replace(/[,;\\]/g,m=>"\\"+m).replace(/\n/g,"\\n");let L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//StudyFlow//AR","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:StudyFlow"];for(const day of SCHED.plan){if(!day.tasks.length)continue;const ch=day.tasks.map(t=>t.review?subjName(t.c)+" مراجعة":(chapterById(t.c,t.ch)?chapterById(t.c,t.ch).label:t.ch)).join("، ");const dt=day.d.replace(/-/g,"");L.push("BEGIN:VEVENT","UID:sf-s-"+day.d+"@sf","DTSTAMP:20260601T000000Z","DTSTART:"+dt+"T"+pad(hh)+pad(mm)+"00","DTEND:"+dt+"T"+pad((+hh+2)%24)+pad(mm)+"00","SUMMARY:"+esc("📚 StudyFlow: "+ch),"BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:وقت المذاكرة","TRIGGER:PT0S","END:VALARM","END:VEVENT")}for(const e of SCHED.exams){const dt=e.d.replace(/-/g,""),exact=/^(\d{2}):(\d{2})$/.exec(e.t);if(exact){const eh=+exact[1],em=exact[2];L.push("BEGIN:VEVENT","UID:sf-e-"+e.c+"@sf","DTSTAMP:20260601T000000Z","DTSTART:"+dt+"T"+pad(eh)+em+"00","DTEND:"+dt+"T"+pad((eh+1)%24)+em+"00","SUMMARY:"+esc("🎯 اختبار "+subjName(e.c)),"BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:اختبار بكرة","TRIGGER:-P1D","END:VALARM","END:VEVENT")}else L.push("BEGIN:VEVENT","UID:sf-e-"+e.c+"@sf","DTSTAMP:20260601T000000Z","DTSTART;VALUE=DATE:"+dt,"SUMMARY:"+esc("🎯 هدف "+subjName(e.c)+" · "+e.t),"END:VEVENT")}L.push("END:VCALENDAR");const blob=new Blob([L.join("\r\n")],{type:"text/calendar"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="studyflow.ics";a.click()}
 
 /* ===== boot ===== */
 function startApp(){renderHome();document.querySelector(".subject")?.classList.add("open");setSyncDot(SYNC.enabled?"جارٍ":"مطفّأة");if(SYNC.enabled)syncPull().then(renderHome)}
@@ -786,10 +780,10 @@ async function clearLegacyStudyFlowCache(){
   if("serviceWorker"in navigator){try{const registration=await navigator.serviceWorker.getRegistration("./");if(registration)await registration.unregister()}catch(e){}}
   if("caches"in window){try{const keys=await caches.keys();await Promise.all(keys.filter(key=>key.startsWith("studyflow-")).map(key=>caches.delete(key)))}catch(e){}}
 }
-async function boot(){await clearLegacyStudyFlowCache();await loadBuiltinFinals();const p=localStorage.getItem(PASS);if(p){const lk=$("#lock");lk.classList.add("show");const tryU=()=>{if($("#lockInput").value===p){lk.classList.remove("show");startApp()}else $("#lockErr").style.display=""};$("#lockBtn").onclick=tryU;$("#lockInput").addEventListener("keydown",e=>{if(e.key==="Enter")tryU()});$("#lockInput").focus()}else startApp()}
+async function boot(){await clearLegacyStudyFlowCache();await loadBuiltinContent();const p=localStorage.getItem(PASS);if(p){const lk=$("#lock");lk.classList.add("show");const tryU=()=>{if($("#lockInput").value===p){lk.classList.remove("show");startApp()}else $("#lockErr").style.display=""};$("#lockBtn").onclick=tryU;$("#lockInput").addEventListener("keydown",e=>{if(e.key==="Enter")tryU()});$("#lockInput").focus()}else startApp()}
 document.addEventListener("visibilitychange",()=>{if(!SYNC.enabled)return;if(document.hidden){syncPush();}else{syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});}});
 window.addEventListener("online",()=>{if(SYNC.enabled)syncPull().then(()=>{if($("#home").style.display==="block")renderHome();});});
-const VER="v0816-web-base-fix";try{var _vb=document.createElement("div");_vb.id="sfver";_vb.textContent=VER;_vb.title="StudyFlow build";_vb.style.cssText="position:fixed;bottom:6px;left:8px;font:600 10px/1 ui-monospace,monospace;color:var(--muted2);opacity:.45;z-index:60;pointer-events:none;letter-spacing:.5px";document.body.appendChild(_vb);}catch(e){}
+const VER="v0817-security-only";try{var _vb=document.createElement("div");_vb.id="sfver";_vb.textContent=VER;_vb.title="StudyFlow build";_vb.style.cssText="position:fixed;bottom:6px;left:8px;font:600 10px/1 ui-monospace,monospace;color:var(--muted2);opacity:.45;z-index:60;pointer-events:none;letter-spacing:.5px";document.body.appendChild(_vb);}catch(e){}
 boot();
 </script>
 </body>

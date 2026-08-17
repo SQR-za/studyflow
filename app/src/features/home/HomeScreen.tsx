@@ -1,6 +1,6 @@
 import { useId, useMemo, useState } from 'react'
 import { ProgressRing } from '../../components/Ui'
-import { APP_BUILD, MASTERY_BOX, WEB_SUBJECT_CODE } from '../../lib/constants'
+import { APP_BUILD, MASTERY_BOX, SECURITY_SUBJECT_CODE } from '../../lib/constants'
 import { daysBetween, subjectShortName, todayString } from '../../lib/utils'
 import type { AppSettings, Chapter, DailyStore, DrillPreset, Lesson, NotesBlock, ProgressStore, StudySchedule, Subject } from '../../types'
 
@@ -25,7 +25,6 @@ interface HomeScreenProps {
   onStartLessonTest: (code: string, lesson: Lesson) => void
   onStartLessonQuickTest: (code: string, lesson: Lesson, preset: DrillPreset) => void
   onOpenLesson: (code: string, chapterId: string, lessonId: string) => void
-  onOpenCram: () => void
   quickPresets: DrillPreset[]
   onOpenNotes: (notes: NotesBlock | undefined | null, title: string) => void
   onToggleExtra: () => void
@@ -62,7 +61,7 @@ function SubjectCard({ subject, store, settings, quickPresets, onStart, onStartL
   onOpenLesson: HomeScreenProps['onOpenLesson']
   onOpenNotes: HomeScreenProps['onOpenNotes']
 }) {
-  const [open, setOpen] = useState(subject.code === 'CCCS422-FINAL')
+  const [open, setOpen] = useState(subject.code === SECURITY_SUBJECT_CODE)
   const bodyId = `subject-${useId().replaceAll(':', '')}`
   const subjectItems = subject.chapters.flatMap(chapter => questionsOf(chapter, settings.includeExtra))
   const subjectStats = statsFor(subjectItems, store)
@@ -212,21 +211,6 @@ export function HomeScreen(props: HomeScreenProps) {
         <button type="button" onClick={() => props.onOpenScreen('weak')}>📉 أضعف الفصول</button>
         <button type="button" onClick={props.onStartStarred}>⭐ المميزة ({starredCount})</button>
       </section>
-
-      {props.data[WEB_SUBJECT_CODE] && !props.settings.hidden.includes(WEB_SUBJECT_CODE) ? (
-        <section className="cram-launch-card" aria-labelledby="cram-launch-title">
-          <div className="cram-launch-card__icon" aria-hidden="true">⏱</div>
-          <div className="cram-launch-card__copy">
-            <span>CCSW 321 · FINAL RESCUE</span>
-            <h2 id="cram-launch-title">ملخص آخر 4 ساعات</h2>
-            <p>جداول الحفظ + أخطاء الكود وتصحيحها + توقّع الناتج، مرتبة حسب أعلى عائد للاختبار.</p>
-            <div aria-label="توزيع وقت المراجعة">
-              <small>CSS · 60m</small><small>JS · 80m</small><small>DOM · 65m</small><small>Final · 35m</small>
-            </div>
-          </div>
-          <button type="button" onClick={props.onOpenCram}>افتح الملخص <span aria-hidden="true">←</span></button>
-        </section>
-      ) : null}
 
       <div className="subject-stack">
         {effectiveOrder.map(code => props.data[code] && (

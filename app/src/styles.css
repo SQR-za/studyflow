@@ -109,33 +109,6 @@ a { color: var(--accent); }
 .duration-control span { padding-inline: 5px; }
 .duration-control button { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: var(--surface-3); color: var(--text); font-size: 1.1rem; }
 
-.cram-launch-card {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 16px;
-  overflow: hidden;
-  position: relative;
-  margin: 4px 0 14px;
-  padding: clamp(16px, 3vw, 24px);
-  border: 1px solid rgba(251, 191, 36, .42);
-  border-radius: 18px;
-  background:
-    radial-gradient(circle at 8% 0%, rgba(251, 191, 36, .16), transparent 17rem),
-    linear-gradient(145deg, rgba(29, 31, 31, .98), rgba(14, 20, 25, .98));
-  box-shadow: 0 20px 50px rgba(0, 0, 0, .2);
-}
-.cram-launch-card::after { content: ''; position: absolute; inset: 0 0 auto; height: 3px; background: linear-gradient(90deg, var(--warn), #fb7185, #a78bfa); }
-.cram-launch-card__icon { display: grid; width: 54px; height: 54px; place-items: center; border: 1px solid rgba(251, 191, 36, .3); border-radius: 16px; background: rgba(251, 191, 36, .1); font-size: 1.55rem; }
-.cram-launch-card__copy { min-width: 0; }
-.cram-launch-card__copy > span { color: var(--warn); font: 800 .68rem 'IBM Plex Mono', monospace; letter-spacing: .05em; }
-.cram-launch-card__copy h2 { margin: 5px 0 4px; font-size: 1.12rem; }
-.cram-launch-card__copy p { max-width: 70ch; margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.65; }
-.cram-launch-card__copy > div { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.cram-launch-card__copy small { padding: 4px 7px; border: 1px solid var(--line); border-radius: 999px; background: rgba(9, 13, 17, .55); color: #dce5e8; font: 700 .61rem 'IBM Plex Mono', monospace; direction: ltr; }
-.cram-launch-card > button { min-height: 46px; padding: 10px 15px; border-radius: 12px; background: var(--warn); color: #251a02; font-weight: 900; white-space: nowrap; }
-.cram-launch-card > button:hover { box-shadow: 0 10px 24px rgba(251, 191, 36, .2); transform: translateY(-1px); }
-
 .subject-stack { display: flex; flex-direction: column; gap: 10px; }
 .subject-card { overflow: hidden; box-shadow: none; position: relative; }
 .subject-card::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--subject-color); opacity: .85; }
@@ -349,11 +322,6 @@ a { color: var(--accent); }
   .quick-nav button { flex-direction: column; gap: 2px; font-size: .72rem; }
   .overview-card { padding: 11px 4px; }.overview-card b { font-size: 1.08rem; }.overview-card span { font-size: .68rem; }
   .study-controls > button, .duration-control { flex: 1 1 calc(50% - 5px); justify-content: center; }
-  .cram-launch-card { grid-template-columns: auto minmax(0, 1fr); gap: 11px; padding: 15px; }
-  .cram-launch-card__icon { width: 44px; height: 44px; border-radius: 13px; font-size: 1.25rem; }
-  .cram-launch-card__copy h2 { font-size: 1rem; }
-  .cram-launch-card__copy p { font-size: .73rem; }
-  .cram-launch-card > button { grid-column: 1 / -1; width: 100%; }
   .subject-card__header { padding: 12px 13px; }.subject-card__identity small { font-size: .66rem; }
   .chapter-row { align-items: flex-start; padding: 12px 10px; gap: 8px; }.chapter-row__actions { flex-direction: column; }.chapter-row__actions button { width: 40px; height: 40px; }
   .lesson-list { margin-inline: 9px; }.lesson-row { align-items: flex-start; }.lesson-row__actions { display: grid; grid-template-columns: repeat(2, 40px); }.lesson-row__actions button { width: 40px; min-height: 40px; padding: 0; }.lesson-row__actions button span { display: none; }

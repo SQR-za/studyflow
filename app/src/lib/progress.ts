@@ -117,7 +117,7 @@ export function normalizeSettings(raw: unknown, base: AppSettings = createDefaul
     sessionMins: finiteNumber(raw.sessionMins, base.sessionMins),
     fullscreen: typeof raw.fullscreen === 'boolean' ? raw.fullscreen : base.fullscreen,
     hidden: Array.isArray(raw.hidden) ? raw.hidden.filter((code): code is string => typeof code === 'string') : [...base.hidden],
-    builtinFinalsBuild: typeof raw.builtinFinalsBuild === 'string' ? raw.builtinFinalsBuild : base.builtinFinalsBuild,
+    builtinContentBuild: typeof raw.builtinContentBuild === 'string' ? raw.builtinContentBuild : base.builtinContentBuild,
   }
 }
 

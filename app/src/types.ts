@@ -222,7 +222,7 @@ export interface AppSettings {
   sessionMins: number
   fullscreen: boolean
   hidden: string[]
-  builtinFinalsBuild?: string
+  builtinContentBuild?: string
 }
 
 export interface DailyStore {
@@ -252,7 +252,7 @@ export interface ProgressBackup {
   _app: 'StudyFlow'
 }
 
-export type Screen = 'home' | 'lesson' | 'cram' | 'session' | 'mock' | 'notes' | 'plan' | 'weak' | 'search' | 'settings'
+export type Screen = 'home' | 'lesson' | 'session' | 'mock' | 'notes' | 'plan' | 'weak' | 'search' | 'settings'
 
 export interface ChapterStats {
   mastered: number

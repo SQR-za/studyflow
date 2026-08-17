@@ -18,7 +18,7 @@ const matchQuestion: MatchQuestion = {
 const questions = [...choiceQuestions, matchQuestion]
 const subject: Subject = {
   name: 'CCCS-422 Final',
-  code: 'CCCS422-FINAL',
+  code: 'SEC-PLUS',
   color: '#f43f5e',
   chapters: [{
     id: 'topic-6',

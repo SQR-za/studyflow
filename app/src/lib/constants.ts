@@ -6,27 +6,22 @@ export const STORAGE_KEYS = {
   daily: 'studyflow-daily-v1',
   sync: 'studyflow-sync-v1',
   content: 'studyflow-content-v1',
-  builtin: 'studyflow-builtin-finals-2026-t3-v1',
-  drills: 'studyflow-pdc-422-drills-v2',
-  webDrills: 'studyflow-web-321-drills-v1',
+  builtin: 'studyflow-builtin-security-plus-sy0-701-v1',
 } as const
 
-export const BUILTIN_CODES = ['CCCS422-FINAL', 'WEB-EXAM2'] as const
-export const BUILTIN_FINALS_BUILD = '2026-08-16-v6'
-export const PDC_SUBJECT_CODE = 'CCCS422-FINAL'
-export const WEB_SUBJECT_CODE = 'WEB-EXAM2'
+export const SECURITY_SUBJECT_CODE = 'SEC-PLUS'
+export const BUILTIN_CODES = [SECURITY_SUBJECT_CODE] as const
+export const BUILTIN_CONTENT_BUILD = 'security-plus-sy0-701-2026-08-17-v1'
 
 export const APP_BASE_PATH = import.meta.env.BASE_URL
-export const BUILTIN_CONTENT_ASSET = 'finals-2026-t3.json?v=20260816-1'
-export const PDC_DRILLS_ASSET = 'pdc-422-drills-v2.json?v=20260813-1'
-export const WEB_DRILLS_ASSET = 'web-321-drills-v1.json?v=20260817-1'
+export const BUILTIN_CONTENT_ASSET = 'security-plus-sy0-701.json?v=20260817-1'
 
 export const DEFAULT_SUBJECT_COLOR = '#38bdf8'
 export const GAPS: Record<number, number> = { 1: 2, 2: 4, 3: 7, 4: 12, 5: 20 }
 export const MASTERY_BOX = 4
 export const DAY_MS = 86_400_000
 export const SESSION_CAP = 5
-export const APP_BUILD = 'v2.0.0-preview.12'
+export const APP_BUILD = 'v2.0.0-preview.13'
 
 export const QUESTION_KIND_LABELS: Record<QuestionKind, string> = {
   direct: '📌 مباشر',
